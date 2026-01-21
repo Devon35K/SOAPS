@@ -16,10 +16,25 @@ The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
 ## 2. Key Features
 
 ### User Management
-- **Multi-role System**: Admin and Student/Alumni users
+- **Multi-role System**: Super Admin, Admin, Student/Alumni users
 - **Account Approval Workflow**: Students submit requests with documents for admin approval
 - **Profile Management**: Users can update profiles and upload images
 - **Session Management**: Secure login with timeout and CSRF protection
+- **User Base Management**: Comprehensive user directory with role-based access control
+
+### Super Admin Features
+- **System Administration**: Full system control and configuration
+- **User Role Management**: Assign and manage user permissions across all roles
+- **System Settings**: Configure application-wide settings and preferences
+- **Audit Control**: Access to all system logs and administrative records
+- **Emergency Controls**: System maintenance mode and emergency access controls
+
+### Activity Logging & Monitoring
+- **Comprehensive Audit Trail**: Log all user actions, system changes, and administrative activities
+- **Real-time Monitoring**: Track user logins, file uploads, document approvals
+- **Security Logs**: Monitor failed login attempts, permission changes, and security events
+- **Administrative Actions**: Record all admin decisions, approvals, and rejections
+- **Report Generation**: Generate detailed activity reports for compliance and auditing
 
 ### Document Management
 - **Document Submission**: Students submit various document types (PDF, DOC, DOCX, JPG, PNG)
@@ -115,6 +130,13 @@ php artisan serve
 
 ## 6. Target Users
 
+### Super Admin
+- Complete system administration and configuration
+- Manage all user roles and permissions
+- Access comprehensive audit logs and system reports
+- Control system maintenance and emergency settings
+- Oversee all administrative functions across the Sports Unit
+
 ### Students/Alumni
 - Submit sports-related documents and applications
 - Track personal achievements and participation records
@@ -150,9 +172,12 @@ php artisan serve
 
 | Role | Email | Password |
 |------|-------|----------|
+| Super Admin | superadmin@soaps.usep.edu.ph | superadmin123 |
+| Super Admin (Backup) | admin@soaps.usep.edu.ph | admin123 |
+| Admin | sports.admin@soaps.usep.edu.ph | admin123 |
 | Default User | test@example.com | password |
 
-> Update credentials immediately in production. Additional users can be created through the application interface or by modifying `database/seeders/DatabaseSeeder.php`.
+> **Important:** Update all default credentials immediately in production. The Super Admin accounts have full system access including user management, audit logs, and system configuration. Additional users can be created through the application interface or by modifying `database/seeders/DatabaseSeeder.php`.
 
 ---
 
