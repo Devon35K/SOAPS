@@ -1,10 +1,47 @@
-# SOAPS - Simple Office Administration and Personnel System
+# SOAPS - Sports Office Administration and Personnel System
 
-A modern web application for office administration and personnel management. Built on Laravel 12 with Vite-powered assets and clean architecture.
+A comprehensive web-based Sports Office Management System for the University of Southeastern Philippines (USeP) OSAS-Sports Unit. Built on Laravel 12 with Vite-powered assets, managing sports activities, document submissions, achievements, and user accounts.
+
+## System Overview
+
+The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
+- Manage student/alumni sports participation and achievements
+- Handle document submissions and approval workflows
+- Track awards, championships, and athletic recognitions
+- Provide secure multi-role user management
+- Streamline administrative operations for sports activities
 
 ---
 
-## 1. Tech Stack
+## 2. Key Features
+
+### User Management
+- **Multi-role System**: Admin and Student/Alumni users
+- **Account Approval Workflow**: Students submit requests with documents for admin approval
+- **Profile Management**: Users can update profiles and upload images
+- **Session Management**: Secure login with timeout and CSRF protection
+
+### Document Management
+- **Document Submission**: Students submit various document types (PDF, DOC, DOCX, JPG, PNG)
+- **Approval Workflow**: Admins can approve/reject submissions with comments
+- **File Storage**: Secure document storage with proper access controls
+- **Download Functionality**: Secure file downloads with proper headers
+
+### Achievement Tracking
+- **Award Recognition System**: Admins can record student achievements
+- **Multiple Award Types**: Championships, medals, certificates, scholarships
+- **Document Attachment**: Supporting documents for achievements
+- **Student Search**: Real-time student lookup for award assignment
+
+### Administrative Features
+- **Dashboard**: Comprehensive admin interface with multiple modules
+- **User Management**: Add, edit, delete users
+- **Reports and Analytics**: Student counts, submission statistics
+- **Account Approvals**: Manage new account requests
+
+---
+
+## 3. Tech Stack
 
 - **Backend:** PHP 8.2, Laravel 12
 - **Frontend:** Vite, Vue 3, Inertia.js, TailwindCSS 4
@@ -14,7 +51,7 @@ A modern web application for office administration and personnel management. Bui
 
 ---
 
-## 2. System Requirements
+## 4. System Requirements
 
 | Component | Minimum Version | Notes |
 |-----------|-----------------|-------|
@@ -28,7 +65,7 @@ A modern web application for office administration and personnel management. Bui
 
 ---
 
-## 3. Quick Start (Fresh Install)
+## 5. Quick Start (Fresh Install)
 
 ```bash
 # 1. Clone project
@@ -76,7 +113,40 @@ php artisan serve
 
 ---
 
-## 4. Seeded Accounts
+## 6. Target Users
+
+### Students/Alumni
+- Submit sports-related documents and applications
+- Track personal achievements and participation records
+- Update profiles and manage account information
+- View approval status of submitted documents
+
+### Administrators
+- Manage user accounts and approval workflows
+- Record and track student achievements
+- Generate reports and analytics
+- Handle day-to-day sports unit operations
+
+### Sports Unit Staff
+- Process document submissions
+- Maintain student records
+- Coordinate sports activities and events
+- Provide administrative support
+
+---
+
+## 7. Security Features
+
+- **Password Hashing**: Secure password storage using PHP's password_hash()
+- **CSRF Protection**: Cross-site request forgery protection with tokens
+- **Session Security**: Timeout protection and session regeneration
+- **Input Validation**: Comprehensive input sanitization and validation
+- **File Security**: MIME type verification and secure file handling
+- **SQL Injection Prevention**: Prepared statements and parameterized queries
+
+---
+
+## 8. Seeded Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -86,7 +156,7 @@ php artisan serve
 
 ---
 
-## 5. Useful Artisan & npm Commands
+## 9. Useful Artisan & npm Commands
 
 | Command | Purpose |
 |---------|---------|
@@ -106,7 +176,7 @@ php artisan serve
 
 ---
 
-## 6. Environment Tips
+## 10. Environment Tips
 
 - **File Uploads:** uploaded files live in `storage/app/public`. Missing images usually mean `php artisan storage:link` was skipped.
 - **Sessions:** configured via `config/session.php`; adjust timeout/security as needed.
@@ -116,7 +186,7 @@ php artisan serve
 
 ---
 
-## 7. Project Map
+## 11. Project Map
 
 ```
 app/
@@ -145,7 +215,7 @@ public/
 
 ---
 
-## 8. Testing & Quality
+## 12. Testing & Quality
 
 ```bash
 # Run automated tests
@@ -160,7 +230,7 @@ npm run lint
 
 ---
 
-## 9. Common Issues & Solutions
+## 13. Common Issues & Solutions
 
 ### Vite Manifest Not Found Error
 If you encounter `ViteManifestNotFoundException`, run:
@@ -183,7 +253,7 @@ php artisan optimize:clear
 
 ---
 
-## 10. Maintenance Checklist
+## 14. Maintenance Checklist
 
 - Clear caches after env/config changes:
   ```bash
@@ -200,7 +270,7 @@ php artisan optimize:clear
 
 ---
 
-## 11. Development Workflow
+## 15. Development Workflow
 
 1. **Setup:** Follow the Quick Start guide above
 2. **Development:** Use `npm run dev` for hot reload during frontend changes
@@ -210,10 +280,10 @@ php artisan optimize:clear
 
 ---
 
-## 12. License & Attribution
+## 16. License & Attribution
 
-This project is released under the [MIT License](LICENSE).
+This project is developed for the University of Southeastern Philippines (USeP) OSAS-Sports Unit.
 
 <div align="center">
-  <sub>Maintained by the SOAPS development team.</sub>
+  <sub>Maintained by the SOAPS development team for USeP Sports Unit.</sub>
 </div>
