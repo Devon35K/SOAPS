@@ -1,26 +1,29 @@
-# SOAPS - Sports Office Administration and Personnel System
+# Sports and Cultural Management System (2IT) Group 6
 
-A comprehensive web-based Sports Office Management System for the University of Southeastern Philippines (USeP) OSAS-Sports Unit. Built on Laravel 12 with Vite-powered assets, managing sports activities, document submissions, achievements, and user accounts.
+A comprehensive desktop-based Document Archiver for the Sports and Cultural Office of the University of Southeastern Philippines (USeP) Tagum-Mabini Campus. Built on Laravel 12 with Vite-powered assets, managing sports and cultural activities, document submissions, point-based evaluations, and equipment tracking.
 
 ## System Overview
 
-The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
-- Manage student/alumni sports participation and achievements
-- Handle document submissions and approval workflows
-- Track awards, championships, and athletic recognitions
-- Provide secure multi-role user management
-- Streamline administrative operations for sports activities
+The Sports and Cultural Management System serves as a digital solution for the USeP Tagum-Mabini Campus Sports and Cultural Office to:
+- Manage student/alumni sports and cultural participation and achievements
+- Handle document submissions and approval workflows with digital archiving
+- Implement point-based evaluation system for awards and recognitions
+- Provide secure multi-role user management (Admin and Student roles)
+- Streamline administrative operations for sports and cultural activities
+- Monitor sports equipment borrowing and returns with automated sanction system
+- Facilitate fast data retrieval, filtering, and comparison capabilities
 
 ---
 
 ## 2. Key Features
 
 ### User Management
-- **Multi-role System**: Super Admin, Admin, Student/Alumni users
+- **Two-Tier Role System**: Admin (Faculty/Staff) and Student users
 - **Account Approval Workflow**: Students submit requests with documents for admin approval
 - **Profile Management**: Users can update profiles and upload images
 - **Session Management**: Secure login with timeout and CSRF protection
 - **User Base Management**: Comprehensive user directory with role-based access control
+- **Multi-Factor Authentication**: Enhanced security with MFA support
 
 ### Super Admin Features
 - **System Administration**: Full system control and configuration
@@ -43,7 +46,10 @@ The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
 - **Download Functionality**: Secure file downloads with proper headers
 
 ### Achievement Tracking
-- **Award Recognition System**: Admins can record student achievements
+- **Point-Based Evaluation System**: Scoring method for assessing student achievements in sports and cultural activities for awards and recognition
+- **Campus Leaderboard**: Ranking system displaying student standings based on accumulated points
+- **Total Points Tracking**: Cumulative score monitoring for individuals and teams
+- **Award Recognition System**: Admins can record student achievements based on point accumulation
 - **Multiple Award Types**: Championships, medals, certificates, scholarships
 - **Document Attachment**: Supporting documents for achievements
 - **Student Search**: Real-time student lookup for award assignment
@@ -53,6 +59,19 @@ The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
 - **User Management**: Add, edit, delete users
 - **Reports and Analytics**: Student counts, submission statistics
 - **Account Approvals**: Manage new account requests
+
+### Sports Equipment Management
+- **Equipment Inventory**: Complete catalog of sports supplies and tools with categorization
+- **Borrowing System**: Track equipment checkouts with student identification and timestamps
+- **Due Date Management**: Automatic tracking of return deadlines with configurable borrowing periods
+- **Sanction System**: Automated penalty imposition for late returns including:
+  - Warning notifications for first offenses
+  - Temporary borrowing restrictions for repeat violations
+  - Official sanctions recorded in student profiles
+  - Escalating penalty tiers based on delay duration
+- **Equipment Status**: Real-time availability tracking and maintenance scheduling
+- **Borrowing History**: Complete audit trail of all equipment transactions
+- **Student Accountability**: Link equipment borrowing to student records for comprehensive monitoring
 
 ---
 
@@ -68,15 +87,40 @@ The SOAPS platform serves as a digital solution for the USeP Sports Unit to:
 
 ## 4. System Requirements
 
-| Component | Minimum Version | Notes |
-|-----------|-----------------|-------|
-| PHP | 8.2.x | Enable `fileinfo`, `openssl`, `pdo_sqlite/pdo_mysql`, `mbstring`, `curl`, `zip` |
-| Composer | 2.6+ | Used for PHP dependency management |
-| Node.js / npm | Node 18+, npm 9+ | Required for Vite asset build |
-| Database | SQLite 3+ (default) / MySQL 8 / MariaDB 10.5 | Update `.env` with credentials |
-| Git | latest | Source control |
+### Hardware Requirements
 
-> **Windows users:** Laragon includes PHP, MySQL, and Node out of the box. Ensure PHP is added to your PATH before running artisan commands from terminals outside Laragon.
+| Component | Minimum Requirements | Recommended Requirements |
+|-----------|---------------------|---------------------------|
+| **Client Machine** | Intel i5 processor, 8GB RAM, 256GB SSD, Windows 10 or Linux OS | Intel i7 or higher, 16GB RAM, 512GB SSD, Windows 11 or latest Linux OS |
+| **Server Machine** | Intel Xeon processor, 16GB RAM, 1TB HDD/SSD, Windows Server 2019 or Linux-based OS | Intel Xeon multi-core, 32GB RAM, 1TB SSD, Latest Windows Server or Linux OS |
+| **Backup Storage** | External hard drives or cloud storage | Automated cloud backup with redundancy (e.g., AWS S3, Google Drive Enterprise) |
+
+### Software Requirements
+
+| Component | Minimum Requirements | Recommended Requirements |
+|-----------|---------------------|---------------------------|
+| **Database Management System** | MySQL 5.7 or Microsoft SQL Server 2016 | MySQL 8.0 or Microsoft SQL Server 2019 or newer |
+| **Development Environment** | Visual Studio 2019, Eclipse, or similar IDE | Visual Studio 2022 or IntelliJ IDEA with full plugin support |
+| **Web Server** | Apache 2.4, Nginx 1.18, or IIS 10 | Apache 2.4 or newer, Nginx latest stable, or IIS with optimized module configurations |
+| **Security Software** | Basic antivirus (e.g., Windows Defender) and anti-malware | Enterprise-level endpoint protection (e.g., Bitdefender, Norton, or Malwarebytes Premium) |
+| **Backup Software** | Manual or scheduled backup tools (e.g., Windows Backup, rsync) | Automated cloud-integrated backup solutions (e.g., Acronis, Veeam, or AWS Backup) |
+
+### Network Requirements
+
+| Component | Minimum Requirements | Recommended Requirements |
+|-----------|---------------------|---------------------------|
+| **Internet Connection** | Stable broadband (DSL/Fiber) with at least 10 Mbps download speed | High-speed fiber connection with 50 Mbps or higher, with redundancy/failover option |
+| **Local Network** | Basic wired or wireless LAN supporting at least 100 Mbps | Gigabit Ethernet for wired connections; Wi-Fi 5/6 for wireless coverage |
+| **Firewall** | Basic software firewall (e.g., Windows Firewall) | Dedicated hardware firewall (e.g., Cisco ASA, Fortinet) and enterprise-level software firewall (e.g., pfSense) |
+
+### Other Facilities
+
+- **User Training Facilities**: Designated room with computers, projector, and internet for hands-on training
+- **Technical Support**: Helpdesk unit with ticketing system and trained IT personnel
+- **Support Availability**: Peak hours support (8 AM - 5 PM weekdays) with emergency off-hours support
+- **Support Channels**: Multichannel support (email, hotline, knowledge base integration)
+
+> **Campus Restriction**: System is designed exclusively for USeP Tagum-Mabini Campus users and requires on-campus access or VPN connection.
 
 ---
 
@@ -128,60 +172,120 @@ php artisan serve
 
 ---
 
-## 6. Target Users
+## 6. Scope and Limitations
 
-### Super Admin
+### Scope
+
+**Primary Users:**
+- **Students**: Enrolled athletes and artists participating in university-approved sports and cultural events
+- **Admins**: Faculty designated to manage the Sports and Cultural Office operations
+
+**Functions:**
+- Digital document submission, validation, and archiving
+- Automated evaluation for awards and recognitions based on a point system
+- Search and filter functionalities for quick access to stored data
+- Sports equipment borrowing and return tracking with sanction system
+- Campus leaderboard and point accumulation monitoring
+
+**Access:**
+- Limited to on-campus users at USeP Tagum-Mabini Campus
+- VPN access available for authorized remote connections
+
+### Limitations
+
+- **Exclusion of Academic Records**: The system focuses solely on sports and cultural documents and does not handle academic records or achievements
+- **Restricted User Base**: Designed exclusively for USeP Tagum-Mabini students, alumni and faculty; not accessible to external users
+- **Dependency on Hardware and Internet Connection**: Requires compatible desktop computers and consistent power supply to function effectively
+- **Manual Inputs for Validation**: Some document validation processes may still require manual review to ensure accuracy and compliance
+
+## 7. Target Users
+
+### Admins (Faculty/Staff)
 - Complete system administration and configuration
-- Manage all user roles and permissions
-- Access comprehensive audit logs and system reports
-- Control system maintenance and emergency settings
-- Oversee all administrative functions across the Sports Unit
+- Manage student accounts and approval workflows
+- Record and track student achievements using point-based evaluation
+- Generate reports and analytics from dashboard
+- Oversee equipment borrowing and return processes
+- Monitor and enforce sanction policies for late returns
+- Process document submissions and maintain digital archives
 
 ### Students/Alumni
-- Submit sports-related documents and applications
+- Submit sports and cultural-related documents and applications
 - Track personal achievements and participation records
+- Monitor accumulated points and campus leaderboard standings
 - Update profiles and manage account information
 - View approval status of submitted documents
-
-### Administrators
-- Manage user accounts and approval workflows
-- Record and track student achievements
-- Generate reports and analytics
-- Handle day-to-day sports unit operations
-
-### Sports Unit Staff
-- Process document submissions
-- Maintain student records
-- Coordinate sports activities and events
-- Provide administrative support
+- Browse available sports equipment and supplies
+- Submit equipment borrowing requests with specified return dates
+- Monitor borrowing history and current equipment status
+- Receive notifications for upcoming due dates and sanctions
 
 ---
 
-## 7. Security Features
+## 8. System Benefits
 
+### Tangible Benefits
+- **Reduction in operational costs**: Decreased need for physical storage and printed documents, saving on paper and printing expenses
+- **Time savings**: Faster document processing and retrieval for faculty and students, leading to more timely participation in events
+- **Improved accuracy**: Minimized manual errors through automated validation and processing
+
+### Intangible Benefits
+- **Improved user satisfaction**: Students face less frustration with simplified submission and tracking processes
+- **Improved productivity**: Faculty can focus on strategic tasks instead of administrative burdens
+- **Data security**: Better protection of sensitive student information with a controlled and digital system
+
+---
+
+## 9. Security Features
+
+### Information Security Mechanisms
+
+**User Authentication:**
+- **Secure Login System**: Unique usernames and passwords for both students and faculty/admins
+- **Multi-Factor Authentication (MFA)**: Enhanced security during the login process
+- **Session Management**: Timeout protection and session regeneration
+
+**Access Control:**
+- **Role-Based Access Control (RBAC)**: Users can only access information and functionalities relevant to their roles
+- **Regular Audits**: Periodic review of user access rights to ensure compliance and security
+
+**Data Encryption:**
+- **In Transit Protection**: SSL/TLS protocols for secure data transmission
+- **At Rest Protection**: AES encryption for sensitive data storage
+- **Secure Connections**: All document uploads and downloads conducted over encrypted channels
+
+**Audit Trails:**
+- **Activity Logging**: Comprehensive logs of user activities within the system
+- **Access Tracking**: Monitor access and modifications to sensitive data
+- **Regular Reviews**: Periodic audit log analysis to identify unauthorized access or anomalies
+
+**Data Privacy Compliance:**
+- **Regulatory Compliance**: Adherence to relevant data protection regulations (e.g., GDPR, local data privacy laws)
+- **Data Retention Policies**: Responsible management of personal data with defined retention and deletion policies
+
+### Technical Security Features
 - **Password Hashing**: Secure password storage using PHP's password_hash()
 - **CSRF Protection**: Cross-site request forgery protection with tokens
-- **Session Security**: Timeout protection and session regeneration
 - **Input Validation**: Comprehensive input sanitization and validation
 - **File Security**: MIME type verification and secure file handling
 - **SQL Injection Prevention**: Prepared statements and parameterized queries
 
 ---
 
-## 8. Seeded Accounts
+## 10. Seeded Accounts
 
 | Role | Email | Password |
 |------|-------|----------|
-| Super Admin | superadmin@soaps.usep.edu.ph | superadmin123 |
-| Super Admin (Backup) | admin@soaps.usep.edu.ph | admin123 |
-| Admin | sports.admin@soaps.usep.edu.ph | admin123 |
-| Default User | test@example.com | password |
+| Admin (Faculty/Staff) | admin@scms.usep.edu.ph | admin123 |
+| Admin (Backup) | sports.admin@scms.usep.edu.ph | admin123 |
+| Student | student@scms.usep.edu.ph | student123 |
+| Test User | test@example.com | password |
 
-> **Important:** Update all default credentials immediately in production. The Super Admin accounts have full system access including user management, audit logs, and system configuration. Additional users can be created through the application interface or by modifying `database/seeders/DatabaseSeeder.php`.
+> **Important:** Update all default credentials immediately in production. The Admin accounts have full system access including user management, document processing, and system configuration. Additional users can be created through the application interface or by modifying `database/seeders/DatabaseSeeder.php`.
 
 ---
 
-## 9. Useful Artisan & npm Commands
+## 11. Useful Artisan & npm Commands
 
 | Command | Purpose |
 |---------|---------|
@@ -201,7 +305,7 @@ php artisan serve
 
 ---
 
-## 10. Environment Tips
+## 12. Environment Tips
 
 - **File Uploads:** uploaded files live in `storage/app/public`. Missing images usually mean `php artisan storage:link` was skipped.
 - **Sessions:** configured via `config/session.php`; adjust timeout/security as needed.
@@ -211,7 +315,7 @@ php artisan serve
 
 ---
 
-## 11. Project Map
+## 13. Project Map
 
 ```
 app/
@@ -240,7 +344,7 @@ public/
 
 ---
 
-## 12. Testing & Quality
+## 14. Testing & Quality
 
 ```bash
 # Run automated tests
@@ -255,7 +359,7 @@ npm run lint
 
 ---
 
-## 13. Common Issues & Solutions
+## 15. Common Issues & Solutions
 
 ### Vite Manifest Not Found Error
 If you encounter `ViteManifestNotFoundException`, run:
@@ -278,7 +382,7 @@ php artisan optimize:clear
 
 ---
 
-## 14. Maintenance Checklist
+## 16. Maintenance Checklist
 
 - Clear caches after env/config changes:
   ```bash
@@ -295,7 +399,7 @@ php artisan optimize:clear
 
 ---
 
-## 15. Development Workflow
+## 17. Development Workflow
 
 1. **Setup:** Follow the Quick Start guide above
 2. **Development:** Use `npm run dev` for hot reload during frontend changes
@@ -305,10 +409,10 @@ php artisan optimize:clear
 
 ---
 
-## 16. License & Attribution
+## 18. License & Attribution
 
-This project is developed for the University of Southeastern Philippines (USeP) OSAS-Sports Unit.
+This project is developed for the University of Southeastern Philippines (USeP) Tagum-Mabini Campus Sports and Cultural Office by Group 6 of the 2IT program.
 
 <div align="center">
-  <sub>Maintained by the SOAPS development team for USeP Sports Unit.</sub>
+  <sub>Maintained by the Sports and Cultural Management System development team for USeP Tagum-Mabini Campus.</sub>
 </div>
