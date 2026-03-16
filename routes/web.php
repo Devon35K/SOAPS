@@ -5,8 +5,15 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login');
+    return Inertia::render('Welcome', ['canRegister' => true]);
 })->name('home');
+
+Route::get('/login', function () {
+    return Inertia::render('auth/Login', [
+        'canResetPassword' => true,
+        'canRegister' => true,
+    ]);
+})->name('login');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
