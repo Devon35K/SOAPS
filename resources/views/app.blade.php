@@ -6,47 +6,22 @@
     <title>Login - {{ config('app.name', 'SOAPS') }}</title>
     
     <!-- Scripts -->
-    <style>
-        @import 'tailwindcss';
-        
-        body {
-            @apply bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center;
-        }
-        
-        .login-card {
-            @apply bg-white shadow-lg rounded-lg p-8;
-        }
-        
-        .form-input {
-            @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
-        }
-        
-        .btn-primary {
-            @apply w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200;
-        }
-        
-        .error-message {
-            @apply mt-1 text-sm text-red-600;
-        }
-        
-        .flash-success {
-            @apply mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded;
-        }
-        
-        .flash-error {
-            @apply mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="font-sans antialiased bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-md">
+    <div class="login-container">
         <!-- Logo/Brand -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ config('app.name', 'SOAPS') }}</h1>
-            <p class="text-gray-600">Sign in to your account</p>
+        <div class="login-header">
+            <div class="login-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 class="brand-title">{{ config('app.name', 'SOAPS') }}</h1>
+            <p class="brand-subtitle">Sign in to your account</p>
         </div>
 
         <!-- Login Form -->
@@ -55,8 +30,8 @@
                 @csrf
                 
                 <!-- Email -->
-                <div class="mb-6">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="form-group">
+                    <label for="email" class="form-label">
                         Email Address
                     </label>
                     <input 
@@ -75,8 +50,8 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="form-group">
+                    <label for="password" class="form-label">
                         Password
                     </label>
                     <input 
@@ -94,14 +69,14 @@
                 </div>
 
                 <!-- Remember Me -->
-                <div class="mb-6">
-                    <label class="flex items-center">
+                <div class="form-group">
+                    <label class="checkbox-label">
                         <input 
                             type="checkbox" 
                             name="remember" 
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="checkbox-input"
                         >
-                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        <span class="checkbox-text">Remember me</span>
                     </label>
                 </div>
 
@@ -118,7 +93,7 @@
                 <!-- Forgot Password Link -->
                 @if (Route::has('password.request'))
                     <div class="text-center">
-                        <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-500">
+                        <a href="{{ route('password.request') }}" class="forgot-link">
                             Forgot your password?
                         </a>
                     </div>
