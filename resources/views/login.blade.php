@@ -3,15 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - {{ config('app.name', 'SOAPS') }}</title>
+    <title>Login</title>
     
     <!-- Scripts -->
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-    
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>USeP OSAS-Sports Unit Login</title>
-    <link rel="stylesheet" href="/css/loginStyle.css">
+    <link rel="stylesheet" href="/CSS/loginS.css">
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link rel="icon" href="/image/Usep.png" sizes="any" />
 
