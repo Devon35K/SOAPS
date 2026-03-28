@@ -37,19 +37,19 @@
         <div class="login-box">
             <h1>WELCOME</h1>
 
-            <?php if (!empty($errorMessage)): ?>
+            @if(session('login_error'))
                 <div class="error-message">
-                    <?php echo htmlspecialchars($errorMessage); ?>
+                    {{ session('login_error') }}
                 </div>
-            <?php else: ?>
+            @else
                 <p>Please log in to get started.</p>
-            <?php endif; ?>
+            @endif
 
             <div id="error-messages" class="error-messages" hidden></div>
-            <form method="POST" action="../controller/auth.php" onsubmit="return validateForm(event)" novalidate>
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
+            <form method="POST" action="{{ route('login.post') }}" onsubmit="return validateForm(event)" novalidate>
+                @csrf
                 <label>
-                    <input type="email" name="email" placeholder="Enter Email" required>
+                    <input type="email" name="email" placeholder="Enter Email" value="{{ old('email') }}" required>
                 </label>
                 <div class="password-container">
                     <input type="password" id="password" name="password" placeholder="Enter Password" required>
@@ -59,8 +59,8 @@
             </form>
 
             <p class="signup-link">
-                Don't have an account? <a href="../view/signupView.php">Sign Up</a>
-                <a href="OTP/forgotPassView.php" style="font-size: 0.8em;">Forgot Password?</a>
+                Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
+                <a href="{{ route('password.request') }}" style="font-size: 0.8em;">Forgot Password?</a>
             </p>
         </div>
     </div>
