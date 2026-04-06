@@ -30,7 +30,7 @@
         .left-panel {
             position: relative; background: var(--maroon-dark); overflow: hidden;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 44px 52px 36px;
+            padding: 32px 40px 28px;
         }
         .gold-bar { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 60%, transparent 100%); }
         .slash { position: absolute; top: 0; right: -60px; width: 180px; height: 100%; background: var(--maroon-mid); transform: skewX(-8deg); pointer-events: none; }
@@ -42,39 +42,39 @@
             position: absolute; top: 140px; left: 44px; pointer-events: none; user-select: none;
         }
         .left-content { position: relative; z-index: 2; }
-        .logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 52px; }
+        .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
         .logo-badge {
-            width: 46px; height: 46px; border-radius: 6px;
+            width: 40px; height: 40px; border-radius: 6px;
             background: rgba(255,255,255,.09); border: 1px solid rgba(240,180,41,.22);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .logo-badge img { width: 32px; height: 32px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
-        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
+        .logo-badge img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
+        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
         .headline-tag {
-            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .68rem;
-            font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold);
+            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .62rem;
+            font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold);
             background: rgba(240,180,41,.1); border: 1px solid rgba(240,180,41,.28);
-            border-radius: 3px; padding: 4px 10px; margin-bottom: 14px;
+            border-radius: 3px; padding: 3px 8px; margin-bottom: 10px;
         }
         .headline {
-            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem);
             font-weight: 900; line-height: .95; color: var(--white); text-transform: uppercase; letter-spacing: -1px;
         }
         .headline .gold-word { color: var(--gold); display: block; }
-        .tagline { margin-top: 20px; font-size: .88rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.65; max-width: 280px; }
-        .stat-strip { display: flex; margin-top: 34px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 22px; }
-        .stat-item { flex: 1; padding-right: 18px; }
-        .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,.08); padding-left: 18px; padding-right: 0; }
-        .stat-val { font-family: 'Barlow Condensed', sans-serif; font-size: 1.75rem; font-weight: 800; color: var(--gold); line-height: 1; }
-        .stat-lbl { font-size: .68rem; font-weight: 400; color: rgba(255,255,255,.32); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 4px; }
-        .left-footer { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); }
-        .left-footer p, .left-footer a { font-size: .7rem; color: rgba(255,255,255,.22); text-decoration: none; }
+        .tagline { margin-top: 10px; font-size: .75rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.5; max-width: 260px; }
+        .stat-strip { display: flex; margin-top: 16px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 14px; }
+        .stat-item { flex: 1; padding-right: 14px; }
+        .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,.08); padding-left: 14px; padding-right: 0; }
+        .stat-val { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--gold); line-height: 1; }
+        .stat-lbl { font-size: .62rem; font-weight: 400; color: rgba(255,255,255,.32); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .left-footer { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.06); }
+        .left-footer p, .left-footer a { font-size: .65rem; color: rgba(255,255,255,.22); text-decoration: none; }
         .left-footer a:hover { color: var(--gold); }
 
         /* ── RIGHT ── */
         .right-panel {
             display: flex; align-items: center; justify-content: center;
-            background: var(--offwhite); padding: 40px 52px; position: relative;
+            background: var(--offwhite); padding: 28px 40px; position: relative;
         }
         .right-panel::before {
             content: ''; position: absolute; bottom: 0; right: 0; width: 240px; height: 240px;
@@ -87,41 +87,41 @@
             transform: skewX(-8deg); pointer-events: none;
         }
         .right-panel .bg-image {
-            position: absolute; inset: 0;
+            position: absolute; inset: -50px;
             background-image: url('/image/background.png');
             background-size: cover;
             background-position: center;
             opacity: 0.15;
             pointer-events: none;
+            transform: scale(1.3);
         }
-        .login-card { width: 100%; max-width: 420px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
+        .login-card { width: 100%; max-width: 380px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .form-number {
             font-family: 'Barlow Condensed', sans-serif; font-size: 6rem; font-weight: 900;
-            color: rgba(122,20,40,.055); line-height: 1; position: absolute; top: -30px; right: -20px;
             letter-spacing: -4px; user-select: none; pointer-events: none;
         }
         .form-eyebrow {
-            font-family: 'Barlow Condensed', sans-serif; font-size: .7rem; font-weight: 700;
-            letter-spacing: 3px; text-transform: uppercase; color: var(--maroon);
-            margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+            font-family: 'Barlow Condensed', sans-serif; font-size: .65rem; font-weight: 700;
+            letter-spacing: 2.5px; text-transform: uppercase; color: var(--maroon);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
         }
         .form-eyebrow::before { content: ''; display: inline-block; width: 20px; height: 3px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
-        .form-title { font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem; font-weight: 900; line-height: .95; text-transform: uppercase; color: var(--charcoal); letter-spacing: -1px; margin-bottom: 6px; }
+        .form-title { font-family: 'Barlow Condensed', sans-serif; font-size: 2.4rem; font-weight: 900; line-height: .95; text-transform: uppercase; color: var(--charcoal); letter-spacing: -1px; margin-bottom: 4px; }
         .form-title span { color: var(--maroon); }
-        .form-desc { font-size: .84rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 26px; }
+        .form-desc { font-size: .75rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; }
         .server-error { display: flex; align-items: center; gap: 10px; background: rgba(122,20,40,.07); border-left: 3px solid var(--maroon); border-radius: 0 6px 6px 0; padding: 11px 14px; font-size: .82rem; color: var(--maroon); font-weight: 600; margin-bottom: 20px; }
         .error-messages { padding: 11px 14px; border-radius: 6px; background: rgba(122,20,40,.06); font-size: .82rem; color: var(--maroon); margin-bottom: 16px; }
         .error-messages p { line-height: 1.8; }
-        .form-fields { display: flex; flex-direction: column; gap: 14px; }
-        .field-lbl { font-size: .68rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+        .form-fields { display: flex; flex-direction: column; gap: 8px; }
+        .field-lbl { font-size: .6rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
         .input-wrap { position: relative; display: flex; align-items: center; }
-        .input-wrap i.icon { position: absolute; left: 14px; font-size: 1.1rem; color: var(--text-muted); pointer-events: none; transition: color .2s; }
+        .input-wrap i.icon { position: absolute; left: 12px; font-size: 1rem; color: var(--text-muted); pointer-events: none; transition: color .2s; }
         .input-wrap input, .input-wrap select {
-            width: 100%; padding: 13px 14px 13px 42px;
+            width: 100%; padding: 9px 10px 9px 34px;
             border: 2px solid rgba(61,42,47,.12); border-radius: 0;
             background: var(--white); font-family: 'Barlow', sans-serif;
-            font-size: .9rem; font-weight: 500; color: var(--charcoal); outline: none;
+            font-size: .82rem; font-weight: 500; color: var(--charcoal); outline: none;
             transition: border-color .2s;
             clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
         }
@@ -132,7 +132,7 @@
         .input-wrap select option { font-family: 'Barlow', sans-serif; }
         .drop-zone {
             border: 2px dashed var(--maroon);
-            padding: 20px;
+            padding: 10px;
             text-align: center;
             background: var(--white);
             cursor: pointer;
@@ -146,7 +146,7 @@
         .drop-zone p {
             margin: 0;
             color: var(--text-muted);
-            font-size: .85rem;
+            font-size: .72rem;
             font-weight: 500;
         }
         .drop-zone .file-name {
@@ -158,9 +158,9 @@
         .drop-zone input[type="file"] { display: none; }
         .drop-zone:hover { border-color: var(--maroon-mid); }
         .btn-login {
-            margin-top: 4px; width: 100%; padding: 15px 20px; border: none;
+            margin-top: 4px; width: 100%; padding: 12px 16px; border: none;
             background: var(--maroon); color: var(--white);
-            font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 800;
+            font-family: 'Barlow Condensed', sans-serif; font-size: .95rem; font-weight: 800;
             letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
             position: relative; overflow: hidden; transition: background .2s, transform .1s;
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -170,7 +170,7 @@
         .btn-login:hover::after { left: 150%; }
         .btn-login:active { transform: scale(.98); }
         .btn-accent { height: 3px; background: linear-gradient(90deg, var(--gold), transparent); }
-        .signup-row { margin-top: 20px; text-align: center; font-size: .82rem; color: var(--text-muted); }
+        .signup-row { margin-top: 12px; text-align: center; font-size: .75rem; color: var(--text-muted); }
         .signup-row a { color: var(--maroon); font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: .76rem; letter-spacing: .5px; }
         .signup-row a:hover { text-decoration: underline; }
 
@@ -232,7 +232,8 @@
             .page { grid-template-columns: 1fr; height: auto; }
             .left-panel { padding: 36px 28px 28px; min-height: 240px; }
             .big-number, .stat-strip, .form-number { display: none; }
-            .right-panel { padding: 40px 28px 56px; }
+            .right-panel { padding: 40px 28px 56px; overflow-y: visible; }
+            .right-panel .bg-image { inset: 0; transform: scale(1.2); }
         }
     </style>
 </head>
@@ -286,7 +287,7 @@
         <div class="login-card">
             <div class="form-number">02</div>
             <p class="form-eyebrow">Student-Athlete Registration</p>
-            <h2 class="form-title">Create<br><span>Account.</span></h2>
+            <h2 class="form-title">Create <span>Account.</span></h2>
 
             @if(session('error'))
                 <div class="server-error"><i class='bx bx-error-circle'></i>{{ session('error') }}</div>
