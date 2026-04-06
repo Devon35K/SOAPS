@@ -24,7 +24,8 @@
             --white:       #FFFFFF;
         }
         html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--offwhite); overflow: hidden; }
-        .page { display: grid; grid-template-columns: 0.5fr 1.5fr; height: 100vh; }
+        html { overflow-x: hidden; }
+        .page { display: grid; grid-template-columns: 0.95fr 1.05fr; height: 100vh; overflow: hidden; }
 
         /* ── LEFT ── */
         .left-panel {
@@ -74,7 +75,7 @@
         /* ── RIGHT ── */
         .right-panel {
             display: flex; align-items: center; justify-content: center;
-            background: var(--offwhite); padding: 28px 40px; position: relative;
+            background: var(--offwhite); padding: 28px 40px; position: relative; overflow: hidden;
         }
         .right-panel::before {
             content: ''; position: absolute; bottom: 0; right: 0; width: 240px; height: 240px;
@@ -227,13 +228,106 @@
             letter-spacing: 1px;
         }
 
-        @media (max-width: 840px) {
-            html, body { overflow: auto; }
-            .page { grid-template-columns: 1fr; height: auto; }
-            .left-panel { padding: 36px 28px 28px; min-height: 240px; }
-            .big-number, .stat-strip, .form-number { display: none; }
-            .right-panel { padding: 40px 28px 56px; overflow-y: visible; }
-            .right-panel .bg-image { inset: 0; transform: scale(1.2); }
+        @media (max-width: 1024px) {
+            .page { grid-template-columns: 0.9fr 1.1fr; }
+            .left-panel { padding: 28px 32px 24px; }
+            .headline { font-size: clamp(2.2rem, 3.5vw, 3.2rem); }
+            .tagline { font-size: .88rem; max-width: 280px; }
+            .big-number { font-size: clamp(4rem, 8vw, 7rem); top: 120px; left: 32px; }
+            .login-card { max-width: 360px; }
+            .speed-bg { opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden; overflow-y: auto; height: auto; }
+            .page { grid-template-columns: 1fr; height: auto; min-height: 100vh; overflow: visible; }
+            .left-panel { 
+                padding: 32px 24px 24px; 
+                min-height: auto;
+                position: relative;
+            }
+            .big-number { display: none; }
+            .slash { width: 120px; right: -40px; }
+            .slash-2 { width: 160px; right: -80px; }
+            .headline { font-size: clamp(2rem, 6vw, 2.8rem); }
+            .tagline { font-size: .9rem; max-width: 100%; }
+            .stat-strip { margin-top: 20px; }
+            .right-panel { 
+                padding: 32px 24px 48px; 
+                overflow: visible;
+                min-height: auto;
+            }
+            .right-panel .bg-image { inset: 0; transform: scale(1.1); opacity: 0.1; }
+            .login-card { max-width: 100%; width: 100%; }
+            .form-title { font-size: 2rem; }
+            .input-wrap input, .input-wrap select { 
+                padding: 12px 12px 12px 40px; 
+                font-size: .9rem;
+                min-height: 48px;
+            }
+            .input-wrap i.icon { left: 14px; font-size: 1.1rem; }
+            .drop-zone { padding: 16px; }
+            .btn-login { 
+                padding: 14px 18px; 
+                font-size: 1rem;
+                min-height: 52px;
+            }
+            .modal { max-width: calc(100% - 32px); padding: 32px 24px; }
+            .loading-content { padding: 24px 32px; max-width: calc(100% - 40px); }
+            .loading-content p { font-size: .9rem; }
+            .speed-bg { opacity: 0.5; }
+        }
+
+        @media (max-width: 480px) {
+            html, body { overflow-x: hidden; }
+            .left-panel { padding: 24px 20px 20px; }
+            .logo-row { gap: 12px; margin-bottom: 32px; }
+            .logo-badge { width: 40px; height: 40px; }
+            .logo-badge img { width: 28px; height: 28px; }
+            .logo-name { font-size: .75rem; }
+            .headline-tag { font-size: .7rem; padding: 3px 8px; }
+            .headline { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+            .tagline { font-size: .85rem; line-height: 1.5; }
+            .stat-strip { display: none; }
+            .left-footer { flex-direction: column; gap: 8px; text-align: center; }
+            .right-panel { padding: 24px 20px 40px; }
+            .form-eyebrow { font-size: .6rem; }
+            .form-title { font-size: 1.8rem; }
+            .form-desc { font-size: .8rem; }
+            .field-lbl { font-size: .65rem; }
+            .input-wrap input, .input-wrap select { 
+                padding: 10px 10px 10px 38px; 
+                font-size: 16px;
+                min-height: 44px;
+            }
+            .drop-zone p { font-size: .8rem; }
+            .btn-login { 
+                font-size: .9rem; 
+                letter-spacing: 1.5px;
+                min-height: 48px;
+            }
+            .signup-row { font-size: .8rem; }
+            .loading-content { padding: 20px 24px; }
+            .loading-content p { font-size: .85rem; }
+            .loading-spinner { width: 36px; height: 36px; }
+            .speed-bg { opacity: 0.3; }
+        }
+
+        @media (max-width: 360px) {
+            .left-panel { padding: 20px 16px 16px; }
+            .right-panel { padding: 20px 16px 32px; }
+            .headline { font-size: 1.6rem; }
+            .form-title { font-size: 1.6rem; }
+            .input-wrap input, .input-wrap select { font-size: 16px; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn-login:hover { background: var(--maroon); }
+            .btn-login:hover::after { left: -100%; }
+            .btn-login:active { transform: scale(.96); background: var(--maroon-mid); }
+            .drop-zone:hover { border-color: var(--maroon); }
+            .left-footer a:hover { color: rgba(255,255,255,.22); }
+            .signup-row a:hover { text-decoration: none; }
         }
     </style>
 </head>
