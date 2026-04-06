@@ -22,7 +22,7 @@
             --white:       #FFFFFF;
         }
         html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--offwhite); overflow: hidden; }
-        .page { display: grid; grid-template-columns: 1.1fr 0.9fr; height: 100vh; }
+        .page { display: grid; grid-template-columns: 0.9fr 1.1fr; height: 100vh; overflow: hidden; }
 
         /* ── LEFT ── */
         .left-panel {
@@ -216,14 +216,10 @@
             <span class="headline-tag">Official Portal</span>
             <h1 class="headline">One Data.<br><span class="gold-word">One USeP.</span></h1>
             <p class="tagline">The centralized hub for student-athletes, competitions, records &amp; official sports events.</p>
-            <div class="stat-strip">
-                <div class="stat-item"><div class="stat-val">1</div><div class="stat-lbl">Unified Portal</div></div>
-                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Secure Access</div></div>
-                <div class="stat-item"><div class="stat-val">All</div><div class="stat-lbl">Data Central</div></div>
-            </div>
+          
         </div>
         <div class="left-footer">
-            <p>© 2025 USeP. All Rights Reserved.</p>
+            <p>© 2026 USeP. All Rights Reserved.</p>
             <div><a href="#" id="termsLink">Terms</a> · <a href="https://www.usep.edu.ph/usep-data-privacy-statement/" target="_blank">Privacy</a></div>
         </div>
     </div>

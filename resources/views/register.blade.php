@@ -24,7 +24,7 @@
             --white:       #FFFFFF;
         }
         html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--offwhite); overflow: hidden; }
-        .page { display: grid; grid-template-columns: 1.1fr 0.9fr; height: 100vh; }
+        .page { display: grid; grid-template-columns: 0.5fr 1.5fr; height: 100vh; }
 
         /* ── LEFT ── */
         .left-panel {
@@ -42,26 +42,26 @@
             position: absolute; top: 140px; left: 44px; pointer-events: none; user-select: none;
         }
         .left-content { position: relative; z-index: 2; }
-        .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
+        .logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
         .logo-badge {
-            width: 40px; height: 40px; border-radius: 6px;
+            width: 48px; height: 48px; border-radius: 6px;
             background: rgba(255,255,255,.09); border: 1px solid rgba(240,180,41,.22);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .logo-badge img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
-        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
+        .logo-badge img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
+        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
         .headline-tag {
-            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .62rem;
+            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
             font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold);
             background: rgba(240,180,41,.1); border: 1px solid rgba(240,180,41,.28);
-            border-radius: 3px; padding: 3px 8px; margin-bottom: 10px;
+            border-radius: 3px; padding: 4px 10px; margin-bottom: 14px;
         }
         .headline {
-            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.8rem, 4vw, 4rem);
             font-weight: 900; line-height: .95; color: var(--white); text-transform: uppercase; letter-spacing: -1px;
         }
         .headline .gold-word { color: var(--gold); display: block; }
-        .tagline { margin-top: 10px; font-size: .75rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.5; max-width: 260px; }
+        .tagline { margin-top: 16px; font-size: .95rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.6; max-width: 320px; }
         .stat-strip { display: flex; margin-top: 16px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 14px; }
         .stat-item { flex: 1; padding-right: 14px; }
         .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,.08); padding-left: 14px; padding-right: 0; }
@@ -262,7 +262,7 @@
         </svg>
         <div class="big-number">02</div>
         <div class="left-content">
-            <div class="logo-row">
+            <div class="logo-row">  
                 <div class="logo-badge"><img src="/image/SportOffice.png" alt="Sports Office"></div>
                 <div class="logo-badge"><img src="/image/Usep.png" alt="USeP"></div>
                 <div class="logo-name">USeP OSAS<br>Sports Unit</div>
@@ -270,14 +270,10 @@
             <span class="headline-tag">Join the Team</span>
             <h1 class="headline">One Goal.<br><span class="gold-word">One Family.</span></h1>
             <p class="tagline">Register as a student-athlete and be part of USeP's sports legacy. Train, compete, and excel with us.</p>
-            <div class="stat-strip">
-                <div class="stat-item"><div class="stat-val">12+</div><div class="stat-lbl">Sports</div></div>
-                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Dedication</div></div>
-                <div class="stat-item"><div class="stat-val">All</div><div class="stat-lbl">Campuses</div></div>
-            </div>
+            
         </div>
         <div class="left-footer">
-            <p>&copy; 2025 USeP. All Rights Reserved.</p>
+            <p>&copy; 2026 USeP. All Rights Reserved.</p>
             <div><a href="#" id="termsLink">Terms</a> &middot; <a href="https://www.usep.edu.ph/usep-data-privacy-statement/" target="_blank">Privacy</a></div>
         </div>
     </div>
@@ -285,7 +281,7 @@
     <div class="right-panel">
         <div class="bg-image"></div>
         <div class="login-card">
-            <div class="form-number">02</div>
+     
             <p class="form-eyebrow">Student-Athlete Registration</p>
             <h2 class="form-title">Create <span>Account.</span></h2>
 
