@@ -84,6 +84,14 @@
             width: 220px; height: 120%; background: rgba(122,20,40,.035);
             transform: skewX(-8deg); pointer-events: none;
         }
+        .right-panel .bg-image {
+            position: absolute; inset: 0;
+            background-image: url('/image/background.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            pointer-events: none;
+        }
         .login-card { width: 100%; max-width: 380px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .form-number {
@@ -213,6 +221,7 @@
     </div>
 
     <div class="right-panel">
+        <div class="bg-image"></div>
         <div class="login-card">
             <div class="form-number">01</div>
             <p class="form-eyebrow">Student &amp; Staff Portal</p>
