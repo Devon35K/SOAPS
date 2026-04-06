@@ -75,7 +75,6 @@
         .right-panel {
             display: flex; align-items: center; justify-content: center;
             background: var(--offwhite); padding: 40px 52px; position: relative;
-            overflow-y: auto;
         }
         .right-panel::before {
             content: ''; position: absolute; bottom: 0; right: 0; width: 240px; height: 240px;
@@ -86,6 +85,14 @@
             content: ''; position: absolute; top: -40px; right: -80px;
             width: 220px; height: 120%; background: rgba(122,20,40,.035);
             transform: skewX(-8deg); pointer-events: none;
+        }
+        .right-panel .bg-image {
+            position: absolute; inset: 0;
+            background-image: url('/image/background.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            pointer-events: none;
         }
         .login-card { width: 100%; max-width: 420px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
@@ -275,6 +282,7 @@
     </div>
 
     <div class="right-panel">
+        <div class="bg-image"></div>
         <div class="login-card">
             <div class="form-number">02</div>
             <p class="form-eyebrow">Student-Athlete Registration</p>
@@ -381,6 +389,10 @@
             <p class="signup-row">Already have an account? <a href="{{ route('login') }}">Sign In</a></p>
         </div>
     </div>
+
+
+
+    
 </div>
 
 <div class="modal-overlay" id="termsModal">

@@ -157,13 +157,20 @@
         .modal a { color: var(--maroon); font-weight: 600; }
         .close-button { position: absolute; top: 14px; right: 14px; border: none; background: rgba(122,20,40,.08); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--maroon); font-size: 1.1rem; transition: background .2s; }
         .close-button:hover { background: rgba(122,20,40,.15); }
-        .privacy-modal { background: var(--white); border-top: 4px solid var(--gold); padding: 44px 40px 36px; max-width: 400px; width: 90%; text-align: center; transform: scale(.95) translateY(12px); transition: transform .25s cubic-bezier(.22,.9,.42,1); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
-        .privacy-modal-overlay.active .privacy-modal { transform: scale(1) translateY(0); }
-        .privacy-modal-image img { width: 110px; height: 110px; object-fit: contain; margin-bottom: 18px; }
-        .privacy-modal h3 { font-size: .9rem; font-weight: 400; color: var(--text-body); line-height: 1.65; margin-bottom: 26px; }
-        .privacy-link { color: var(--maroon); font-weight: 600; cursor: pointer; }
-        .privacy-button { background: var(--maroon); color: #fff; border: none; padding: 13px 44px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); transition: background .2s; }
-        .privacy-button:hover { background: var(--maroon-mid); }
+        .privacy-modal { background: var(--white); border-top: 4px solid var(--gold); padding: 80px 70px 60px; max-width: 650px; width: 90%; text-align: center; transform: scale(0.8) translateY(30px); opacity: 0; transition: transform 0.4s cubic-bezier(.22,.9,.42,1), opacity 0.4s ease; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); box-shadow: 0 30px 60px rgba(0,0,0,.2); }
+        .privacy-modal-overlay.active .privacy-modal { transform: scale(1) translateY(0); opacity: 1; }
+        .privacy-modal-image img { width: 220px; height: 220px; object-fit: contain; margin-bottom: 30px; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .privacy-modal h3 { font-size: 1.15rem; font-weight: 400; color: var(--text-body); line-height: 1.8; margin-bottom: 40px; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s; }
+        .privacy-modal-overlay.active .privacy-modal h3 { opacity: 1; transform: translateY(0); }
+        .privacy-link { color: var(--maroon); font-weight: 600; cursor: pointer; transition: color 0.2s; position: relative; }
+        .privacy-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.3s ease; }
+        .privacy-link:hover { color: var(--maroon-mid); }
+        .privacy-link:hover::after { width: 100%; }
+        .privacy-button { background: var(--maroon); color: #fff; border: none; padding: 18px 70px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); transition: background .2s, transform 0.2s, box-shadow 0.2s; opacity: 0; transform: translateY(20px); }
+        .privacy-modal-overlay.active .privacy-button { opacity: 1; transform: translateY(0); transition: background .2s, transform 0.2s, box-shadow 0.2s, opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s; }
+        .privacy-button:hover { background: var(--maroon-mid); transform: scale(1.05) translateY(-2px); box-shadow: 0 12px 25px rgba(122,20,40,.3); }
+        .privacy-button:active { transform: scale(1.02) translateY(0); }
 
         @media (max-width: 840px) {
             html, body { overflow: auto; }
