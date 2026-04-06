@@ -85,12 +85,13 @@
             transform: skewX(-8deg); pointer-events: none;
         }
         .right-panel .bg-image {
-            position: absolute; inset: 0;
+            position: absolute; inset: -50px;
             background-image: url('/image/background.png');
             background-size: cover;
             background-position: center;
             opacity: 0.15;
             pointer-events: none;
+            transform: scale(1.3);
         }
         .login-card { width: 100%; max-width: 380px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
