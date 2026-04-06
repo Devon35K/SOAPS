@@ -19,7 +19,7 @@ class LoginController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             
-            if ($user->role === 'admin') {
+            if ($user->role === 'admin' || $user->role === 'super_admin') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.dashboard');
@@ -51,7 +51,7 @@ class LoginController extends Controller
             \Log::info('User logged in', ['user_id' => $user->id, 'email' => $user->email]);
             
             // Redirect based on user role
-            if ($user->role === 'admin') {
+            if ($user->role === 'admin' || $user->role === 'super_admin') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.dashboard');

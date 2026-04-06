@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_images', function (Blueprint $table) {
+        Schema::create('new_table_name', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('image'); // Store as base64 for SQLite compatibility
-            $table->string('image_type')->nullable();
-            $table->timestamp('uploaded_at')->useCurrent();
             $table->timestamps();
         });
     }
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_images');
+        Schema::dropIfExists('new_table_name');
     }
 };

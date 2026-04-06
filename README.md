@@ -126,6 +126,8 @@ The Sports and Cultural Management System serves as a digital solution for the U
 
 ## 5. Quick Start (Fresh Install)
 
+### Step 1: Clone and Install Dependencies
+
 ```bash
 # 1. Clone project
 git clone <repository-url>
@@ -134,41 +136,89 @@ cd SOAPS
 # 2. Install PHP dependencies
 composer install
 
-# 3. Environment + app key
+# 3. Install Node.js dependencies
+npm install
+```
+
+### Step 2: Environment Configuration
+
+```bash
+# 4. Copy environment file
 cp .env.example .env
+
+# 5. Generate application key
 php artisan key:generate
+```
 
-# 4. Configure .env (optional - defaults work for development)
-#   - DB_CONNECTION=sqlite (default) or mysql for production
-#   - DB_DATABASE=soaps (for MySQL)
-#   - DB_USERNAME=root
-#   - DB_PASSWORD=your_password
-#   - APP_URL=http://soaps.test (or your domain)
+### Step 3: Database Setup (Choose SQLite or MySQL)
 
-#   - MAIL_MAILER=smtp
-#   - MAIL_HOST=smtp.gmail.com
-#   - MAIL_PORT=587
-#   - MAIL_USERNAME=your-email@gmail.com
-#   - MAIL_PASSWORD=your-app-password
-#   - MAIL_ENCRYPTION=tls
-#   - MAIL_FROM_ADDRESS=your-email@gmail.com
-#   - MAIL_FROM_NAME="${APP_NAME}"
+**Option A: SQLite (Default - Easiest for Development)**
+- No additional setup needed. SQLite database file will be created automatically.
 
-# 5. Run migrations + seeders (creates default user)
+**Option B: MySQL (Recommended for Production)**
+
+1. **Create the database in phpMyAdmin:**
+   - Open http://localhost/phpmyadmin (or your MySQL admin tool)
+   - Click "New" to create a database
+   - Database name: `SOAPS` (or any name you prefer)
+   - Click "Create"
+
+2. **Update `.env` file with MySQL settings:**
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=SOAPS
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+### Step 4: Create Tables and Seed Data
+
+```bash
+# 6. Run migrations to create all tables
+php artisan migrate
+
+# Or use --seed flag to create tables AND seed with default data
 php artisan migrate --seed
 
-# 6. Link storage for uploaded files (REQUIRED)
+# To reset database and re-create tables (clears all data):
+php artisan migrate:fresh --seed
+```
+
+**Tables created by migrations:**
+- `users` - User accounts (students, admins)
+- `cache` - Application cache
+- `jobs` - Queue jobs
+- `new_table_name` - Custom application tables
+- Plus other application-specific tables
+
+### Step 5: Final Setup
+
+```bash
+# 7. Create storage symlink for file uploads
 php artisan storage:link
 
-# 7. Install and compile assets
-npm install
+# 8. Compile assets
 npm run build   # production assets
-# or npm run dev for hot reload during development
+# or: npm run dev  # for development with hot reload
 
-# 8. Serve application
+# 9. Start development server
 php artisan serve
 # Visit: http://127.0.0.1:8000
 ```
+
+### Quick Troubleshooting
+
+**Tables not showing in phpMyAdmin?**
+- Make sure `DB_CONNECTION=mysql` in `.env`
+- Clear config cache: `php artisan config:clear`
+- Re-run migrations: `php artisan migrate:fresh --seed`
+
+**Migration errors?**
+- Check database exists in MySQL
+- Verify DB credentials in `.env`
+- Clear all caches: `php artisan optimize:clear`
 
 ---
 
@@ -274,14 +324,28 @@ php artisan serve
 
 ## 10. Seeded Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin (Faculty/Staff) | admin@scms.usep.edu.ph | admin123 |
-| Admin (Backup) | sports.admin@scms.usep.edu.ph | admin123 |
-| Student | student@scms.usep.edu.ph | student123 |
-| Test User | test@example.com | password |
+| Role | Email | Password | Permissions |
+|------|-------|----------|-------------|
+| **Super Admin** | superadmin@usep.edu.ph | superadmin123 | Full system control, can manage other admins, system settings |
+| **Admin** | admin@usep.edu.ph | admin123 | Manage users, documents, approvals, equipment |
+| **Student** | student@usep.edu.ph | student123 | Submit documents, track achievements, borrow equipment |
 
-> **Important:** Update all default credentials immediately in production. The Admin accounts have full system access including user management, document processing, and system configuration. Additional users can be created through the application interface or by modifying `database/seeders/DatabaseSeeder.php`.
+> **Important:** Update all default credentials immediately in production. Super Admin has highest privileges including creating other admins. Admin accounts can manage day-to-day operations but cannot modify system configuration.
+
+### Role-Based Access Control (RBAC)
+
+| Feature                 | Super Admin | Admin              | Student |
+|---------                |:---------- :|:-----:             |:-------:|
+| User Management (CRUD)  | ✅          | ✅ (students only) | ❌     |
+| Approve/Reject Accounts | ✅          | ✅                 | ❌     |
+| System Settings         | ✅          | ❌                 | ❌     |
+| Create Other Admins     | ✅          | ❌                 | ❌     |
+| Document Management     | ✅          | ✅                 | ❌     |
+| Equipment Management    | ✅          | ✅                 | ❌     |
+| View Reports/Analytics  | ✅          | ✅                 | ❌     |
+| Submit Documents        | ❌          | ❌                 | ✅     |
+| View Personal Records   | ✅          | ✅                 | ✅     |
+| Borrow Equipment        | ❌          | ❌                 | ✅     |
 
 ---
 

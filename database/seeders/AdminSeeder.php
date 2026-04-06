@@ -13,27 +13,35 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin using the stored procedure
-        $fullName = "Gian Glen Vincent Garcia";
-        $address = "Tagum City";
-        $sampleEmail = "admin@usep.edu.ph";
-        $samplePassword = "admin123";
-        $hashedPassword = Hash::make($samplePassword);
-        $status = "alumni";
+        // Create default admin user
+        $fullName = "System Administrator";
+        $address = "USeP Tagum-Mabini Campus";
+        $email = "admin@usep.edu.ph";
+        $password = "admin123";
+        $status = "undergraduate";
 
-        // Insert admin directly (since stored procedure might not be available during seeding)
-        DB::table('admins')->insert([
-            'full_name' => $fullName,
-            'address' => $address,
-            'email' => $sampleEmail,
-            'password' => $hashedPassword,
-            'status' => $status,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // Check if admin already exists
+        $exists = DB::table('users')->where('email', $email)->first();
 
-        $this->command->info('Default admin account created successfully.');
-        $this->command->info('Email: admin@usep.edu.ph');
-        $this->command->info('Password: admin123');
+        if (!$exists) {
+            DB::table('users')->insert([
+                'student_id' => 'ADMIN001',
+                'full_name' => $fullName,
+                'address' => $address,
+                'email' => $email,
+                'password' => Hash::make($password),
+                'status' => $status,
+                'role' => 'admin',
+                'approved' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $this->command->info('Default admin account created successfully.');
+            $this->command->info('Email: admin@usep.edu.ph');
+            $this->command->info('Password: admin123');
+        } else {
+            $this->command->info('Admin account already exists.');
+        }
     }
 }

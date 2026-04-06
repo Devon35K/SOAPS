@@ -24,9 +24,21 @@ class RoleMiddleware
             return redirect()->route('login');
         }
         
-        if ($user->role !== $role) {
+        // Check if user has the required role
+        // super_admin can access admin routes too
+        $hasAccess = false;
+        
+        if ($role === 'admin') {
+            $hasAccess = in_array($user->role, ['admin', 'super_admin']);
+        } elseif ($role === 'super_admin') {
+            $hasAccess = $user->role === 'super_admin';
+        } else {
+            $hasAccess = $user->role === $role;
+        }
+        
+        if (!$hasAccess) {
             // Redirect to appropriate dashboard based on actual role
-            if ($user->role === 'admin') {
+            if (in_array($user->role, ['admin', 'super_admin'])) {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.dashboard');

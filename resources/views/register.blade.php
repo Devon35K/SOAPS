@@ -6,7 +6,7 @@
     <title>Sign Up — USeP OSAS Sports Unit</title>
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="/image/Usep.png" sizes="any" />
+    <link rel="icon" href="/image/SportOffice.png" sizes="any" />
     <script src="{{ asset('js/validateStudentAthlete.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>

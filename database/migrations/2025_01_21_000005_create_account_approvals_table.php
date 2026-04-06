@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('email');
             $table->enum('status', ['undergraduate', 'alumni'])->default('undergraduate');
             $table->string('file_name');
-            $table->longBinary('file_data');
+            $table->text('file_data'); // Store as base64 for SQLite compatibility
             $table->string('file_type');
             $table->integer('file_size');
             $table->timestamp('request_date')->useCurrent();
             $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->foreignId('approved_by')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('approval_date')->nullable();
             $table->unique(['student_id', 'email']);
             $table->timestamps();
