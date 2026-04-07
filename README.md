@@ -335,7 +335,7 @@ php artisan serve
 ### Role-Based Access Control (RBAC)
 
 | Feature                 | Super Admin | Admin              | Student |
-|---------                |:---------- :|:-----:             |:-------:|
+|---------                |:---------- :|:-----:              |:-------:|
 | User Management (CRUD)  | ✅          | ✅ (students only) | ❌     |
 | Approve/Reject Accounts | ✅          | ✅                 | ❌     |
 | System Settings         | ✅          | ❌                 | ❌     |
