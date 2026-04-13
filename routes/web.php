@@ -49,6 +49,7 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
     Route::get('account-approvals', [AdminController::class, 'accountApprovals'])->name('account-approvals');
     Route::post('approve-request', [AdminController::class, 'approveRequest'])->name('approve-request');
     Route::post('reject-request', [AdminController::class, 'rejectRequest'])->name('reject-request');
+    Route::get('approval-document/{id}', [AdminController::class, 'viewApprovalDocument'])->name('approval-document');
 
     // Super Admin only routes
     Route::middleware(['role:super_admin'])->group(function () {
@@ -63,9 +64,11 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
 
 // User routes  
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
-    Route::get('dashboard', function () {
-        return view('user.dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('submissions', [App\Http\Controllers\UserController::class, 'submissions'])->name('submissions');
+    Route::get('achievements', [App\Http\Controllers\UserController::class, 'achievements'])->name('achievements');
+    Route::get('track-records', [App\Http\Controllers\UserController::class, 'trackRecords'])->name('track-records');
+    Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
 });
 
 require __DIR__.'/settings.php';

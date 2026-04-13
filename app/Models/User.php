@@ -29,6 +29,7 @@ class User extends Authenticatable
         'sport',
         'campus',
         'year_section',
+        'document_path',
         'approved',
         'role',
     ];

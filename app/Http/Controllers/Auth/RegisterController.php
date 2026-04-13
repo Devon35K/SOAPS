@@ -46,6 +46,7 @@ class RegisterController extends Controller
             $user = User::create([
                 'student_id' => $validated['student_id'],
                 'full_name' => $validated['full_name'],
+                'address' => 'Not provided',
                 'email' => $validated['email'],
                 'status' => $validated['status'],
                 'sport' => $validated['sport'],
@@ -62,8 +63,7 @@ class RegisterController extends Controller
                 'student_id' => $user->student_id
             ]);
 
-            return redirect()->route('login')
-                ->with('success', 'Registration successful! Please wait for admin approval.')
+            return redirect()->route('register', ['status' => 'success'])
                 ->with('message', 'Your account has been submitted for approval. You will be notified once approved.');
 
         } catch (\Exception $e) {

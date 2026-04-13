@@ -10,6 +10,8 @@ class Leaderboard extends Model
 {
     use HasFactory;
 
+    protected $table = 'leaderboard';
+
     protected $primaryKey = 'user_id';
 
     public $incrementing = false;

@@ -231,7 +231,11 @@
             <p class="form-eyebrow">Student &amp; Staff Portal</p>
             <h2 class="form-title">Sign<br><span>In.</span></h2>
 
-            @if(session('login_error'))
+            @if(session('success'))
+                <div class="server-error" style="background: rgba(40,167,69,.1); border-left-color: #28a745; color: #28a745;">
+                    <i class='bx bx-check-circle'></i>{{ session('success') }}
+                </div>
+            @elseif(session('login_error'))
                 <div class="server-error"><i class='bx bx-error-circle'></i>{{ session('login_error') }}</div>
             @else
                 <p class="form-desc">Access your account and stay in the game.</p>

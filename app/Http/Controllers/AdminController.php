@@ -41,7 +41,8 @@ class AdminController extends Controller
             ->with('images')
             ->paginate($perPage, ['*'], 'page', $page);
 
-        return view('admin.partials.student-athletes', [
+        return view('admin.index', [
+            'currentPage' => 'Student Athletes',
             'users' => $users,
             'searchTerm' => $searchTerm,
             'sport' => $sport,
@@ -69,11 +70,15 @@ class AdminController extends Controller
             ->with('user')
             ->get();
 
-        $leaderboard = \App\Models\Leaderboard::where('status', $leaderboardStatus)
-            ->orderBy('total_points', 'desc')
+        $leaderboard = \App\Models\Leaderboard::with('user.images')
+            ->join('users', 'leaderboard.user_id', '=', 'users.id')
+            ->where('users.status', $leaderboardStatus)
+            ->select('leaderboard.*', 'users.full_name as athlete_name')
+            ->orderBy('leaderboard.total_points', 'desc')
             ->get();
 
-        return view('admin.partials.achievements', [
+        return view('admin.index', [
+            'currentPage' => 'Achievement',
             'achievements' => $achievements,
             'leaderboard' => $leaderboard,
             'search' => $search,
@@ -104,7 +109,8 @@ class AdminController extends Controller
             $submissionsByUser[$user->id] = $user->submissions;
         }
 
-        return view('admin.partials.evaluations', [
+        return view('admin.index', [
+            'currentPage' => 'Evaluation',
             'users' => $users,
             'submissionsByUser' => $submissionsByUser,
             'searchTerm' => $searchTerm,
@@ -118,7 +124,8 @@ class AdminController extends Controller
             ->with('user')
             ->get();
 
-        return view('admin.partials.approved-docs', [
+        return view('admin.index', [
+            'currentPage' => 'Approved Docs',
             'submissions' => $submissions,
         ]);
     }
@@ -135,7 +142,8 @@ class AdminController extends Controller
             'pendingSubmissions' => \App\Models\Submission::where('status', 'pending')->count(),
         ];
 
-        return view('admin.partials.reports', [
+        return view('admin.index', [
+            'currentPage' => 'Reports',
             'stats' => $stats,
         ]);
     }
@@ -199,6 +207,19 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
+    }
+
+    public function viewApprovalDocument($id)
+    {
+        $approval = \App\Models\AccountApproval::findOrFail($id);
+
+        if (!$approval->file_data) {
+            abort(404);
+        }
+
+        return response($approval->file_data)
+            ->header('Content-Type', $approval->file_type)
+            ->header('Content-Disposition', 'inline; filename="' . $approval->file_name . '"');
     }
 
     public function users(Request $request)

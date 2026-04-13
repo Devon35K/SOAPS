@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - {{ $currentPage }}</title>
+    <title>Student Dashboard - AcadPortal</title>
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" href="/image/SportOffice.png" sizes="any" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @csrf
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
             --maroon:      #7A1428;
@@ -30,13 +27,13 @@
             height: 100vh;
             overflow: hidden;
         }
-        .admin-container {
+        .user-container {
             display: grid;
             grid-template-columns: 280px 1fr;
             height: 100vh;
         }
 
-        /* Sidebar Styling (Matching left-panel) */
+        /* Sidebar Styling */
         .sidebar {
             background: var(--maroon-dark);
             color: white;
@@ -227,92 +224,7 @@
             z-index: 1;
         }
 
-        /* UI Components Premium Design */
-        .data-table {
-            background: white;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
-            border-bottom: 4px solid var(--gold);
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-        }
-        .table-header {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 16px;
-            background: var(--maroon-dark);
-            color: var(--gold);
-            padding: 18px 24px;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1.5px;
-            border-bottom: 2px solid var(--maroon-mid);
-        }
-        .table-row {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 16px;
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-            align-items: center;
-            color: var(--text-body);
-            transition: background 0.2s;
-        }
-        .table-row:hover {
-            background: rgba(122,20,40,0.02);
-        }
-
-        .search-form {
-            background: white;
-            padding: 24px;
-            border-radius: 0;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
-            border-top: 4px solid var(--maroon);
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-            position: relative;
-        }
-        .search-form::before {
-            content: ''; position: absolute; top: 0; right: -20px;
-            width: 80px; height: 100%; background: rgba(122,20,40,.02);
-            transform: skewX(-8deg); pointer-events: none;
-        }
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            align-items: end;
-        }
-        .form-group label {
-            display: block;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--maroon);
-            margin-bottom: 8px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 13px 16px;
-            border: 2px solid rgba(61,42,47,.12);
-            border-radius: 0;
-            font-family: 'Barlow', sans-serif;
-            font-size: 0.95rem;
-            color: var(--charcoal);
-            outline: none;
-            background: var(--white);
-            transition: border-color 0.2s;
-            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-        }
-        .form-control:focus {
-            border-color: var(--maroon);
-        }
-
+        /* Generic UI Shared Details */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -328,9 +240,8 @@
             transition: all 0.2s, transform 0.1s;
             border: none;
             position: relative;
-            background: var(--maroon);
-            color: var(--white);
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+            text-decoration: none;
         }
         .btn::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
@@ -341,30 +252,42 @@
 
         .btn-primary { background: var(--maroon); color: var(--white); }
         .btn-primary:hover { background: var(--maroon-mid); }
-        
-        .btn-success { background: #10B981; color: white; }
-        .btn-success:hover { background: #059669; }
-        
-        .btn-danger { background: #EF4444; color: white; }
-        .btn-danger:hover { background: #DC2626; }
+        .btn-gold { background: var(--gold); color: var(--charcoal); }
+        .btn-gold:hover { background: var(--gold-dark); }
+        .btn-outline { background: transparent; color: var(--maroon); border: 2px solid var(--maroon); padding: 11px 20px; }
+        .btn-outline:hover { background: rgba(122,20,40,0.05); }
 
-        .alert {
-            padding: 16px 20px;
+        /* Tables */
+        .data-table {
+            background: white;
             border-radius: 0;
-            margin-bottom: 24px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+            border-bottom: 4px solid var(--gold);
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
         }
-        .alert-success {
-            background: rgba(16,185,129,0.08);
-            border-left: 4px solid #10B981;
-            color: #065F46;
+        .table-header {
+            display: flex;
+            background: var(--maroon-dark);
+            color: var(--gold);
+            padding: 18px 24px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid var(--maroon-mid);
         }
-        .alert-error {
-            background: rgba(239,68,68,0.08);
-            border-left: 4px solid #EF4444;
-            color: #991B1B;
+        .table-row {
+            display: flex;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            align-items: center;
+            color: var(--text-body);
+            transition: background 0.2s;
+        }
+        .table-row:hover {
+            background: rgba(122,20,40,0.02);
         }
 
         /* Mobile Menu */
@@ -374,7 +297,7 @@
         .sidebar-overlay.active { display: block; }
 
         @media (max-width: 840px) {
-            .admin-container { grid-template-columns: 1fr; }
+            .user-container { grid-template-columns: 1fr; }
             .sidebar { position: fixed; left: -300px; top: 0; bottom: 0; width: 300px; z-index: 50; transition: left 0.3s cubic-bezier(.22,.9,.42,1); }
             .sidebar.active { left: 0; }
             .menu-toggle, .mobile-close-btn { display: flex; align-items: center; justify-content: center; }
@@ -382,24 +305,22 @@
             .main-header { padding: 16px 24px; }
             .page-title { font-size: 1.6rem; }
             .content-area { padding: 20px; }
-            .search-grid { grid-template-columns: 1fr; }
-            .table-header, .table-row { grid-template-columns: 1fr !important; gap: 8px; }
-            .table-header { display: none; }
-            .table-row { padding: 16px; border-bottom: 2px solid rgba(0,0,0,0.08); }
-            .table-row > div { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
-            .table-row > div::before { content: attr(data-label); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; color: var(--maroon); }
             .user-info .user-name { display: none; }
         }
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    <div class="admin-container">
-        @include('admin.partials.sidebar')
+    <div class="user-container">
+        <!-- Sidebar -->
+        @include('user.partials.sidebar')
 
+        <!-- Main Content -->
         <div class="main-content">
-            @include('admin.partials.header')
+            <!-- Header -->
+            @include('user.partials.header')
 
+            <!-- Content Area -->
             <div class="content-area">
                 @yield('content')
             </div>
@@ -416,6 +337,5 @@
             document.getElementById('sidebarOverlay').classList.remove('active');
         }
     </script>
-    @stack('scripts')
 </body>
 </html>

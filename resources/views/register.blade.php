@@ -391,6 +391,14 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="error-messages">
+                    @foreach ($errors->all() as $error)
+                        <p><i class='bx bx-error-circle'></i> {{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
             <div id="error-messages" class="error-messages" hidden></div>
 
             <form method="POST" action="{{ route('register.post') }}" enctype="multipart/form-data" onsubmit="return validateStudentAthleteForm(event)" novalidate>
@@ -549,7 +557,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const status = form.querySelector('select[name="status"]').value;
         const sport = form.querySelector('select[name="sport"]').value;
         const campus = form.querySelector('select[name="campus"]').value;
-        const document = form.querySelector('input[name="document"]').files.length;
+        const documentFileCount = form.querySelector('input[name="document"]').files.length;
         const box = document.getElementById('error-messages');
         const msgs = [];
         box.innerHTML = ''; box.hidden = true;
@@ -560,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!status) msgs.push('Status is required.');
         if (!sport) msgs.push('Sport is required.');
         if (!campus) msgs.push('Campus is required.');
-        if (!document) msgs.push('Verification document is required.');
+        if (!documentFileCount) msgs.push('Verification document is required.');
         if (msgs.length) {
             box.hidden = false;
             msgs.forEach(m => { const p = document.createElement('p'); p.textContent = m; box.appendChild(p); });
