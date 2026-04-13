@@ -66,6 +66,22 @@ function validateStudentAthleteForm(event) {
         isValid = false;
     }
     
+    // Password validation
+    const password = formData.get('password');
+    const passwordConfirmation = formData.get('password_confirmation');
+    if (!password || password.trim() === '') {
+        errors.push('Password is required');
+        isValid = false;
+    } else if (password.length < 8) {
+        errors.push('Password must be at least 8 characters');
+        isValid = false;
+    }
+    
+    if (password !== passwordConfirmation) {
+        errors.push('Passwords do not match');
+        isValid = false;
+    }
+    
     // Document validation
     const document = formData.get('document');
     if (!document || document.size === 0) {

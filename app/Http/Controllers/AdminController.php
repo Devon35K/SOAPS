@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\Services\SessionManager;
 use App\Services\DatabaseService;
 use App\Models\User;
+use App\Models\AccountApproval;
+use App\Mail\ApprovalMail;
+use App\Mail\RejectionMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -29,6 +34,8 @@ class AdminController extends Controller
         $perPage = 10;
 
         $users = User::query()
+            ->where('role', 'user')
+            ->where('approved', true)
             ->when($searchTerm, function ($query) use ($searchTerm) {
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('student_id', 'like', "%{$searchTerm}%")
@@ -38,7 +45,7 @@ class AdminController extends Controller
             ->when($sport, fn($q) => $q->where('sport', $sport))
             ->when($campus, fn($q) => $q->where('campus', $campus))
             ->when($status, fn($q) => $q->where('status', $status))
-            ->with('images')
+            ->with(['images', 'achievements'])
             ->paginate($perPage, ['*'], 'page', $page);
 
         return view('admin.index', [
@@ -134,9 +141,9 @@ class AdminController extends Controller
     {
 
         $stats = [
-            'totalStudents' => User::where('role', 'user')->count(),
+            'totalStudents' => User::where('role', 'user')->where('approved', true)->count(),
             'totalAdmins' => User::whereIn('role', ['admin', 'super_admin'])->count(),
-            'pendingApprovals' => \App\Models\AccountApproval::where('approval_status', 'pending')->count(),
+            'pendingApprovals' => AccountApproval::where('approval_status', 'pending')->count(),
             'totalSubmissions' => \App\Models\Submission::count(),
             'approvedSubmissions' => \App\Models\Submission::where('status', 'approved')->count(),
             'pendingSubmissions' => \App\Models\Submission::where('status', 'pending')->count(),
@@ -174,18 +181,30 @@ class AdminController extends Controller
 
         if ($approval) {
             $approval->approval_status = 'approved';
+            $approval->approved_by = auth()->id();
+            $approval->approval_date = now();
             $approval->save();
 
-            // Create user account
+            // Create user account with all fields from approval request
             User::create([
                 'student_id' => $approval->student_id,
                 'full_name' => $approval->full_name,
                 'email' => $approval->email,
                 'password' => $approval->password,
                 'status' => $approval->status,
+                'sport' => $approval->sport,
+                'campus' => $approval->campus,
+                'year_section' => $approval->year_section,
                 'approved' => true,
                 'role' => 'user',
             ]);
+
+            // Send approval email
+            try {
+                Mail::to($approval->email)->send(new ApprovalMail($approval->full_name, $approval->student_id, $approval->email));
+            } catch (\Exception $e) {
+                Log::error('Failed to send approval email: ' . $e->getMessage());
+            }
 
             return redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'approve']);
         }
@@ -203,6 +222,13 @@ class AdminController extends Controller
             $approval->approval_status = 'rejected';
             $approval->save();
 
+            // Send rejection email
+            try {
+                Mail::to($approval->email)->send(new RejectionMail($approval->full_name));
+            } catch (\Exception $e) {
+                Log::error('Failed to send rejection email: ' . $e->getMessage());
+            }
+
             return redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'reject']);
         }
 
@@ -211,13 +237,16 @@ class AdminController extends Controller
 
     public function viewApprovalDocument($id)
     {
-        $approval = \App\Models\AccountApproval::findOrFail($id);
+        $approval = AccountApproval::findOrFail($id);
 
         if (!$approval->file_data) {
             abort(404);
         }
 
-        return response($approval->file_data)
+        // Decode base64 data
+        $decodedData = base64_decode($approval->file_data);
+
+        return response($decodedData)
             ->header('Content-Type', $approval->file_type)
             ->header('Content-Disposition', 'inline; filename="' . $approval->file_name . '"');
     }

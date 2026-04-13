@@ -10,8 +10,12 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', ['canRegister' => true]);
+    return view('intro');
 })->name('home');
+
+Route::get('/intro', function () {
+    return view('intro');
+})->name('intro');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');

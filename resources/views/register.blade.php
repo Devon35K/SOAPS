@@ -175,6 +175,31 @@
         .signup-row a { color: var(--maroon); font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: .76rem; letter-spacing: .5px; }
         .signup-row a:hover { text-decoration: underline; }
 
+        /* ── Input Enhancements ── */
+        .password-toggle {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: var(--text-muted); padding: 5px; transition: color .2s; z-index: 5;
+        }
+        .password-toggle:hover { color: var(--maroon); }
+        
+        /* ── Staggered Entrance ── */
+        .form-fields > div { opacity: 0; transform: translateY(15px); transition: all .4s cubic-bezier(.22,.9,.42,1) both; }
+        .page-loaded .form-fields > div:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(4) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(5) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(6) { transition-delay: 0.35s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(7) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(8) { transition-delay: 0.45s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(9) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        
+        .login-card > *:not(form) { opacity: 0; transform: translateY(10px); transition: all .4s cubic-bezier(.22,.9,.42,1) both; }
+        .page-loaded .login-card > *:not(form) { opacity: 1; transform: translateY(0); }
+        .page-loaded .login-card p:nth-child(1) { transition-delay: 0s; }
+        .page-loaded .login-card h2:nth-child(2) { transition-delay: 0.05s; }
+        .page-loaded .login-card p:nth-child(3) { transition-delay: 0.1s; }
+
         /* ── Modals ── */
         .modal-overlay { position: fixed; inset: 0; background: rgba(28,20,16,.65); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s; }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
@@ -186,47 +211,37 @@
         .close-button { position: absolute; top: 14px; right: 14px; border: none; background: rgba(122,20,40,.08); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--maroon); font-size: 1.1rem; transition: background .2s; }
         .close-button:hover { background: rgba(122,20,40,.15); }
 
-        /* ── Loading Modal ── */
+        /* ── Branded Loading Modal ── */
         .loading-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(28,20,16,.65);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            display: none; position: fixed; inset: 0;
+            background: rgba(28,20,16,.92); backdrop-filter: blur(8px);
+            justify-content: center; align-items: center; z-index: 5000; opacity: 0; transition: opacity 0.3s ease;
         }
-        .loading-modal.show { display: flex; }
-        .loading-content {
-            background: var(--white);
-            padding: 30px 40px;
-            border-top: 4px solid var(--gold);
-            position: relative;
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-            text-align: center;
+        .loading-modal.show { display: flex; opacity: 1; }
+        .loading-box { text-align: center; width: 100%; max-width: 320px; }
+        
+        .loader-ring-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 32px; }
+        .loader-ring {
+            position: absolute; inset: 0; border: 4px solid rgba(240,180,41,0.1);
+            border-top-color: var(--gold); border-radius: 50%;
+            animation: loader-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
-        .loading-spinner {
-            border: 4px solid rgba(122,20,40,.1);
-            border-top: 4px solid var(--maroon);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+        .loader-icon {
+            position: absolute; inset: 15px; background: rgba(122,20,40,0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 2.2rem; animation: loader-pulse 1.5s ease-in-out infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loading-content p {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--charcoal);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        
+        .loading-text { font-family: 'Barlow Condensed', sans-serif; }
+        .loading-text h4 { color: var(--white); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .loading-text p { color: rgba(255,255,255,0.6); font-size: 0.85rem; letter-spacing: 1px; }
+        
+        .loader-bar-bg { width: 180px; height: 3px; background: rgba(255,255,255,0.1); margin: 24px auto 0; position: relative; overflow: hidden; }
+        .loader-bar { position: absolute; top: 0; left: 0; height: 100%; width: 40%; background: var(--gold); animation: bar-slide 1.5s infinite ease-in-out; }
+
+        @keyframes loader-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes loader-pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes bar-slide { 0% { left: -40%; } 100% { left: 100%; } }
 
         @media (max-width: 1024px) {
             .page { grid-template-columns: 0.9fr 1.1fr; }
@@ -460,6 +475,22 @@
                         </div>
                     </div>
                     <div>
+                        <div class="field-lbl">Password</div>
+                        <div class="input-wrap">
+                            <i class='bx bx-lock-alt icon'></i>
+                            <input type="password" name="password" id="password" placeholder="••••••••" required autocomplete="new-password">
+                            <i class='bx bx-show password-toggle' onclick="togglePass('password')"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="field-lbl">Confirm Password</div>
+                        <div class="input-wrap">
+                            <i class='bx bx-lock-alt icon'></i>
+                            <input type="password" name="password_confirmation" id="password_confirmation" placeholder="••••••••" required autocomplete="new-password">
+                            <i class='bx bx-show password-toggle' onclick="togglePass('password_confirmation')"></i>
+                        </div>
+                    </div>
+                    <div>
                         <div class="field-lbl">Campus</div>
                         <div class="input-wrap">
                             <i class='bx bx-buildings icon'></i>
@@ -507,9 +538,18 @@
 </div>
 
 <div class="loading-modal" id="loadingModal">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p>Please wait, submitting your information...</p>
+    <div class="loading-box">
+        <div class="loader-ring-wrap">
+            <div class="loader-ring"></div>
+            <div class="loader-icon"><i class='bx bx-trophy'></i></div>
+        </div>
+        <div class="loading-text">
+            <h4>Creating Account...</h4>
+            <p>Processing your athletic registration</p>
+        </div>
+        <div class="loader-bar-bg">
+            <div class="loader-bar"></div>
+        </div>
     </div>
 </div>
 
@@ -535,6 +575,16 @@ document.addEventListener('DOMContentLoaded', function () {
     window.showLoadingModal = showLoadingModal;
     window.hideLoadingModal = hideLoadingModal;
 
+    window.togglePass = function(id) {
+        const inp = document.getElementById(id);
+        const icon = inp.nextElementSibling;
+        if (inp.type === "password") {
+            inp.type = "text"; icon.classList.replace('bx-show', 'bx-hide');
+        } else {
+            inp.type = "password"; icon.classList.replace('bx-hide', 'bx-show');
+        }
+    };
+
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -542,14 +592,26 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         dropZone.classList.remove('dragover');
         const files = e.dataTransfer.files;
-        if (files.length > 0) { fileInput.files = files; fileNameDisplay.textContent = files[0].name; }
-    });
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) fileNameDisplay.textContent = fileInput.files[0].name;
-        else fileNameDisplay.textContent = '';
+        if (files.length > 0) { 
+            fileInput.files = files; 
+            handleFileSelect(files[0]);
+        }
     });
 
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) handleFileSelect(fileInput.files[0]);
+        else { fileNameDisplay.textContent = ''; dropZone.style.borderColor = 'var(--maroon)'; }
+    });
+
+    function handleFileSelect(file) {
+        fileNameDisplay.innerHTML = `<i class='bx bx-check-circle' style='color:#28a745'></i> ${file.name}`;
+        dropZone.style.borderColor = '#28a745';
+        dropZone.style.background = 'rgba(40,167,69,0.03)';
+    }
+
     window.validateStudentAthleteForm = function (event) {
+        // ... previous validation logic ...
+        // (Keeping it but ensuring showLoadingModal is triggered)
         const form = event.target;
         const studentId = form.querySelector('input[name="student_id"]').value.trim();
         const fullName = form.querySelector('input[name="full_name"]').value.trim();
@@ -557,6 +619,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const status = form.querySelector('select[name="status"]').value;
         const sport = form.querySelector('select[name="sport"]').value;
         const campus = form.querySelector('select[name="campus"]').value;
+        const password = form.querySelector('input[name="password"]').value;
+        const passwordConfirmation = form.querySelector('input[name="password_confirmation"]').value;
         const documentFileCount = form.querySelector('input[name="document"]').files.length;
         const box = document.getElementById('error-messages');
         const msgs = [];
@@ -568,6 +632,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!status) msgs.push('Status is required.');
         if (!sport) msgs.push('Sport is required.');
         if (!campus) msgs.push('Campus is required.');
+        if (!password) msgs.push('Password is required.');
+        else if (password.length < 8) msgs.push('Password must be at least 8 characters.');
+        if (password !== passwordConfirmation) msgs.push('Passwords do not match.');
         if (!documentFileCount) msgs.push('Verification document is required.');
         if (msgs.length) {
             box.hidden = false;
@@ -580,18 +647,20 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.onload = function() {
+        document.body.classList.add('page-loaded');
         const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const message = urlParams.get('message');
-        if (status === 'success') {
+        // ... rest of swal logic ...
+        const swstatus = urlParams.get('status');
+        const swmessage = urlParams.get('message');
+        if (swstatus === 'success') {
             Swal.fire({
                 icon: 'success', title: 'Success',
-                text: 'Your account has been submitted successfully! Please wait for admin approval.',
+                text: swmessage || 'Your account has been submitted successfully! Please wait for admin approval.',
                 confirmButtonText: 'OK', confirmButtonColor: '#7A1428'
             }).then(() => window.history.replaceState({}, document.title, window.location.pathname));
-        } else if (status === 'error' && message) {
+        } else if (swstatus === 'error' && swmessage) {
             Swal.fire({
-                icon: 'error', title: 'Error', text: message,
+                icon: 'error', title: 'Error', text: swmessage,
                 confirmButtonText: 'OK', confirmButtonColor: '#7A1428'
             }).then(() => window.history.replaceState({}, document.title, window.location.pathname));
         }

@@ -105,8 +105,12 @@
             background: rgba(240,180,41,.1);
             border-left: 4px solid var(--gold);
             color: var(--gold);
+            transform: translateX(5px);
         }
-        .nav-item i { font-size: 1.3rem; }
+        .nav-item:hover i {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        .nav-item i { font-size: 1.3rem; transition: transform 0.3s ease; }
 
         .role-badge {
             background: rgba(240,180,41,.1);
@@ -124,6 +128,53 @@
             align-self: flex-start;
             position: relative;
             z-index: 2;
+        }
+
+        /* ── Wave Animations ── */
+        @keyframes waveMotion {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25%); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes rippleWave {
+            0% { transform: scale(0); opacity: 0.5; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        
+        .wave-bg {
+            position: absolute; bottom: 0; left: 0; width: 200%; height: 60px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C58.31,111,123,115.22,188.4,105.41,253.8,95.59,286.9,78.25,321.39,56.44Z' fill='rgba(240,180,41,0.08)'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 50% 100%;
+            animation: waveMotion 10s linear infinite;
+            z-index: 1; pointer-events: none;
+        }
+        .wave-bg-2 {
+            bottom: -10px; opacity: 0.5; animation-duration: 15s;
+            filter: hue-rotate(20deg);
+        }
+
+        .action-card {
+            background: white;
+            padding: 24px;
+            border-bottom: 4px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .action-card::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 5px; height: 5px;
+            background: var(--gold); opacity: 0; border-radius: 50%; transform: translate(-50%, -50%);
+            transition: none;
+        }
+        .action-card:hover::after {
+            animation: rippleWave 1s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .sidebar-footer {
@@ -163,6 +214,11 @@
             background: var(--offwhite);
             overflow-y: auto;
             position: relative;
+            animation: contentReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes contentReveal {
+            from { opacity: 0; filter: blur(10px); }
+            to { opacity: 1; filter: blur(0); }
         }
         .main-content::before {
             content: '';
@@ -249,6 +305,10 @@
         }
         .btn:hover::after { left: 150%; }
         .btn:active { transform: scale(0.98); }
+        .btn:hover {
+            box-shadow: 0 8px 15px rgba(122, 20, 40, 0.2);
+            transform: translateY(-2px);
+        }
 
         .btn-primary { background: var(--maroon); color: var(--white); }
         .btn-primary:hover { background: var(--maroon-mid); }
@@ -307,6 +367,114 @@
             .content-area { padding: 20px; }
             .user-info .user-name { display: none; }
         }
+
+        /* ── Advanced Animations ── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            70% { transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes iconPulse {
+            0% { box-shadow: 0 0 0 0 rgba(240, 180, 41, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(240, 180, 41, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(240, 180, 41, 0); }
+        }
+
+        .animate-down { animation: fadeInDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .animate-up { animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .animate-left { animation: fadeInLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .animate-right { animation: fadeInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .animate-pop { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Enhanced Card Hover */
+        .action-card {
+            background: white;
+            padding: 24px;
+            border-bottom: 4px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(122, 20, 40, 0.08);
+            border-color: rgba(122, 20, 40, 0.1);
+            background: #fff;
+        }
+        .action-card:hover .action-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .action-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .welcome-card {
+            background: var(--maroon-dark);
+            color: white;
+            padding: 40px;
+            border-left: 5px solid var(--gold);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+        }
+        .welcome-card::after {
+            content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+            background: rgba(255,255,255,0.03); transform: rotate(45deg); pointer-events: none;
+        }
+        .welcome-card h2 span { color: var(--gold); }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .action-card-left h3 {
+            font-family: 'Barlow Condensed', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            color: var(--charcoal);
+        }
+        .action-card-left p { font-size: 0.82rem; color: var(--text-muted); }
+
+        .actions-row { display: flex; gap: 16px; flex-wrap: wrap; }
     </style>
 </head>
 <body>

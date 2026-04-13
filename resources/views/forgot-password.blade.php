@@ -206,9 +206,78 @@
             .big-number, .stat-strip, .form-number { display: none; }
             .right-panel { padding: 40px 28px 56px; }
         }
+
+        /* ── Unique Loading Animation ── */
+        .loader-overlay {
+            position: fixed; inset: 0; background: rgba(122, 20, 40, 0.95);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .4s ease;
+        }
+        .loader-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .loader-content { position: relative; display: flex; flex-direction: column; align-items: center; }
+        
+        .loader-logo {
+            width: 80px; height: 80px; margin-bottom: 24px;
+            filter: drop-shadow(0 0 15px rgba(240, 180, 41, 0.4));
+            animation: pulse-logo 2s ease-in-out infinite;
+        }
+        
+        .loader-spinner {
+            width: 120px; height: 120px; border: 3px solid transparent;
+            border-top: 3px solid var(--gold); border-radius: 50%;
+            position: absolute; top: -20px;
+            animation: spin 1.5s linear infinite;
+        }
+        .loader-spinner::before {
+            content: ''; position: absolute; inset: 8px; border: 2px solid transparent;
+            border-top: 2px solid var(--white); border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+        
+        .loader-text {
+            font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem;
+            font-weight: 800; color: var(--gold); text-transform: uppercase;
+            letter-spacing: 4px; margin-top: 10px; animation: text-flicker 2s infinite;
+        }
+        
+        .loader-bar-container {
+            width: 200px; height: 2px; background: rgba(255,255,255,0.1);
+            margin-top: 20px; border-radius: 2px; overflow: hidden;
+        }
+        .loader-bar {
+            width: 40%; height: 100%; background: var(--gold);
+            animation: bar-slide 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-logo {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes text-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes bar-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(250%); }
+        }
     </style>
 </head>
 <body>
+    <!-- Unique Loading Loader -->
+    <div class="loader-overlay" id="loadingOverlay">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <img src="/image/SportOffice.png" alt="Logo" class="loader-logo">
+            <div class="loader-text">Processing Request</div>
+            <div class="loader-bar-container">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
 <div class="page">
 
     <div class="left-panel">
@@ -372,10 +441,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Send OTP button click handler
     sendOtpBtn.addEventListener('click', async function() {
         const email = emailInput.value.trim();
-        this.classList.add('loading');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.add('active');
 
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            this.classList.remove('loading');
+            loadingOverlay.classList.remove('active');
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Email',
@@ -424,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonColor: '#7A1428'
             });
         } finally {
-            this.classList.remove('loading');
+            loadingOverlay.classList.remove('active');
         }
     });
 
@@ -432,10 +502,11 @@ document.addEventListener('DOMContentLoaded', function() {
     verifyBtn.addEventListener('click', async function() {
         const otp = otpInput.value.trim();
         const email = emailInput.value.trim();
-        this.classList.add('loading');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.add('active');
 
         if (!otp || otp.length !== 6 || !/^\d{6}$/.test(otp)) {
-            this.classList.remove('loading');
+            loadingOverlay.classList.remove('active');
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid OTP',
@@ -458,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.status === 'success') {
+                loadingOverlay.classList.remove('active');
                 Swal.fire({
                     icon: 'success',
                     title: 'OTP Verified',
@@ -484,17 +556,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonColor: '#7A1428'
             });
         } finally {
-            this.classList.remove('loading');
+            loadingOverlay.classList.remove('active');
         }
     });
 
     // Handle reset password form submission
     document.getElementById('resetPasswordForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.add('active');
         const newPassword = this.querySelector('input[name="password"]').value;
         const confirmPassword = this.querySelector('input[name="password_confirmation"]').value;
 
         if (newPassword.length < 8) {
+            loadingOverlay.classList.remove('active');
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Password',
@@ -505,6 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (newPassword !== confirmPassword) {
+            loadingOverlay.classList.remove('active');
             Swal.fire({
                 icon: 'error',
                 title: 'Password Mismatch',
@@ -527,31 +603,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.status === 'success') {
+                loadingOverlay.classList.remove('active');
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Password reset successfully! Redirecting to login...',
-                    confirmButtonColor: '#7A1428'
-                }).then(() => {
-                    window.location.href = '{{ route("login") }}?success=password_reset';
-                });
-            } else {
+                     icon: 'success',
+                     title: 'Success',
+                     text: 'Password reset successfully! Redirecting to login...',
+                     confirmButtonColor: '#7A1428'
+                 }).then(() => {
+                     window.location.href = '{{ route("login") }}?success=password_reset';
+                 });
+             } else {
+                loadingOverlay.classList.remove('active');
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: result.message || 'Failed to reset password.',
-                    confirmButtonColor: '#7A1428'
-                });
-            }
-        } catch (error) {
+                     icon: 'error',
+                     title: 'Error',
+                     text: result.message || 'Failed to reset password.',
+                     confirmButtonColor: '#7A1428'
+                 });
+             }
+         } catch (error) {
+            loadingOverlay.classList.remove('active');
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to reset password. Please try again.',
-                confirmButtonColor: '#7A1428'
-            });
-        }
+                 icon: 'error',
+                 title: 'Error',
+                 text: 'Failed to reset password. Please try again.',
+                 confirmButtonColor: '#7A1428'
+             });
+         }
     });
+
+    // Utility function to hide loader for errors/success
+    function hideLoader() {
+        document.getElementById('loadingOverlay').classList.remove('active');
+    }
+
+    // Wrap the finally blocks or explicit removals
+    // For sendOtpBtn
+    // (We need to ensure it's removed everywhere)
 
     // Display any error/success messages from querystring
     const urlParams = new URLSearchParams(window.location.search);

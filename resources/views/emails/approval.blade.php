@@ -221,10 +221,10 @@
                 </div>
                 <div class="credential-item">
                     <span class="credential-label">Password:</span>
-                    <span class="credential-value">{{ $studentId }}</span>
+                    <span class="credential-value">The password you set during registration</span>
                 </div>
                 <p class="password-note">
-                    For security purposes, please change your password immediately after your first login.
+                    If you have forgotten your password, please use the "Forgot Password" option on the login page.
                 </p>
             </div>
             

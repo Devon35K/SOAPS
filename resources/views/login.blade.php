@@ -180,6 +180,16 @@
             .big-number, .stat-strip, .form-number { display: none; }
             .right-panel { padding: 40px 28px 56px; }
         }
+
+        @keyframes intro-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        @keyframes intro-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        /* ── Form Slide In ── */
+        .login-card { opacity: 0; transform: translateY(30px); transition: all .8s cubic-bezier(0.22, 1, 0.36, 1) .2s; }
+        .page-loaded .login-card { opacity: 1; transform: translateY(0); }
+        .left-content { opacity: 0; transform: translateX(-30px); transition: all .8s cubic-bezier(0.22, 1, 0.36, 1) .2s; }
+        .page-loaded .left-content { opacity: 1; transform: translateX(0); }
     </style>
 </head>
 <body>
@@ -310,11 +320,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const privacyModal = document.getElementById('privacyModal');
-    if (sessionStorage.getItem('privacyModalShown')) { privacyModal.style.display = 'none'; }
-    else {
-        privacyModal.classList.add('active'); document.body.style.overflow = 'hidden';
-        document.getElementById('continueButton').addEventListener('click', () => { sessionStorage.setItem('privacyModalShown', 'true'); privacyModal.classList.remove('active'); document.body.style.overflow = ''; });
-    }
+    
+    const startApp = () => {
+        document.body.classList.add('page-loaded');
+        if (sessionStorage.getItem('privacyModalShown')) { 
+            privacyModal.style.display = 'none'; 
+            document.body.style.overflow = '';
+        } else {
+            privacyModal.classList.add('active'); 
+            document.body.style.overflow = 'hidden';
+            document.getElementById('continueButton').addEventListener('click', () => { 
+                sessionStorage.setItem('privacyModalShown', 'true'); 
+                privacyModal.classList.remove('active'); 
+                document.body.style.overflow = ''; 
+            });
+        }
+    };
+
+    startApp();
+
     const pl = document.getElementById('privacyLink');
     if (pl) pl.addEventListener('click', () => window.open('https://www.usep.edu.ph/usep-data-privacy-statement/', '_blank'));
 

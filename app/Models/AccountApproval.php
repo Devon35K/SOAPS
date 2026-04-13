@@ -14,6 +14,7 @@ class AccountApproval extends Model
         'student_id',
         'full_name',
         'email',
+        'password',
         'status',
         'sport',
         'campus',
@@ -25,6 +26,7 @@ class AccountApproval extends Model
         'approval_status',
         'approved_by',
         'approval_date',
+        'request_date',
     ];
 
     protected $casts = [
@@ -37,6 +39,6 @@ class AccountApproval extends Model
      */
     public function approvedBy(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }
