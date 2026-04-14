@@ -1,3 +1,7 @@
+oylw ryql yure idcu
+
+
+
 # Sports and Cultural Management System (2IT) Group 6
 
 A comprehensive desktop-based Document Archiver for the Sports and Cultural Office of the University of Southeastern Philippines (USeP) Tagum-Mabini Campus. Built on Laravel 12 with Vite-powered assets, managing sports and cultural activities, document submissions, point-based evaluations, and equipment tracking.
