@@ -6,7 +6,7 @@
     <title>Sign Up — USeP OSAS Sports Unit</title>
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="/image/Usep.png" sizes="any" />
+    <link rel="icon" href="/image/SportOffice.png" sizes="any" />
     <script src="{{ asset('js/validateStudentAthlete.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -24,7 +24,8 @@
             --white:       #FFFFFF;
         }
         html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--offwhite); overflow: hidden; }
-        .page { display: grid; grid-template-columns: 1.1fr 0.9fr; height: 100vh; }
+        html { overflow-x: hidden; }
+        .page { display: grid; grid-template-columns: 0.95fr 1.05fr; height: 100vh; overflow: hidden; }
 
         /* ── LEFT ── */
         .left-panel {
@@ -42,26 +43,26 @@
             position: absolute; top: 140px; left: 44px; pointer-events: none; user-select: none;
         }
         .left-content { position: relative; z-index: 2; }
-        .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
+        .logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
         .logo-badge {
-            width: 40px; height: 40px; border-radius: 6px;
+            width: 48px; height: 48px; border-radius: 6px;
             background: rgba(255,255,255,.09); border: 1px solid rgba(240,180,41,.22);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .logo-badge img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
-        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
+        .logo-badge img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 1px 3px rgba(0,0,0,.4)); }
+        .logo-name { font-family: 'Barlow Condensed', sans-serif; font-size: .85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,.75); line-height: 1.35; }
         .headline-tag {
-            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .62rem;
+            display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
             font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold);
             background: rgba(240,180,41,.1); border: 1px solid rgba(240,180,41,.28);
-            border-radius: 3px; padding: 3px 8px; margin-bottom: 10px;
+            border-radius: 3px; padding: 4px 10px; margin-bottom: 14px;
         }
         .headline {
-            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+            font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.8rem, 4vw, 4rem);
             font-weight: 900; line-height: .95; color: var(--white); text-transform: uppercase; letter-spacing: -1px;
         }
         .headline .gold-word { color: var(--gold); display: block; }
-        .tagline { margin-top: 10px; font-size: .75rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.5; max-width: 260px; }
+        .tagline { margin-top: 16px; font-size: .95rem; font-weight: 300; color: rgba(255,255,255,.42); line-height: 1.6; max-width: 320px; }
         .stat-strip { display: flex; margin-top: 16px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 14px; }
         .stat-item { flex: 1; padding-right: 14px; }
         .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,.08); padding-left: 14px; padding-right: 0; }
@@ -74,7 +75,7 @@
         /* ── RIGHT ── */
         .right-panel {
             display: flex; align-items: center; justify-content: center;
-            background: var(--offwhite); padding: 28px 40px; position: relative;
+            background: var(--offwhite); padding: 28px 40px; position: relative; overflow: hidden;
         }
         .right-panel::before {
             content: ''; position: absolute; bottom: 0; right: 0; width: 240px; height: 240px;
@@ -174,6 +175,31 @@
         .signup-row a { color: var(--maroon); font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: .76rem; letter-spacing: .5px; }
         .signup-row a:hover { text-decoration: underline; }
 
+        /* ── Input Enhancements ── */
+        .password-toggle {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: var(--text-muted); padding: 5px; transition: color .2s; z-index: 5;
+        }
+        .password-toggle:hover { color: var(--maroon); }
+        
+        /* ── Staggered Entrance ── */
+        .form-fields > div { opacity: 0; transform: translateY(15px); transition: all .4s cubic-bezier(.22,.9,.42,1) both; }
+        .page-loaded .form-fields > div:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(4) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(5) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(6) { transition-delay: 0.35s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(7) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(8) { transition-delay: 0.45s; opacity: 1; transform: translateY(0); }
+        .page-loaded .form-fields > div:nth-child(9) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        
+        .login-card > *:not(form) { opacity: 0; transform: translateY(10px); transition: all .4s cubic-bezier(.22,.9,.42,1) both; }
+        .page-loaded .login-card > *:not(form) { opacity: 1; transform: translateY(0); }
+        .page-loaded .login-card p:nth-child(1) { transition-delay: 0s; }
+        .page-loaded .login-card h2:nth-child(2) { transition-delay: 0.05s; }
+        .page-loaded .login-card p:nth-child(3) { transition-delay: 0.1s; }
+
         /* ── Modals ── */
         .modal-overlay { position: fixed; inset: 0; background: rgba(28,20,16,.65); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s; }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
@@ -185,55 +211,138 @@
         .close-button { position: absolute; top: 14px; right: 14px; border: none; background: rgba(122,20,40,.08); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--maroon); font-size: 1.1rem; transition: background .2s; }
         .close-button:hover { background: rgba(122,20,40,.15); }
 
-        /* ── Loading Modal ── */
+        /* ── Branded Loading Modal ── */
         .loading-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(28,20,16,.65);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            display: none; position: fixed; inset: 0;
+            background: rgba(28,20,16,.92); backdrop-filter: blur(8px);
+            justify-content: center; align-items: center; z-index: 5000; opacity: 0; transition: opacity 0.3s ease;
         }
-        .loading-modal.show { display: flex; }
-        .loading-content {
-            background: var(--white);
-            padding: 30px 40px;
-            border-top: 4px solid var(--gold);
-            position: relative;
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-            text-align: center;
+        .loading-modal.show { display: flex; opacity: 1; }
+        .loading-box { text-align: center; width: 100%; max-width: 320px; }
+        
+        .loader-ring-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 32px; }
+        .loader-ring {
+            position: absolute; inset: 0; border: 4px solid rgba(240,180,41,0.1);
+            border-top-color: var(--gold); border-radius: 50%;
+            animation: loader-spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
-        .loading-spinner {
-            border: 4px solid rgba(122,20,40,.1);
-            border-top: 4px solid var(--maroon);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+        .loader-icon {
+            position: absolute; inset: 15px; background: rgba(122,20,40,0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 2.2rem; animation: loader-pulse 1.5s ease-in-out infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loading-content p {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--charcoal);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        
+        .loading-text { font-family: 'Barlow Condensed', sans-serif; }
+        .loading-text h4 { color: var(--white); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .loading-text p { color: rgba(255,255,255,0.6); font-size: 0.85rem; letter-spacing: 1px; }
+        
+        .loader-bar-bg { width: 180px; height: 3px; background: rgba(255,255,255,0.1); margin: 24px auto 0; position: relative; overflow: hidden; }
+        .loader-bar { position: absolute; top: 0; left: 0; height: 100%; width: 40%; background: var(--gold); animation: bar-slide 1.5s infinite ease-in-out; }
+
+        @keyframes loader-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes loader-pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes bar-slide { 0% { left: -40%; } 100% { left: 100%; } }
+
+        @media (max-width: 1024px) {
+            .page { grid-template-columns: 0.9fr 1.1fr; }
+            .left-panel { padding: 28px 32px 24px; }
+            .headline { font-size: clamp(2.2rem, 3.5vw, 3.2rem); }
+            .tagline { font-size: .88rem; max-width: 280px; }
+            .big-number { font-size: clamp(4rem, 8vw, 7rem); top: 120px; left: 32px; }
+            .login-card { max-width: 360px; }
+            .speed-bg { opacity: 0.7; }
         }
 
-        @media (max-width: 840px) {
-            html, body { overflow: auto; }
-            .page { grid-template-columns: 1fr; height: auto; }
-            .left-panel { padding: 36px 28px 28px; min-height: 240px; }
-            .big-number, .stat-strip, .form-number { display: none; }
-            .right-panel { padding: 40px 28px 56px; overflow-y: visible; }
-            .right-panel .bg-image { inset: 0; transform: scale(1.2); }
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden; overflow-y: auto; height: auto; }
+            .page { grid-template-columns: 1fr; height: auto; min-height: 100vh; overflow: visible; }
+            .left-panel { 
+                padding: 32px 24px 24px; 
+                min-height: auto;
+                position: relative;
+            }
+            .big-number { display: none; }
+            .slash { width: 120px; right: -40px; }
+            .slash-2 { width: 160px; right: -80px; }
+            .headline { font-size: clamp(2rem, 6vw, 2.8rem); }
+            .tagline { font-size: .9rem; max-width: 100%; }
+            .stat-strip { margin-top: 20px; }
+            .right-panel { 
+                padding: 32px 24px 48px; 
+                overflow: visible;
+                min-height: auto;
+            }
+            .right-panel .bg-image { inset: 0; transform: scale(1.1); opacity: 0.1; }
+            .login-card { max-width: 100%; width: 100%; }
+            .form-title { font-size: 2rem; }
+            .input-wrap input, .input-wrap select { 
+                padding: 12px 12px 12px 40px; 
+                font-size: .9rem;
+                min-height: 48px;
+            }
+            .input-wrap i.icon { left: 14px; font-size: 1.1rem; }
+            .drop-zone { padding: 16px; }
+            .btn-login { 
+                padding: 14px 18px; 
+                font-size: 1rem;
+                min-height: 52px;
+            }
+            .modal { max-width: calc(100% - 32px); padding: 32px 24px; }
+            .loading-content { padding: 24px 32px; max-width: calc(100% - 40px); }
+            .loading-content p { font-size: .9rem; }
+            .speed-bg { opacity: 0.5; }
+        }
+
+        @media (max-width: 480px) {
+            html, body { overflow-x: hidden; }
+            .left-panel { padding: 24px 20px 20px; }
+            .logo-row { gap: 12px; margin-bottom: 32px; }
+            .logo-badge { width: 40px; height: 40px; }
+            .logo-badge img { width: 28px; height: 28px; }
+            .logo-name { font-size: .75rem; }
+            .headline-tag { font-size: .7rem; padding: 3px 8px; }
+            .headline { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+            .tagline { font-size: .85rem; line-height: 1.5; }
+            .stat-strip { display: none; }
+            .left-footer { flex-direction: column; gap: 8px; text-align: center; }
+            .right-panel { padding: 24px 20px 40px; }
+            .form-eyebrow { font-size: .6rem; }
+            .form-title { font-size: 1.8rem; }
+            .form-desc { font-size: .8rem; }
+            .field-lbl { font-size: .65rem; }
+            .input-wrap input, .input-wrap select { 
+                padding: 10px 10px 10px 38px; 
+                font-size: 16px;
+                min-height: 44px;
+            }
+            .drop-zone p { font-size: .8rem; }
+            .btn-login { 
+                font-size: .9rem; 
+                letter-spacing: 1.5px;
+                min-height: 48px;
+            }
+            .signup-row { font-size: .8rem; }
+            .loading-content { padding: 20px 24px; }
+            .loading-content p { font-size: .85rem; }
+            .loading-spinner { width: 36px; height: 36px; }
+            .speed-bg { opacity: 0.3; }
+        }
+
+        @media (max-width: 360px) {
+            .left-panel { padding: 20px 16px 16px; }
+            .right-panel { padding: 20px 16px 32px; }
+            .headline { font-size: 1.6rem; }
+            .form-title { font-size: 1.6rem; }
+            .input-wrap input, .input-wrap select { font-size: 16px; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn-login:hover { background: var(--maroon); }
+            .btn-login:hover::after { left: -100%; }
+            .btn-login:active { transform: scale(.96); background: var(--maroon-mid); }
+            .drop-zone:hover { border-color: var(--maroon); }
+            .left-footer a:hover { color: rgba(255,255,255,.22); }
+            .signup-row a:hover { text-decoration: none; }
         }
     </style>
 </head>
@@ -262,7 +371,7 @@
         </svg>
         <div class="big-number">02</div>
         <div class="left-content">
-            <div class="logo-row">
+            <div class="logo-row">  
                 <div class="logo-badge"><img src="/image/SportOffice.png" alt="Sports Office"></div>
                 <div class="logo-badge"><img src="/image/Usep.png" alt="USeP"></div>
                 <div class="logo-name">USeP OSAS<br>Sports Unit</div>
@@ -270,14 +379,10 @@
             <span class="headline-tag">Join the Team</span>
             <h1 class="headline">One Goal.<br><span class="gold-word">One Family.</span></h1>
             <p class="tagline">Register as a student-athlete and be part of USeP's sports legacy. Train, compete, and excel with us.</p>
-            <div class="stat-strip">
-                <div class="stat-item"><div class="stat-val">12+</div><div class="stat-lbl">Sports</div></div>
-                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Dedication</div></div>
-                <div class="stat-item"><div class="stat-val">All</div><div class="stat-lbl">Campuses</div></div>
-            </div>
+            
         </div>
         <div class="left-footer">
-            <p>&copy; 2025 USeP. All Rights Reserved.</p>
+            <p>&copy; 2026 USeP. All Rights Reserved.</p>
             <div><a href="#" id="termsLink">Terms</a> &middot; <a href="https://www.usep.edu.ph/usep-data-privacy-statement/" target="_blank">Privacy</a></div>
         </div>
     </div>
@@ -285,7 +390,7 @@
     <div class="right-panel">
         <div class="bg-image"></div>
         <div class="login-card">
-            <div class="form-number">02</div>
+     
             <p class="form-eyebrow">Student-Athlete Registration</p>
             <h2 class="form-title">Create <span>Account.</span></h2>
 
@@ -298,6 +403,14 @@
             @if(session('success'))
                 <div class="server-error" style="background: rgba(40,167,69,.1); border-left-color: #28a745; color: #28a745;">
                     <i class='bx bx-check-circle'></i>{{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="error-messages">
+                    @foreach ($errors->all() as $error)
+                        <p><i class='bx bx-error-circle'></i> {{ $error }}</p>
+                    @endforeach
                 </div>
             @endif
 
@@ -362,6 +475,22 @@
                         </div>
                     </div>
                     <div>
+                        <div class="field-lbl">Password</div>
+                        <div class="input-wrap">
+                            <i class='bx bx-lock-alt icon'></i>
+                            <input type="password" name="password" id="password" placeholder="••••••••" required autocomplete="new-password">
+                            <i class='bx bx-show password-toggle' onclick="togglePass('password')"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="field-lbl">Confirm Password</div>
+                        <div class="input-wrap">
+                            <i class='bx bx-lock-alt icon'></i>
+                            <input type="password" name="password_confirmation" id="password_confirmation" placeholder="••••••••" required autocomplete="new-password">
+                            <i class='bx bx-show password-toggle' onclick="togglePass('password_confirmation')"></i>
+                        </div>
+                    </div>
+                    <div>
                         <div class="field-lbl">Campus</div>
                         <div class="input-wrap">
                             <i class='bx bx-buildings icon'></i>
@@ -409,9 +538,18 @@
 </div>
 
 <div class="loading-modal" id="loadingModal">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p>Please wait, submitting your information...</p>
+    <div class="loading-box">
+        <div class="loader-ring-wrap">
+            <div class="loader-ring"></div>
+            <div class="loader-icon"><i class='bx bx-trophy'></i></div>
+        </div>
+        <div class="loading-text">
+            <h4>Creating Account...</h4>
+            <p>Processing your athletic registration</p>
+        </div>
+        <div class="loader-bar-bg">
+            <div class="loader-bar"></div>
+        </div>
     </div>
 </div>
 
@@ -437,6 +575,16 @@ document.addEventListener('DOMContentLoaded', function () {
     window.showLoadingModal = showLoadingModal;
     window.hideLoadingModal = hideLoadingModal;
 
+    window.togglePass = function(id) {
+        const inp = document.getElementById(id);
+        const icon = inp.nextElementSibling;
+        if (inp.type === "password") {
+            inp.type = "text"; icon.classList.replace('bx-show', 'bx-hide');
+        } else {
+            inp.type = "password"; icon.classList.replace('bx-hide', 'bx-show');
+        }
+    };
+
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -444,14 +592,26 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         dropZone.classList.remove('dragover');
         const files = e.dataTransfer.files;
-        if (files.length > 0) { fileInput.files = files; fileNameDisplay.textContent = files[0].name; }
-    });
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) fileNameDisplay.textContent = fileInput.files[0].name;
-        else fileNameDisplay.textContent = '';
+        if (files.length > 0) { 
+            fileInput.files = files; 
+            handleFileSelect(files[0]);
+        }
     });
 
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) handleFileSelect(fileInput.files[0]);
+        else { fileNameDisplay.textContent = ''; dropZone.style.borderColor = 'var(--maroon)'; }
+    });
+
+    function handleFileSelect(file) {
+        fileNameDisplay.innerHTML = `<i class='bx bx-check-circle' style='color:#28a745'></i> ${file.name}`;
+        dropZone.style.borderColor = '#28a745';
+        dropZone.style.background = 'rgba(40,167,69,0.03)';
+    }
+
     window.validateStudentAthleteForm = function (event) {
+        // ... previous validation logic ...
+        // (Keeping it but ensuring showLoadingModal is triggered)
         const form = event.target;
         const studentId = form.querySelector('input[name="student_id"]').value.trim();
         const fullName = form.querySelector('input[name="full_name"]').value.trim();
@@ -459,7 +619,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const status = form.querySelector('select[name="status"]').value;
         const sport = form.querySelector('select[name="sport"]').value;
         const campus = form.querySelector('select[name="campus"]').value;
-        const document = form.querySelector('input[name="document"]').files.length;
+        const password = form.querySelector('input[name="password"]').value;
+        const passwordConfirmation = form.querySelector('input[name="password_confirmation"]').value;
+        const documentFileCount = form.querySelector('input[name="document"]').files.length;
         const box = document.getElementById('error-messages');
         const msgs = [];
         box.innerHTML = ''; box.hidden = true;
@@ -470,7 +632,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!status) msgs.push('Status is required.');
         if (!sport) msgs.push('Sport is required.');
         if (!campus) msgs.push('Campus is required.');
-        if (!document) msgs.push('Verification document is required.');
+        if (!password) msgs.push('Password is required.');
+        else if (password.length < 8) msgs.push('Password must be at least 8 characters.');
+        if (password !== passwordConfirmation) msgs.push('Passwords do not match.');
+        if (!documentFileCount) msgs.push('Verification document is required.');
         if (msgs.length) {
             box.hidden = false;
             msgs.forEach(m => { const p = document.createElement('p'); p.textContent = m; box.appendChild(p); });
@@ -482,18 +647,20 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.onload = function() {
+        document.body.classList.add('page-loaded');
         const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const message = urlParams.get('message');
-        if (status === 'success') {
+        // ... rest of swal logic ...
+        const swstatus = urlParams.get('status');
+        const swmessage = urlParams.get('message');
+        if (swstatus === 'success') {
             Swal.fire({
                 icon: 'success', title: 'Success',
-                text: 'Your account has been submitted successfully! Please wait for admin approval.',
+                text: swmessage || 'Your account has been submitted successfully! Please wait for admin approval.',
                 confirmButtonText: 'OK', confirmButtonColor: '#7A1428'
             }).then(() => window.history.replaceState({}, document.title, window.location.pathname));
-        } else if (status === 'error' && message) {
+        } else if (swstatus === 'error' && swmessage) {
             Swal.fire({
-                icon: 'error', title: 'Error', text: message,
+                icon: 'error', title: 'Error', text: swmessage,
                 confirmButtonText: 'OK', confirmButtonColor: '#7A1428'
             }).then(() => window.history.replaceState({}, document.title, window.location.pathname));
         }

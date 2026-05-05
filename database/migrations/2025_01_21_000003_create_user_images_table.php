@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->longBinary('image');
+            $table->text('image'); // Store as base64 for SQLite compatibility
             $table->string('image_type')->nullable();
             $table->timestamp('uploaded_at')->useCurrent();
             $table->timestamps();

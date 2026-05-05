@@ -19,7 +19,7 @@ class LoginController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             
-            if ($user->role === 'admin') {
+            if ($user->role === 'admin' || $user->role === 'super_admin') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.dashboard');
@@ -50,8 +50,17 @@ class LoginController extends Controller
             // Log successful login
             \Log::info('User logged in', ['user_id' => $user->id, 'email' => $user->email]);
             
+            // Check if user is approved
+            if (!$user->approved) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')
+                    ->with('login_error', 'Your account is pending admin approval.');
+            }
+
             // Redirect based on user role
-            if ($user->role === 'admin') {
+            if ($user->role === 'admin' || $user->role === 'super_admin') {
                 return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('user.dashboard');

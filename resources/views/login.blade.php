@@ -6,7 +6,7 @@
     <title>Login — USeP OSAS Sports Unit</title>
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="/image/Usep.png" sizes="any" />
+    <link rel="icon" href="/image/SportOffice.png" sizes="any" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -22,7 +22,7 @@
             --white:       #FFFFFF;
         }
         html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--offwhite); overflow: hidden; }
-        .page { display: grid; grid-template-columns: 1.1fr 0.9fr; height: 100vh; }
+        .page { display: grid; grid-template-columns: 0.9fr 1.1fr; height: 100vh; overflow: hidden; }
 
         /* ── LEFT ── */
         .left-panel {
@@ -180,6 +180,16 @@
             .big-number, .stat-strip, .form-number { display: none; }
             .right-panel { padding: 40px 28px 56px; }
         }
+
+        @keyframes intro-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        @keyframes intro-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        /* ── Form Slide In ── */
+        .login-card { opacity: 0; transform: translateY(30px); transition: all .8s cubic-bezier(0.22, 1, 0.36, 1) .2s; }
+        .page-loaded .login-card { opacity: 1; transform: translateY(0); }
+        .left-content { opacity: 0; transform: translateX(-30px); transition: all .8s cubic-bezier(0.22, 1, 0.36, 1) .2s; }
+        .page-loaded .left-content { opacity: 1; transform: translateX(0); }
     </style>
 </head>
 <body>
@@ -216,14 +226,10 @@
             <span class="headline-tag">Official Portal</span>
             <h1 class="headline">One Data.<br><span class="gold-word">One USeP.</span></h1>
             <p class="tagline">The centralized hub for student-athletes, competitions, records &amp; official sports events.</p>
-            <div class="stat-strip">
-                <div class="stat-item"><div class="stat-val">1</div><div class="stat-lbl">Unified Portal</div></div>
-                <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Secure Access</div></div>
-                <div class="stat-item"><div class="stat-val">All</div><div class="stat-lbl">Data Central</div></div>
-            </div>
+          
         </div>
         <div class="left-footer">
-            <p>© 2025 USeP. All Rights Reserved.</p>
+            <p>© 2026 USeP. All Rights Reserved.</p>
             <div><a href="#" id="termsLink">Terms</a> · <a href="https://www.usep.edu.ph/usep-data-privacy-statement/" target="_blank">Privacy</a></div>
         </div>
     </div>
@@ -235,7 +241,11 @@
             <p class="form-eyebrow">Student &amp; Staff Portal</p>
             <h2 class="form-title">Sign<br><span>In.</span></h2>
 
-            @if(session('login_error'))
+            @if(session('success'))
+                <div class="server-error" style="background: rgba(40,167,69,.1); border-left-color: #28a745; color: #28a745;">
+                    <i class='bx bx-check-circle'></i>{{ session('success') }}
+                </div>
+            @elseif(session('login_error'))
                 <div class="server-error"><i class='bx bx-error-circle'></i>{{ session('login_error') }}</div>
             @else
                 <p class="form-desc">Access your account and stay in the game.</p>
@@ -310,11 +320,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const privacyModal = document.getElementById('privacyModal');
-    if (sessionStorage.getItem('privacyModalShown')) { privacyModal.style.display = 'none'; }
-    else {
-        privacyModal.classList.add('active'); document.body.style.overflow = 'hidden';
-        document.getElementById('continueButton').addEventListener('click', () => { sessionStorage.setItem('privacyModalShown', 'true'); privacyModal.classList.remove('active'); document.body.style.overflow = ''; });
-    }
+    
+    const startApp = () => {
+        document.body.classList.add('page-loaded');
+        if (sessionStorage.getItem('privacyModalShown')) { 
+            privacyModal.style.display = 'none'; 
+            document.body.style.overflow = '';
+        } else {
+            privacyModal.classList.add('active'); 
+            document.body.style.overflow = 'hidden';
+            document.getElementById('continueButton').addEventListener('click', () => { 
+                sessionStorage.setItem('privacyModalShown', 'true'); 
+                privacyModal.classList.remove('active'); 
+                document.body.style.overflow = ''; 
+            });
+        }
+    };
+
+    startApp();
+
     const pl = document.getElementById('privacyLink');
     if (pl) pl.addEventListener('click', () => window.open('https://www.usep.edu.ph/usep-data-privacy-statement/', '_blank'));
 

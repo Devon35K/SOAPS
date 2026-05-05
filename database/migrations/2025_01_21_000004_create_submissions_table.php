@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('document_type');
             $table->string('other_type')->nullable();
             $table->string('file_name');
-            $table->longBinary('file_data');
+            $table->text('file_data'); // Store as base64 for SQLite compatibility
             $table->integer('file_size');
             $table->text('description');
             $table->timestamp('submission_date')->useCurrent();
