@@ -8,19 +8,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
     public function run(): void
     {
-        // Create default admin user
         $fullName = "System Administrator";
         $address = "USeP Tagum-Mabini Campus";
         $email = "admin@usep.edu.ph";
         $password = "admin123";
         $status = "undergraduate";
 
-        // Check if admin already exists
         $exists = DB::table('users')->where('email', $email)->first();
 
         if (!$exists) {
