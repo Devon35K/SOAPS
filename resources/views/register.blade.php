@@ -491,11 +491,11 @@
                         </div>
                     </div>
                     <div>
-                        <div class="field-lbl">Campus</div>
+                        <div class="field-lbl">Campus/Unit</div>
                         <div class="input-wrap">
                             <i class='bx bx-buildings icon'></i>
                             <select name="campus" required>
-                                <option value="" {{ !old('campus') ? 'selected' : '' }} disabled>Select Campus</option>
+                                <option value="" {{ !old('campus') ? 'selected' : '' }} disabled>Select Campus/Unit</option>
                                 <option value="Tagum" {{ old('campus') == 'Tagum' ? 'selected' : '' }}>Tagum</option>
                                 <option value="Mabini" {{ old('campus') == 'Mabini' ? 'selected' : '' }}>Mabini</option>
                             </select>
@@ -631,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) msgs.push('Please enter a valid email address.');
         if (!status) msgs.push('Status is required.');
         if (!sport) msgs.push('Sport is required.');
-        if (!campus) msgs.push('Campus is required.');
+        if (!campus) msgs.push('Campus/Unit is required.');
         if (!password) msgs.push('Password is required.');
         else if (password.length < 8) msgs.push('Password must be at least 8 characters.');
         if (password !== passwordConfirmation) msgs.push('Passwords do not match.');

@@ -98,9 +98,29 @@ $sports = ['Basketball', 'Volleyball', 'Football', 'Swimming', 'Track and Field'
                 </span>
             </div>
             <div data-label="Actions" style="display: flex; gap: 8px;">
-                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.7rem;">
-                    <i class='bx bx-show'></i>
-                </button>
+                @php
+                    $subId = $achievement->documents['submission_id'] ?? null;
+                    // We need to get the extension from the submission if possible, 
+                    // or just pass a generic view if we can't.
+                    // For now, let's try to pass the extension if available.
+                    $ext = 'pdf'; // Default
+                    if ($subId) {
+                        $sub = \App\Models\Submission::find($subId);
+                        if ($sub) {
+                            $ext = pathinfo($sub->file_name, PATHINFO_EXTENSION);
+                        }
+                    }
+                @endphp
+                @if($subId)
+                    <button onclick="openAchievementDoc({{ $subId }}, '{{ $ext }}')" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.7rem;">
+                        <i class='bx bx-show'></i>
+                    </button>
+                @else
+                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.7rem; opacity: 0.5; cursor: not-allowed;" title="No document linked">
+                        <i class='bx bx-show'></i>
+                    </button>
+                @endif
+                
                 @if($achievement->status === 'Pending')
                     <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.7rem;">
                         <i class='bx bx-check'></i>
@@ -117,3 +137,82 @@ $sports = ['Basketball', 'Volleyball', 'Football', 'Swimming', 'Track and Field'
         </div>
     @endforelse
 </div>
+
+<!-- Achievement Document Preview Modal (Moved to body via JS) -->
+<div id="achievementDocModal" style="position: fixed; inset: 0; background: rgba(15, 12, 12, 0.85); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 999999;">
+    <div style="background: white; width: 95%; max-width: 1200px; height: 90vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 28px; background: #fff; border-bottom: 2px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 8px; height: 24px; background: var(--maroon);"></div>
+                <h3 style="font-family: 'Barlow Condensed'; font-weight: 800; font-size: 1.4rem; color: var(--charcoal); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Achievement Evidence</h3>
+            </div>
+            <button onclick="closeAchievementDoc()" style="background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 4px; font-size: 1.5rem; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#f1f5f9'">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+        <!-- Body -->
+        <div id="achievementDocContent" style="flex: 1; overflow: hidden; background: #333; display: flex; align-items: center; justify-content: center;">
+            <!-- Content will be injected here -->
+        </div>
+    </div>
+</div>
+
+<script>
+// Move modal to body to prevent z-index/layout issues with parent containers
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('achievementDocModal');
+    if (modal) document.body.appendChild(modal);
+});
+
+function openAchievementDoc(subId, extension) {
+    const modal = document.getElementById('achievementDocModal');
+    const container = document.getElementById('achievementDocContent');
+    
+    container.innerHTML = '<div style="color: white; font-family: Barlow;">Loading evidence...</div>';
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    const url = `/admin/submission-view/${subId}`;
+    const ext = extension.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        img.style.maxWidth = '800px';
+        img.style.height = 'auto';
+        img.style.flexShrink = '0';
+        img.style.display = 'block';
+        img.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.5)';
+        img.style.border = '1px solid rgba(255,255,255,0.1)';
+        img.style.borderRadius = '4px';
+        img.style.marginBottom = '40px';
+        
+        container.style.background = '#1a1a1a';
+        container.style.padding = '40px 20px';
+        container.style.overflowY = 'auto';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'flex-start';
+        container.innerHTML = '';
+        container.appendChild(img);
+    } else {
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        container.style.background = '#333';
+        container.innerHTML = '';
+        container.appendChild(iframe);
+    }
+}
+
+function closeAchievementDoc() {
+    document.getElementById('achievementDocModal').style.display = 'none';
+    document.getElementById('achievementDocContent').innerHTML = '';
+    document.body.style.overflow = 'auto';
+}
+</script>

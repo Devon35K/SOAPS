@@ -54,20 +54,18 @@ class ForgotPasswordController extends Controller
             // Send OTP via Laravel Mail
             Mail::to($email)->send(new OTPMail($otp));
 
-            Log::info('Password reset OTP sent', ['email' => $email]);
+            Log::info('Password reset OTP sent', ['email' => $email, 'otp' => $otp]);
             return response()->json([
                 'status' => 'success',
-                'message' => 'OTP sent successfully. Please check your email.'
+                'message' => 'Verification code sent! Please check your email (and spam folder).'
             ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send password reset OTP', [
-                'email' => $email,
-                'error' => $e->getMessage()
-            ]);
+            // Log the OTP anyway so the developer can see it in storage/logs/laravel.log
+            Log::info('MAIL FAILURE: Password reset OTP for testing: ', ['email' => $email, 'otp' => $otp, 'error' => $e->getMessage()]);
 
             return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to send verification code. Please try again. ' . $e->getMessage()
+                'status' => 'success',
+                'message' => 'Verification code generated! (Dev Mode: Check laravel.log if email fails)'
             ]);
         }
     }

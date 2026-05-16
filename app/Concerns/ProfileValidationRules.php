@@ -14,9 +14,14 @@ trait ProfileValidationRules
      */
     protected function profileRules(?int $userId = null): array
     {
+        $user = auth()->user();
+        $isStudent = $user && $user->role === 'user';
+
         return [
-            'name' => $this->nameRules(),
+            'full_name' => $this->fullNameRules(),
             'email' => $this->emailRules($userId),
+            'sport' => $isStudent ? ['required', 'string', 'max:255'] : ['nullable', 'string', 'max:255'],
+            'campus' => $isStudent ? ['required', 'string', 'max:255'] : ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -25,7 +30,7 @@ trait ProfileValidationRules
      *
      * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>
      */
-    protected function nameRules(): array
+    protected function fullNameRules(): array
     {
         return ['required', 'string', 'max:255'];
     }

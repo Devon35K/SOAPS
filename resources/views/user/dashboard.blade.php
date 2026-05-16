@@ -4,12 +4,12 @@
     <div class="welcome-card animate-down">
         <div class="wave-bg"></div>
         <div class="wave-bg wave-bg-2"></div>
-        <h2 style="position: relative; z-index: 2;">Welcome back, <span>{{ explode(' ', Auth::user()->full_name ?? 'Student')[0] }}</span>!</h2>
+        <h2 style="position: relative; z-index: 2;">Welcome back, <span>{{ Auth::user()->full_name ?? 'Student' }}</span>!</h2>
         <p style="position: relative; z-index: 2;">This is your central hub for sports tracking, document submissions, and achievement logging. Access your options below.</p>
     </div>
 
     <div class="quick-actions">
-        <div class="action-card animate-up delay-1">
+        <a href="{{ route('user.submissions') }}" class="action-card animate-up delay-1" style="text-decoration: none; cursor: pointer;">
             <div class="action-card-left">
                 <h3>Document Submissions</h3>
                 <p>Submit Forms & Clearances</p>
@@ -17,9 +17,9 @@
             <div class="action-icon" style="background: rgba(240,180,41,0.15);">
                 <i class='bx bx-file-export' style="color: var(--gold-dark);"></i>
             </div>
-        </div>
+        </a>
         
-        <div class="action-card animate-up delay-2">
+        <a href="{{ route('user.track-records') }}" class="action-card animate-up delay-2" style="text-decoration: none; cursor: pointer;">
             <div class="action-card-left">
                 <h3>Track Records</h3>
                 <p>View Submission History</p>
@@ -27,9 +27,9 @@
             <div class="action-icon" style="background: rgba(16,185,129,0.08);">
                 <i class='bx bx-history' style="color: #10B981;"></i>
             </div>
-        </div>
+        </a>
 
-        <div class="action-card animate-up delay-3" style="border-bottom-color: var(--maroon);">
+        <a href="{{ route('user.achievements') }}" class="action-card animate-up delay-3" style="border-bottom-color: var(--maroon); text-decoration: none; cursor: pointer;">
             <div class="action-card-left">
                 <h3>Achievements</h3>
                 <p>Check Campus Leaderboard</p>
@@ -37,12 +37,12 @@
             <div class="action-icon">
                 <i class='bx bx-trophy'></i>
             </div>
-        </div>
+        </a>
     </div>
 
     <div class="actions-row animate-up delay-4">
         <a href="{{ route('user.submissions') }}" class="btn btn-primary"><i class='bx bx-plus'></i> New Submission</a>
-        <a href="{{ route('user.achievements') }}" class="btn btn-gold"><i class='bx bx-medal'></i> Log Achievement</a>
-        <a href="{{ route('user.profile') }}" class="btn btn-outline"><i class='bx bx-user-circle'></i> Edit Profile</a>
+        <a href="{{ route('user.submissions') }}" class="btn btn-gold"><i class='bx bx-medal'></i> Log Achievement</a>
+        <a href="{{ route('profile.edit') }}" class="btn btn-outline"><i class='bx bx-user-circle'></i> Edit Profile</a>
     </div>
 @endsection

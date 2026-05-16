@@ -24,9 +24,6 @@
         <a href="{{ route('user.track-records') }}" class="nav-item {{ request()->routeIs('user.track-records') ? 'active' : '' }}">
             <i class='bx bx-file'></i> <span>Track Records</span>
         </a>
-        <a href="{{ route('user.profile') }}" class="nav-item {{ request()->routeIs('user.profile') ? 'active' : '' }}">
-            <i class='bx bx-user'></i> <span>Profile Update</span>
-        </a>
         <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
             <i class='bx bx-cog'></i> <span>Settings</span>
         </a>

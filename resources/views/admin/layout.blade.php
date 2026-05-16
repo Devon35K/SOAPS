@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - {{ $currentPage }}</title>
+    <title>Admin Dashboard - {{ $currentPage ?? 'Settings' }}</title>
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" href="/image/SportOffice.png" sizes="any" />
@@ -416,6 +416,5 @@
             document.getElementById('sidebarOverlay').classList.remove('active');
         }
     </script>
-    @stack('scripts')
 </body>
 </html>

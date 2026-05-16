@@ -6,8 +6,24 @@
         <p>Keep your contact information and sports affiliation up to date so the sports unit can reach you easily.</p>
     </div>
 
+    @if(session('success'))
+        <div style="background: #dcfce7; color: #166534; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+            <i class='bx bx-check-circle'></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div style="background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-weight: 600;">
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="data-table" style="padding: 32px; border-top: 4px solid var(--maroon);">
-        <form method="POST" action="#">
+        <form method="POST" action="{{ route('user.profile.update') }}">
             @csrf
             @method('PUT')
             
@@ -15,7 +31,7 @@
                 <!-- Full Name -->
                 <div>
                     <label style="display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--maroon); margin-bottom: 8px;">Full Name</label>
-                    <input type="text" name="full_name" value="{{ $user->full_name ?? '' }}" class="form-control" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
+                    <input type="text" name="full_name" value="{{ $user->full_name ?? '' }}" class="form-control" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
                 </div>
 
                 <!-- Email Address -->
@@ -28,19 +44,21 @@
                 <!-- Sport -->
                 <div>
                     <label style="display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--maroon); margin-bottom: 8px;">Primary Sport</label>
-                    <select name="sport" class="form-control" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
+                    <select name="sport" class="form-control" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
                         <option value="Basketball" {{ ($user->sport ?? '') == 'Basketball' ? 'selected' : '' }}>Basketball</option>
                         <option value="Volleyball" {{ ($user->sport ?? '') == 'Volleyball' ? 'selected' : '' }}>Volleyball</option>
                         <option value="Football" {{ ($user->sport ?? '') == 'Football' ? 'selected' : '' }}>Football</option>
                         <option value="Athletics" {{ ($user->sport ?? '') == 'Athletics' ? 'selected' : '' }}>Athletics</option>
                         <option value="Swimming" {{ ($user->sport ?? '') == 'Swimming' ? 'selected' : '' }}>Swimming</option>
+                        <option value="Cheerleading" {{ ($user->sport ?? '') == 'Cheerleading' ? 'selected' : '' }}>Cheerleading</option>
+                        <option value="Dance" {{ ($user->sport ?? '') == 'Dance' ? 'selected' : '' }}>Dance Sports</option>
                     </select>
                 </div>
 
                 <!-- Campus -->
                 <div>
-                    <label style="display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--maroon); margin-bottom: 8px;">Campus</label>
-                    <select name="campus" class="form-control" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
+                    <label style="display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--maroon); margin-bottom: 8px;">Campus/Unit</label>
+                    <select name="campus" class="form-control" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
                         <option value="Tagum" {{ ($user->campus ?? '') == 'Tagum' ? 'selected' : '' }}>Tagum</option>
                         <option value="Mabini" {{ ($user->campus ?? '') == 'Mabini' ? 'selected' : '' }}>Mabini</option>
                     </select>

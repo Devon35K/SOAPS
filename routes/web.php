@@ -54,6 +54,11 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
     Route::post('approve-request', [AdminController::class, 'approveRequest'])->name('approve-request');
     Route::post('reject-request', [AdminController::class, 'rejectRequest'])->name('reject-request');
     Route::get('approval-document/{id}', [AdminController::class, 'viewApprovalDocument'])->name('approval-document');
+    
+    // Evaluation routes
+    Route::get('user-submissions/{userId}', [AdminController::class, 'getUserSubmissions'])->name('user-submissions');
+    Route::post('evaluate-submission', [AdminController::class, 'evaluateSubmission'])->name('evaluate-submission');
+    Route::get('submission-view/{id}', [AdminController::class, 'viewSubmissionFile'])->name('submission-view');
 
     // Super Admin only routes
     Route::middleware(['role:super_admin'])->group(function () {
@@ -70,9 +75,12 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
     Route::get('dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
     Route::get('submissions', [App\Http\Controllers\UserController::class, 'submissions'])->name('submissions');
+    Route::post('submissions', [App\Http\Controllers\UserController::class, 'storeSubmission'])->name('submissions.store');
+    Route::get('submission-document/{id}', [App\Http\Controllers\UserController::class, 'viewDocument'])->name('submissions.view');
     Route::get('achievements', [App\Http\Controllers\UserController::class, 'achievements'])->name('achievements');
     Route::get('track-records', [App\Http\Controllers\UserController::class, 'trackRecords'])->name('track-records');
     Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
+    Route::put('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');
 });
 
 require __DIR__.'/settings.php';

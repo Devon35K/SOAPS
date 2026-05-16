@@ -19,9 +19,18 @@ class AdminController extends Controller
     {
         $currentPage = $request->get('page', 'Dashboard');
 
-        return view('admin.index', [
+        // Fetch Analytics Data
+        $stats = [
+            'totalAthletes' => \App\Models\User::where('role', 'user')->count(),
+            'pendingEvaluations' => \App\Models\Submission::where('status', 'pending')->count(),
+            'pendingAccounts' => \App\Models\AccountApproval::where('status', 'pending')->count(),
+            'totalPoints' => \App\Models\Leaderboard::sum('total_points'),
+            'recentSubmissions' => \App\Models\Submission::with('user')->orderBy('created_at', 'desc')->take(5)->get(),
+        ];
+
+        return view('admin.index', array_merge([
             'currentPage' => $currentPage,
-        ]);
+        ], $stats));
     }
 
     public function studentAthletes(Request $request)
@@ -206,10 +215,14 @@ class AdminController extends Controller
                 Log::error('Failed to send approval email: ' . $e->getMessage());
             }
 
-            return redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'approve']);
+            return $request->ajax() 
+                ? response()->json(['success' => true, 'message' => 'Request approved successfully! User has been notified.'])
+                : redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'approve']);
         }
 
-        return redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'approve']);
+        return $request->ajax()
+            ? response()->json(['success' => false, 'message' => 'Failed to find approval request.'])
+            : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'approve']);
     }
 
     public function rejectRequest(Request $request)
@@ -233,11 +246,15 @@ class AdminController extends Controller
                 Log::error('Failed to send rejection email: ' . $e->getMessage());
             }
 
-            return redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'reject']);
+            return $request->ajax() 
+                ? response()->json(['success' => true, 'message' => 'Request rejected successfully!'])
+                : redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'reject']);
         }
 
 
-        return redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
+        return $request->ajax()
+            ? response()->json(['success' => false, 'message' => 'Failed to reject request.'])
+            : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
     }
 
     public function viewApprovalDocument($id)
@@ -254,6 +271,94 @@ class AdminController extends Controller
         return response($decodedData)
             ->header('Content-Type', $approval->file_type)
             ->header('Content-Disposition', 'inline; filename="' . $approval->file_name . '"');
+    }
+
+    /**
+     * Get pending submissions for a specific user (for AJAX modal)
+     */
+    public function getUserSubmissions($userId)
+    {
+        $submissions = \App\Models\Submission::where('user_id', $userId)
+            ->where('status', 'pending')
+            ->get();
+
+        return response()->json($submissions);
+    }
+
+    /**
+     * Process evaluation: Approve/Reject and assign points
+     */
+    public function evaluateSubmission(Request $request)
+    {
+        $request->validate([
+            'submission_id' => 'required|exists:submissions,id',
+            'action' => 'required|in:approve,reject',
+            'level' => 'required_if:action,approve|in:Local,Regional,National,International',
+            'rank' => 'required_if:action,approve|in:1st,2nd,3rd,Participant',
+            'points' => 'required_if:action,approve|integer',
+            'comments' => 'nullable|string'
+        ]);
+
+        $submission = \App\Models\Submission::findOrFail($request->submission_id);
+        $user = $submission->user;
+
+        if ($request->action === 'approve') {
+            $submission->status = 'approved';
+            $submission->comments = $request->comments;
+            $submission->save();
+
+            // Create Achievement record only if points are awarded
+            if ($request->points > 0) {
+                \App\Models\Achievement::create([
+                    'user_id' => $user->id,
+                    'athlete_name' => $user->full_name,
+                    'level_of_competition' => $request->level,
+                    'performance' => $request->rank,
+                    'total_points' => $request->points,
+                    'status' => 'Approved',
+                    'submission_date' => now(),
+                    'documents' => ['submission_id' => $submission->id]
+                ]);
+
+                // Update Leaderboard
+                $leaderboard = \App\Models\Leaderboard::firstOrCreate(
+                    ['user_id' => $user->id],
+                    ['total_points' => 0]
+                );
+                $leaderboard->total_points += $request->points;
+                $leaderboard->save();
+            }
+
+            return response()->json(['success' => true, 'message' => $request->points > 0 ? 'Submission approved and points awarded!' : 'Document approved and archived.']);
+        } else {
+            $submission->status = 'rejected';
+            $submission->comments = $request->comments;
+            $submission->save();
+
+            return response()->json(['success' => true, 'message' => 'Submission rejected.']);
+        }
+    }
+
+    /**
+     * View a specific submission file
+     */
+    public function viewSubmissionFile($id)
+    {
+        $submission = \App\Models\Submission::findOrFail($id);
+        
+        if (!$submission->file_data) abort(404);
+
+        $decodedData = base64_decode($submission->file_data);
+        $extension = strtolower(pathinfo($submission->file_name, PATHINFO_EXTENSION));
+        
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png'
+        ];
+
+        return response($decodedData)
+            ->header('Content-Type', $mimeTypes[$extension] ?? 'application/octet-stream')
+            ->header('Content-Disposition', 'inline; filename="' . $submission->file_name . '"');
     }
 
     public function users(Request $request)
