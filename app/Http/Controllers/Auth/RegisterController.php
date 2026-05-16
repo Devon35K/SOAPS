@@ -9,6 +9,7 @@ use App\Models\AccountApproval;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -28,14 +29,14 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'student_id' => [
                 'required', 'string', 'max:50',
-                'unique:users,student_id',
-                'unique:account_approvals,student_id'
+                Rule::unique('users', 'student_id'),
+                Rule::unique('account_approvals', 'student_id')->where('approval_status', 'pending')
             ],
             'full_name' => 'required|string|max:255',
             'email' => [
                 'required', 'email', 'max:255',
-                'unique:users,email',
-                'unique:account_approvals,email'
+                Rule::unique('users', 'email'),
+                Rule::unique('account_approvals', 'email')->where('approval_status', 'pending')
             ],
             'status' => 'required|in:undergraduate,alumni',
             'sport' => 'required|string|max:50',
@@ -48,6 +49,13 @@ class RegisterController extends Controller
         ]);
 
         try {
+            // Delete any existing rejected applications with the same details 
+            // to allow re-registration (bypasses DB unique constraint)
+            AccountApproval::where('student_id', $validated['student_id'])
+                ->where('email', $validated['email'])
+                ->where('approval_status', 'rejected')
+                ->delete();
+
             // Handle file upload - store as Base64 for AccountApproval and also keep on disk
             $file = $request->file('document');
             $fileData = base64_encode(file_get_contents($file->getRealPath()));

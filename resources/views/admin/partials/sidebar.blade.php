@@ -13,6 +13,7 @@ $menuItems = [
     ['name' => 'Approved Docs', 'icon' => 'file-doc', 'route' => 'admin.approved-docs'],
     ['name' => 'Reports', 'icon' => 'report', 'route' => 'admin.reports'],
     ['name' => 'Account Approvals', 'icon' => 'user-check', 'route' => 'admin.account-approvals'],
+    ['name' => 'Settings', 'icon' => 'cog', 'route' => 'profile.edit'],
 ];
 
 if ($isSuperAdmin) {

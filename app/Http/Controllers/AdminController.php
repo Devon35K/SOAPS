@@ -219,18 +219,23 @@ class AdminController extends Controller
         $approval = \App\Models\AccountApproval::find($approvalId);
 
         if ($approval) {
-            $approval->approval_status = 'rejected';
-            $approval->save();
+            // Store email and name for the rejection mail before deleting
+            $email = $approval->email;
+            $name = $approval->full_name;
+
+            // Delete the record as requested by the user ("when rejected it won't register to the database")
+            $approval->delete();
 
             // Send rejection email
             try {
-                Mail::to($approval->email)->send(new RejectionMail($approval->full_name));
+                Mail::to($email)->send(new RejectionMail($name));
             } catch (\Exception $e) {
                 Log::error('Failed to send rejection email: ' . $e->getMessage());
             }
 
             return redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'reject']);
         }
+
 
         return redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
     }

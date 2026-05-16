@@ -74,8 +74,8 @@
 
         /* ── RIGHT ── */
         .right-panel {
-            display: flex; align-items: center; justify-content: center;
-            background: var(--offwhite); padding: 28px 40px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            background: var(--offwhite); padding: 28px 40px; position: relative; overflow-y: auto; overflow-x: hidden;
         }
         .right-panel::before {
             content: ''; position: absolute; bottom: 0; right: 0; width: 240px; height: 240px;
@@ -96,7 +96,7 @@
             pointer-events: none;
             transform: scale(1.3);
         }
-        .login-card { width: 100%; max-width: 380px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; }
+        .login-card { width: 100%; max-width: 380px; position: relative; z-index: 1; animation: slideUp .6s cubic-bezier(.22,.9,.42,1) both; margin: auto; }
         @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .form-number {
             font-family: 'Barlow Condensed', sans-serif; font-size: 6rem; font-weight: 900;
@@ -511,7 +511,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="page" value="signup">
-                    <button type="submit" class="btn-login" onclick="showLoadingModal()">Join the Team</button>
+                    <button type="submit" class="btn-login">Join the Team</button>
                     <div class="btn-accent"></div>
                 </div>
             </form>
@@ -640,6 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
             box.hidden = false;
             msgs.forEach(m => { const p = document.createElement('p'); p.textContent = m; box.appendChild(p); });
             event.preventDefault();
+            hideLoadingModal();
             return false;
         }
         showLoadingModal();
