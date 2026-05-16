@@ -27,14 +27,14 @@
     </div>
 
     @forelse($requests as $request)
-        <div class="table-row" style="grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr;">
+        <div class="table-row" id="request-row-{{ $request->id }}" style="grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr;">
             <div data-label="Name">
                 <div style="font-weight: 600;">{{ $request->full_name }}</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $request->email }}</div>
             </div>
             <div data-label="Student ID">{{ $request->student_id }}</div>
             <div data-label="Status">
-                <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; background: #fef08a; color: #854d0e;">
+                <span id="status-badge-{{ $request->id }}" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; background: #fef08a; color: #854d0e;">
                     {{ ucfirst($request->status) }}
                 </span>
             </div>
@@ -43,20 +43,14 @@
                 <button class="btn btn-primary" style="padding: 8px 14px; font-size: 0.75rem;" onclick="viewDocument({{ $request->id }}, '{{ $request->file_type }}')">
                     <i class='bx bx-file'></i> View
                 </button>
-                <form method="POST" action="{{ route('admin.approve-request') }}" style="margin: 0; display: inline;">
-                    @csrf
-                    <input type="hidden" name="approval_id" value="{{ $request->id }}">
-                    <button type="submit" class="btn btn-success" style="padding: 8px 14px; font-size: 0.75rem;" onclick="return confirm('Approve {{ $request->full_name }}?')">
-                        <i class='bx bx-check'></i> Approve
-                    </button>
-                </form>
-                <form method="POST" action="{{ route('admin.reject-request') }}" style="margin: 0; display: inline;">
-                    @csrf
-                    <input type="hidden" name="approval_id" value="{{ $request->id }}">
-                    <button type="submit" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;" onclick="return confirm('Reject {{ $request->full_name }}?')">
-                        <i class='bx bx-x'></i> Reject
-                    </button>
-                </form>
+                
+                <button onclick="handleApproval({{ $request->id }}, 'approve')" id="btn-approve-{{ $request->id }}" class="btn btn-success" style="padding: 8px 14px; font-size: 0.75rem;">
+                    <i class='bx bx-check'></i> Approve
+                </button>
+
+                <button onclick="handleApproval({{ $request->id }}, 'reject')" id="btn-reject-{{ $request->id }}" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;">
+                    <i class='bx bx-x'></i> Reject
+                </button>
             </div>
         </div>
     @empty
@@ -121,6 +115,69 @@ function viewDocument(requestId, fileType = '') {
             <iframe src="${url}" style="width: 100%; height: 600px; border: none; background: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
         `;
     }
+}
+
+function handleApproval(requestId, action) {
+    if (!confirm(`Are you sure you want to ${action} this request?`)) return;
+
+    const row = document.getElementById(`request-row-${requestId}`);
+    const badge = document.getElementById(`status-badge-${requestId}`);
+    const btn = document.getElementById(`btn-${action}-${requestId}`);
+    const otherBtn = document.getElementById(`btn-${action === 'approve' ? 'reject' : 'approve'}-${requestId}`);
+    
+    // Loading state
+    btn.disabled = true;
+    otherBtn.disabled = true;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+
+    const url = action === 'approve' ? '{{ route("admin.approve-request") }}' : '{{ route("admin.reject-request") }}';
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ approval_id: requestId })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Visual feedback
+            badge.style.background = action === 'approve' ? '#dcfce7' : '#fee2e2';
+            badge.style.color = action === 'approve' ? '#166534' : '#991b1b';
+            badge.innerText = action === 'approve' ? 'Approved' : 'Rejected';
+            
+            // Fade out and remove
+            setTimeout(() => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(20px)';
+                row.style.transition = 'all 0.5s ease';
+                setTimeout(() => {
+                    row.remove();
+                    // Check if table is empty
+                    if (document.querySelectorAll('.table-row:not([style*="display: none"])').length === 0) {
+                        location.reload();
+                    }
+                }, 500);
+            }, 800);
+        } else {
+            alert(result.message || 'Action failed');
+            btn.disabled = false;
+            otherBtn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        btn.disabled = false;
+        otherBtn.disabled = false;
+        btn.innerHTML = originalText;
+    });
 }
 
 function closeDocumentModal() {

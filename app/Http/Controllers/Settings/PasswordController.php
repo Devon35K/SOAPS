@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\PasswordUpdateRequest;
 use Illuminate\Http\RedirectResponse;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class PasswordController extends Controller
 {
@@ -20,12 +22,26 @@ class PasswordController extends Controller
     /**
      * Update the user's password.
      */
-    public function update(PasswordUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->update([
-            'password' => $request->password,
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'current_password' => ['required', 'string', 'current_password'],
+            'password'         => ['required', 'string', Password::defaults(), 'confirmed'],
+        ])->setAttributeNames([
+            'current_password' => 'Current Password',
+            'password'         => 'New Password',
         ]);
 
-        return back();
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator, 'updatePassword')
+                ->withInput();
+        }
+
+        $request->user()->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('status', 'password-updated');
     }
 }

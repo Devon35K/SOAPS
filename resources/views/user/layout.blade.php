@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" href="/image/SportOffice.png" sizes="any" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --maroon:      #7A1428;
@@ -503,7 +504,8 @@
         function closeSidebar() {
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('sidebarOverlay').classList.remove('active');
-        }
-    </script>
+        </body>
+</html>
+
 </body>
 </html>

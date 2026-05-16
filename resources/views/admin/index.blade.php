@@ -31,9 +31,6 @@
             @break
 
         @default
-            <div class="text-center py-12">
-                <h2 class="text-2xl font-bold text-gray-800">Welcome to Admin Dashboard</h2>
-                <p class="text-gray-600 mt-2">Select a section from the sidebar to manage.</p>
-            </div>
+            @include('admin.partials.dashboard')
     @endswitch
 @endsection
