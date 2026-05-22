@@ -4,7 +4,6 @@ namespace Tests\Feature\Settings;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Fortify\Features;
 use Tests\TestCase;
 
@@ -28,10 +27,9 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->get(route('two-factor.show'))
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('settings/TwoFactor')
-                ->where('twoFactorEnabled', false)
-            );
+            ->assertOk()
+            ->assertViewIs('settings.two-factor')
+            ->assertViewHas('twoFactorEnabled', false);
     }
 
     public function test_two_factor_settings_page_requires_password_confirmation_when_enabled()
@@ -69,9 +67,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->actingAs($user)
             ->get(route('two-factor.show'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
-                ->component('settings/TwoFactor')
-            );
+            ->assertViewIs('settings.two-factor');
     }
 
     public function test_two_factor_settings_page_returns_forbidden_response_when_two_factor_is_disabled()
@@ -89,4 +85,81 @@ class TwoFactorAuthenticationTest extends TestCase
             ->get(route('two-factor.show'))
             ->assertForbidden();
     }
+
+    public function test_two_factor_settings_page_shows_enable_button_when_disabled()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two-factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create([
+            'two_factor_secret' => null,
+            'two_factor_confirmed_at' => null,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('two-factor.show'));
+
+        $response->assertOk();
+        $response->assertSee('You have not enabled two-factor authentication.');
+        $response->assertSee('Enable 2FA');
+    }
+
+    public function test_two_factor_settings_page_shows_qr_code_when_pending_confirmation()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two-factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create([
+            'two_factor_secret' => encrypt('secret-key'),
+            'two_factor_recovery_codes' => encrypt(json_encode([])),
+            'two_factor_confirmed_at' => null,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('two-factor.show'));
+
+        $response->assertOk();
+        $response->assertSee('Finish Enabling 2FA');
+        $response->assertSee('Scan this QR code');
+        $response->assertSee('Confirm');
+        $response->assertSee('Activate');
+    }
+
+    public function test_two_factor_settings_page_shows_active_status_when_fully_enabled()
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two-factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => false,
+        ]);
+
+        $user = User::factory()->create([
+            'two_factor_secret' => encrypt('secret-key'),
+            'two_factor_recovery_codes' => encrypt(json_encode([])),
+            'two_factor_confirmed_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('two-factor.show'));
+
+        $response->assertOk();
+        $response->assertSee('Two-factor authentication is active.');
+        $response->assertSee('Disable 2FA');
+    }
 }
+

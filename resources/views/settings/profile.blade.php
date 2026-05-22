@@ -52,13 +52,21 @@
                 <div>
                     <label style="display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--maroon); margin-bottom: 8px;">Primary Sport</label>
                     <select name="sport" class="form-control" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(61,42,47,.12); background: var(--offwhite); outline: none; font-family: 'Barlow', sans-serif; color: var(--charcoal); transition: border-color 0.2s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);">
-                        <option value="Basketball" {{ old('sport', Auth::user()->sport) == 'Basketball' ? 'selected' : '' }}>Basketball</option>
-                        <option value="Volleyball" {{ old('sport', Auth::user()->sport) == 'Volleyball' ? 'selected' : '' }}>Volleyball</option>
-                        <option value="Football" {{ old('sport', Auth::user()->sport) == 'Football' ? 'selected' : '' }}>Football</option>
                         <option value="Athletics" {{ old('sport', Auth::user()->sport) == 'Athletics' ? 'selected' : '' }}>Athletics</option>
-                        <option value="Swimming" {{ old('sport', Auth::user()->sport) == 'Swimming' ? 'selected' : '' }}>Swimming</option>
+                        <option value="Badminton" {{ old('sport', Auth::user()->sport) == 'Badminton' ? 'selected' : '' }}>Badminton</option>
+                        <option value="Basketball" {{ old('sport', Auth::user()->sport) == 'Basketball' ? 'selected' : '' }}>Basketball</option>
                         <option value="Cheerleading" {{ old('sport', Auth::user()->sport) == 'Cheerleading' ? 'selected' : '' }}>Cheerleading</option>
-                        <option value="Dance" {{ old('sport', Auth::user()->sport) == 'Dance' ? 'selected' : '' }}>Dance Sports</option>
+                        <option value="Chess" {{ old('sport', Auth::user()->sport) == 'Chess' ? 'selected' : '' }}>Chess</option>
+                        <option value="Dance Sports" {{ old('sport', Auth::user()->sport) == 'Dance Sports' || old('sport', Auth::user()->sport) == 'Dance' ? 'selected' : '' }}>Dance Sports</option>
+                        <option value="ESports" {{ old('sport', Auth::user()->sport) == 'ESports' ? 'selected' : '' }}>ESports</option>
+                        <option value="Football" {{ old('sport', Auth::user()->sport) == 'Football' ? 'selected' : '' }}>Football</option>
+                        <option value="Sepak Takraw" {{ old('sport', Auth::user()->sport) == 'Sepak Takraw' ? 'selected' : '' }}>Sepak Takraw</option>
+                        <option value="Swimming" {{ old('sport', Auth::user()->sport) == 'Swimming' ? 'selected' : '' }}>Swimming</option>
+                        <option value="Table Tennis" {{ old('sport', Auth::user()->sport) == 'Table Tennis' ? 'selected' : '' }}>Table Tennis</option>
+                        <option value="Taekwondo" {{ old('sport', Auth::user()->sport) == 'Taekwondo' ? 'selected' : '' }}>Taekwondo</option>
+                        <option value="Tennis" {{ old('sport', Auth::user()->sport) == 'Tennis' ? 'selected' : '' }}>Tennis</option>
+                        <option value="Volleyball" {{ old('sport', Auth::user()->sport) == 'Volleyball' ? 'selected' : '' }}>Volleyball</option>
+                        <option value="Wrestling" {{ old('sport', Auth::user()->sport) == 'Wrestling' ? 'selected' : '' }}>Wrestling</option>
                     </select>
                 </div>
 

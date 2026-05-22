@@ -12,7 +12,9 @@ class ProfileUpdateTest extends TestCase
 
     public function test_profile_page_is_displayed()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+        ]);
 
         $response = $this
             ->actingAs($user)
@@ -23,13 +25,17 @@ class ProfileUpdateTest extends TestCase
 
     public function test_profile_information_can_be_updated()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+        ]);
 
         $response = $this
             ->actingAs($user)
             ->patch(route('profile.update'), [
-                'name' => 'Test User',
+                'full_name' => 'Test User',
                 'email' => 'test@example.com',
+                'sport' => 'Basketball',
+                'campus' => 'Tagum',
             ]);
 
         $response
@@ -38,20 +44,25 @@ class ProfileUpdateTest extends TestCase
 
         $user->refresh();
 
-        $this->assertSame('Test User', $user->name);
+        $this->assertSame('Test User', $user->full_name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+            'email_verified_at' => now(),
+        ]);
 
         $response = $this
             ->actingAs($user)
             ->patch(route('profile.update'), [
-                'name' => 'Test User',
+                'full_name' => 'Test User',
                 'email' => $user->email,
+                'sport' => 'Basketball',
+                'campus' => 'Tagum',
             ]);
 
         $response
@@ -63,7 +74,9 @@ class ProfileUpdateTest extends TestCase
 
     public function test_user_can_delete_their_account()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+        ]);
 
         $response = $this
             ->actingAs($user)
@@ -73,7 +86,7 @@ class ProfileUpdateTest extends TestCase
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('home'));
+            ->assertRedirect('/');
 
         $this->assertGuest();
         $this->assertNull($user->fresh());
@@ -81,7 +94,9 @@ class ProfileUpdateTest extends TestCase
 
     public function test_correct_password_must_be_provided_to_delete_account()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+        ]);
 
         $response = $this
             ->actingAs($user)
@@ -96,4 +111,25 @@ class ProfileUpdateTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_profile_can_be_updated_with_newly_supported_sports()
+    {
+        $user = User::factory()->create([
+            'approved' => true,
+            'role' => 'user',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch(route('profile.update'), [
+                'full_name' => 'Test User',
+                'email' => $user->email,
+                'sport' => 'ESports',
+                'campus' => 'Tagum',
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertSame('ESports', $user->refresh()->sport);
+    }
 }
+

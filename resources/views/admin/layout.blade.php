@@ -328,8 +328,10 @@
             transition: all 0.2s, transform 0.1s;
             border: none;
             position: relative;
+            overflow: hidden;
             background: var(--maroon);
             color: var(--white);
+            text-decoration: none;
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
         }
         .btn::after {
@@ -342,11 +344,68 @@
         .btn-primary { background: var(--maroon); color: var(--white); }
         .btn-primary:hover { background: var(--maroon-mid); }
         
+        .btn-gold { background: var(--gold); color: var(--charcoal); }
+        .btn-gold:hover { background: var(--gold-dark); color: var(--charcoal); }
+        
+        .btn-outline { background: transparent; color: var(--maroon); border: 2px solid var(--maroon); }
+        .btn-outline:hover { background: rgba(122,20,40,0.05); }
+        
         .btn-success { background: #10B981; color: white; }
         .btn-success:hover { background: #059669; }
         
         .btn-danger { background: #EF4444; color: white; }
         .btn-danger:hover { background: #DC2626; }
+
+        /* Premium Clickable Analytics Cards */
+        .action-card {
+            background: white;
+            padding: 24px;
+            border-bottom: 4px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none !important;
+            color: inherit;
+            cursor: pointer;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(122, 20, 40, 0.08);
+            border-color: rgba(122, 20, 40, 0.1);
+            background: #ffffff;
+        }
+        .action-card:hover .action-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .action-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
+        }
+        .action-card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Responsive Dashboard Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .alert {
             padding: 16px 20px;

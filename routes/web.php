@@ -78,6 +78,7 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(f
     Route::post('submissions', [App\Http\Controllers\UserController::class, 'storeSubmission'])->name('submissions.store');
     Route::get('submission-document/{id}', [App\Http\Controllers\UserController::class, 'viewDocument'])->name('submissions.view');
     Route::get('achievements', [App\Http\Controllers\UserController::class, 'achievements'])->name('achievements');
+    Route::get('leaderboard', [App\Http\Controllers\UserController::class, 'leaderboard'])->name('leaderboard');
     Route::get('track-records', [App\Http\Controllers\UserController::class, 'trackRecords'])->name('track-records');
     Route::get('profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
     Route::put('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');

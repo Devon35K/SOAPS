@@ -461,7 +461,10 @@
                                 <option value="Athletics" {{ old('sport') == 'Athletics' ? 'selected' : '' }}>Athletics</option>
                                 <option value="Badminton" {{ old('sport') == 'Badminton' ? 'selected' : '' }}>Badminton</option>
                                 <option value="Basketball" {{ old('sport') == 'Basketball' ? 'selected' : '' }}>Basketball</option>
+                                <option value="Cheerleading" {{ old('sport') == 'Cheerleading' ? 'selected' : '' }}>Cheerleading</option>
                                 <option value="Chess" {{ old('sport') == 'Chess' ? 'selected' : '' }}>Chess</option>
+                                <option value="Dance Sports" {{ old('sport') == 'Dance Sports' || old('sport') == 'Dance' ? 'selected' : '' }}>Dance Sports</option>
+                                <option value="ESports" {{ old('sport') == 'ESports' ? 'selected' : '' }}>ESports</option>
                                 <option value="Football" {{ old('sport') == 'Football' ? 'selected' : '' }}>Football</option>
                                 <option value="Sepak Takraw" {{ old('sport') == 'Sepak Takraw' ? 'selected' : '' }}>Sepak Takraw</option>
                                 <option value="Swimming" {{ old('sport') == 'Swimming' ? 'selected' : '' }}>Swimming</option>
@@ -469,7 +472,7 @@
                                 <option value="Taekwondo" {{ old('sport') == 'Taekwondo' ? 'selected' : '' }}>Taekwondo</option>
                                 <option value="Tennis" {{ old('sport') == 'Tennis' ? 'selected' : '' }}>Tennis</option>
                                 <option value="Volleyball" {{ old('sport') == 'Volleyball' ? 'selected' : '' }}>Volleyball</option>
-                                <option value="ESports" {{ old('sport') == 'ESports' ? 'selected' : '' }}>Wrestling</option>
+                                <option value="Wrestling" {{ old('sport') == 'Wrestling' ? 'selected' : '' }}>Wrestling</option>
                             </select>
                             <i class='bx bx-chevron-down icon'></i>
                         </div>
@@ -479,7 +482,7 @@
                         <div class="input-wrap">
                             <i class='bx bx-lock-alt icon'></i>
                             <input type="password" name="password" id="password" placeholder="••••••••" required autocomplete="new-password">
-                            <i class='bx bx-show password-toggle' onclick="togglePass('password')"></i>
+                            <i class='bx bx-hide password-toggle' onclick="togglePass('password')"></i>
                         </div>
                     </div>
                     <div>
@@ -487,7 +490,7 @@
                         <div class="input-wrap">
                             <i class='bx bx-lock-alt icon'></i>
                             <input type="password" name="password_confirmation" id="password_confirmation" placeholder="••••••••" required autocomplete="new-password">
-                            <i class='bx bx-show password-toggle' onclick="togglePass('password_confirmation')"></i>
+                            <i class='bx bx-hide password-toggle' onclick="togglePass('password_confirmation')"></i>
                         </div>
                     </div>
                     <div>
@@ -579,9 +582,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const inp = document.getElementById(id);
         const icon = inp.nextElementSibling;
         if (inp.type === "password") {
-            inp.type = "text"; icon.classList.replace('bx-show', 'bx-hide');
+            inp.type = "text";
+            icon.classList.replace('bx-hide', 'bx-show');
         } else {
-            inp.type = "password"; icon.classList.replace('bx-hide', 'bx-show');
+            inp.type = "password";
+            icon.classList.replace('bx-show', 'bx-hide');
         }
     };
 

@@ -21,15 +21,18 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true,
+            'role' => 'user'
+        ]);
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post(route('login.post'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('user.dashboard'));
     }
 
     public function test_users_with_two_factor_enabled_are_redirected_to_two_factor_challenge()
@@ -43,7 +46,9 @@ class AuthenticationTest extends TestCase
             'confirmPassword' => true,
         ]);
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true
+        ]);
 
         $user->forceFill([
             'two_factor_secret' => encrypt('test-secret'),
@@ -51,7 +56,7 @@ class AuthenticationTest extends TestCase
             'two_factor_confirmed_at' => now(),
         ])->save();
 
-        $response = $this->post(route('login'), [
+        $response = $this->post(route('login.post'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -63,9 +68,11 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_not_authenticate_with_invalid_password()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true
+        ]);
 
-        $this->post(route('login.store'), [
+        $this->post(route('login.post'), [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
@@ -75,21 +82,25 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_logout()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true
+        ]);
 
         $response = $this->actingAs($user)->post(route('logout'));
 
         $this->assertGuest();
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('login'));
     }
 
     public function test_users_are_rate_limited()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'approved' => true
+        ]);
 
         RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post(route('login.post'), [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
