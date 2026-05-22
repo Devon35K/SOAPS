@@ -46,8 +46,10 @@ Route::get('dashboard', function () {
 Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('student-athletes', [AdminController::class, 'studentAthletes'])->name('student-athletes');
+    Route::get('student-athletes/search', [AdminController::class, 'studentAthletesSearch'])->name('student-athletes.search');
     Route::get('achievements', [AdminController::class, 'achievements'])->name('achievements');
     Route::get('evaluations', [AdminController::class, 'evaluations'])->name('evaluations');
+    Route::get('evaluations/search', [AdminController::class, 'evaluationsSearch'])->name('evaluations.search');
     Route::get('approved-docs', [AdminController::class, 'approvedDocs'])->name('approved-docs');
     Route::get('reports', [AdminController::class, 'reports'])->name('reports');
     Route::get('account-approvals', [AdminController::class, 'accountApprovals'])->name('account-approvals');

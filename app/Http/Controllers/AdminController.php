@@ -15,6 +15,18 @@ use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
+    /** Canonical sports list — single source of truth for all admin views */
+    const SPORTS = [
+        'Athletics', 'Badminton', 'Basketball', 'Cheerleading', 'Chess',
+        'Dance Sports', 'Esports', 'Football', 'Sepak Takraw', 'Softball',
+        'Swimming', 'Table Tennis', 'Taekwondo', 'Tennis', 'Volleyball', 'Wrestling',
+    ];
+
+    /** Canonical campus list */
+    const CAMPUSES = [
+        'Tagum-Mabini', 'Obrero', 'Mintal', 'Guianga', 'Bislig',
+    ];
+
     public function index(Request $request)
     {
         $currentPage = $request->get('page', 'Dashboard');
@@ -36,11 +48,10 @@ class AdminController extends Controller
     public function studentAthletes(Request $request)
     {
         $searchTerm = $request->get('search', '');
-        $sport = $request->get('sport', '');
-        $campus = $request->get('campus', '');
-        $status = $request->get('status', '');
-        $page = max(1, (int) $request->get('page_num', 1));
-        $perPage = 10;
+        $sport      = $request->get('sport', '');
+        $campus     = $request->get('campus', '');
+        $status     = $request->get('status', '');
+        $perPage    = 15;
 
         $users = User::query()
             ->where('role', 'user')
@@ -51,19 +62,52 @@ class AdminController extends Controller
                       ->orWhere('full_name', 'like', "%{$searchTerm}%");
                 });
             })
-            ->when($sport, fn($q) => $q->where('sport', $sport))
-            ->when($campus, fn($q) => $q->where('campus', $campus))
-            ->when($status, fn($q) => $q->where('status', $status))
+            ->when($sport,   fn($q) => $q->where('sport', $sport))
+            ->when($campus,  fn($q) => $q->where('campus', $campus))
+            ->when($status,  fn($q) => $q->where('status', $status))
             ->with(['images', 'achievements'])
-            ->paginate($perPage, ['*'], 'page', $page);
+            ->paginate($perPage);
 
         return view('admin.index', [
             'currentPage' => 'Student Athletes',
-            'users' => $users,
-            'searchTerm' => $searchTerm,
-            'sport' => $sport,
-            'campus' => $campus,
-            'status' => $status,
+            'users'       => $users,
+            'searchTerm'  => $searchTerm,
+            'sport'       => $sport,
+            'campus'      => $campus,
+            'status'      => $status,
+            'sports'      => self::SPORTS,
+            'campuses'    => self::CAMPUSES,
+        ]);
+    }
+
+    /**
+     * AJAX endpoint — returns only the athlete rows + pagination HTML.
+     */
+    public function studentAthletesSearch(Request $request)
+    {
+        $searchTerm = $request->get('search', '');
+        $sport      = $request->get('sport', '');
+        $campus     = $request->get('campus', '');
+        $status     = $request->get('status', '');
+        $perPage    = 15;
+
+        $users = User::query()
+            ->where('role', 'user')
+            ->where('approved', true)
+            ->when($searchTerm, function ($query) use ($searchTerm) {
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('student_id', 'like', "%{$searchTerm}%")
+                      ->orWhere('full_name', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->when($sport,   fn($q) => $q->where('sport', $sport))
+            ->when($campus,  fn($q) => $q->where('campus', $campus))
+            ->when($status,  fn($q) => $q->where('status', $status))
+            ->with(['images'])
+            ->paginate($perPage);
+
+        return view('admin.partials.student-athletes-results', [
+            'users'  => $users,
         ]);
     }
 
@@ -88,7 +132,12 @@ class AdminController extends Controller
 
         $leaderboard = \App\Models\Leaderboard::with('user.images')
             ->join('users', 'leaderboard.user_id', '=', 'users.id')
-            ->where('users.status', $leaderboardStatus)
+            ->when($search, function ($q) use ($search) {
+                $q->where('users.full_name', 'like', "%{$search}%")
+                  ->orWhere('users.student_id', 'like', "%{$search}%");
+            })
+            ->when($status, fn($q) => $q->where('users.status', $status))
+            ->when($sport, fn($q) => $q->where('users.sport', $sport))
             ->select('leaderboard.*', 'users.full_name as athlete_name')
             ->orderBy('leaderboard.total_points', 'desc')
             ->get();
@@ -96,12 +145,12 @@ class AdminController extends Controller
         return view('admin.index', [
             'currentPage' => 'Achievement',
             'achievements' => $achievements,
-            'leaderboard' => $leaderboard,
-            'search' => $search,
-            'status' => $status,
-            'sport' => $sport,
+            'leaderboard'  => $leaderboard,
+            'search'       => $search,
+            'status'       => $status,
+            'sport'        => $sport,
             'leaderboardStatus' => $leaderboardStatus,
-            'sports' => ['Basketball', 'Volleyball', 'Football', 'Swimming', 'Track and Field', 'Tennis', 'Table Tennis', 'Badminton'],
+            'sports'       => self::SPORTS,
         ]);
     }
 
@@ -111,14 +160,19 @@ class AdminController extends Controller
         $searchTerm = $request->get('search', '');
 
         $users = User::query()
+            ->where('role', 'user')
+            ->where('approved', true)
             ->when($searchTerm, function ($q) use ($searchTerm) {
-                $q->where('student_id', 'like', "%{$searchTerm}%")
-                  ->orWhere('full_name', 'like', "%{$searchTerm}%");
+                $q->where(function ($subQ) use ($searchTerm) {
+                    $subQ->where('student_id', 'like', "%{$searchTerm}%")
+                         ->orWhere('full_name', 'like', "%{$searchTerm}%");
+                });
             })
-            ->with(['submissions' => function ($q) {
+            ->with(['images', 'submissions' => function ($q) {
                 $q->where('status', 'pending');
             }])
-            ->get();
+            ->paginate(15);
+
 
         $submissionsByUser = [];
         foreach ($users as $user) {
@@ -132,6 +186,39 @@ class AdminController extends Controller
             'searchTerm' => $searchTerm,
         ]);
     }
+
+    /**
+     * AJAX endpoint — returns only the evaluations rows + pagination HTML.
+     */
+    public function evaluationsSearch(Request $request)
+    {
+        $searchTerm = $request->get('search', '');
+
+        $users = User::query()
+            ->where('role', 'user')
+            ->where('approved', true)
+            ->when($searchTerm, function ($q) use ($searchTerm) {
+                $q->where(function ($subQ) use ($searchTerm) {
+                    $subQ->where('student_id', 'like', "%{$searchTerm}%")
+                         ->orWhere('full_name', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->with(['images', 'submissions' => function ($q) {
+                $q->where('status', 'pending');
+            }])
+            ->paginate(15);
+
+        $submissionsByUser = [];
+        foreach ($users as $user) {
+            $submissionsByUser[$user->id] = $user->submissions;
+        }
+
+        return view('admin.partials.evaluations-results', [
+            'users' => $users,
+            'submissionsByUser' => $submissionsByUser,
+        ]);
+    }
+
 
     public function approvedDocs(Request $request)
     {

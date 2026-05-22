@@ -111,25 +111,25 @@ class UserController extends Controller
         $rank = array_search($userId, $allRankings);
         $rank = ($rank !== false) ? $rank + 1 : 'N/A';
         
-        // Fetch top 10 for leaderboard
+        // Fetch top 100 for leaderboard
         $leaderboardEntries = \App\Models\Leaderboard::with('user')
             ->orderBy('total_points', 'desc')
-            ->take(10)
+            ->take(100)
             ->get();
 
-        // Check if the current user is in the top 10
-        $userInTop10 = $leaderboardEntries->contains('user_id', $userId);
+        // Check if the current user is in the top 100
+        $userInTop100 = $leaderboardEntries->contains('user_id', $userId);
         
         $currentUserEntry = null;
-        if (!$userInTop10) {
-            $currentUserEntry = \App\Models\Leaderboard::with('user')->find($userId);
+        if (!$userInTop100) {
+            $currentUserEntry = \App\Models\Leaderboard::with('user')->where('user_id', $userId)->first();
         }
 
         return view('user.leaderboard', compact(
             'totalPoints', 
             'rank', 
             'leaderboardEntries', 
-            'userInTop10', 
+            'userInTop100', 
             'currentUserEntry',
             'allRankings'
         ));
