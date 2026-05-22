@@ -18,6 +18,16 @@
         </div>
     @endif
 
+    @if($errors->any())
+        <div style="background: #fee2e2; color: #991b1b; padding: 16px; margin-bottom: 24px; border-left: 4px solid #991b1b; font-weight: 600;">
+            <ul style="margin: 0; padding-left: 20px; font-weight: 600;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="data-table" style="padding: 32px; border-bottom: 4px solid var(--maroon); margin-bottom: 32px;">
         <form method="POST" action="{{ route('user.submissions.store') }}" enctype="multipart/form-data">
             @csrf
@@ -135,7 +145,31 @@
     <script>
     function updateFileInfo(input) {
         if (input.files && input.files[0]) {
-            const fileName = input.files[0].name;
+            const file = input.files[0];
+            const fileSize = file.size; // in bytes
+            const maxSize = 5 * 1024 * 1024; // 5 MB
+
+            if (fileSize > maxSize) {
+                // Show SweetAlert2 error dialog
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'The selected file exceeds the 5 MB limit. Please select a smaller file.',
+                    confirmButtonColor: '#7A1428'
+                });
+
+                // Reset the input and dropZone styling
+                input.value = '';
+                document.getElementById('uploadText').innerText = "Drag and drop to upload";
+                document.getElementById('uploadSubtext').innerText = "or click to browse files (PDF, JPG, PNG)";
+                document.getElementById('uploadIcon').className = 'bx bx-cloud-upload';
+                document.getElementById('uploadIcon').style.color = 'var(--maroon)';
+                document.getElementById('dropZone').style.borderColor = 'var(--maroon)';
+                document.getElementById('dropZone').style.background = 'rgba(122,20,40,0.02)';
+                return;
+            }
+
+            const fileName = file.name;
             document.getElementById('uploadText').innerText = "Selected: " + fileName;
             document.getElementById('uploadSubtext').innerText = "Click to change file";
             document.getElementById('uploadIcon').className = 'bx bx-check-circle';

@@ -33,6 +33,12 @@ class UserController extends Controller
             'document_type' => 'required|string',
             'notes' => 'nullable|string|max:500',
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ], [
+            'document.required' => 'Please select a document to upload.',
+            'document.file' => 'The uploaded item must be a valid file.',
+            'document.mimes' => 'Invalid file format. Only PDF, JPG, JPEG, and PNG files are supported.',
+            'document.max' => 'The uploaded file exceeds the 5 MB limit. Please select a smaller file.',
+            'document_type.required' => 'Please select a document type.',
         ]);
 
         try {
@@ -56,7 +62,13 @@ class UserController extends Controller
 
             return redirect()->route('user.submissions')->with('success', 'Document submitted successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('user.submissions')->with('error', 'Failed to submit document: ' . $e->getMessage());
+            // Log raw system exception for developer diagnostics
+            \Illuminate\Support\Facades\Log::error('Submission storage failed: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'exception' => $e
+            ]);
+
+            return redirect()->route('user.submissions')->with('error', 'Failed to submit document: An unexpected error occurred while saving your file to the database. Please ensure it is less than 5 MB and try again.');
         }
     }
 
@@ -82,6 +94,45 @@ class UserController extends Controller
             ->get();
 
         return view('user.achievements', compact('totalPoints', 'rank', 'achievements'));
+    }
+
+    /**
+     * Display the student leaderboard page.
+     */
+    public function leaderboard()
+    {
+        $userId = auth()->id();
+        
+        // Fetch real points from leaderboard
+        $totalPoints = \App\Models\Leaderboard::where('user_id', $userId)->value('total_points') ?? 0;
+        
+        // Calculate all rankings once to compute ranks efficiently
+        $allRankings = \App\Models\Leaderboard::orderBy('total_points', 'desc')->pluck('user_id')->toArray();
+        $rank = array_search($userId, $allRankings);
+        $rank = ($rank !== false) ? $rank + 1 : 'N/A';
+        
+        // Fetch top 10 for leaderboard
+        $leaderboardEntries = \App\Models\Leaderboard::with('user')
+            ->orderBy('total_points', 'desc')
+            ->take(10)
+            ->get();
+
+        // Check if the current user is in the top 10
+        $userInTop10 = $leaderboardEntries->contains('user_id', $userId);
+        
+        $currentUserEntry = null;
+        if (!$userInTop10) {
+            $currentUserEntry = \App\Models\Leaderboard::with('user')->find($userId);
+        }
+
+        return view('user.leaderboard', compact(
+            'totalPoints', 
+            'rank', 
+            'leaderboardEntries', 
+            'userInTop10', 
+            'currentUserEntry',
+            'allRankings'
+        ));
     }
 
     /**

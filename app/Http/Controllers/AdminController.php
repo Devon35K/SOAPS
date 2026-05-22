@@ -135,14 +135,23 @@ class AdminController extends Controller
 
     public function approvedDocs(Request $request)
     {
+        $searchTerm = $request->get('search', '');
 
-        $submissions = \App\Models\Submission::where('status', 'approved')
-            ->with('user')
-            ->get();
+        $query = \App\Models\Submission::where('status', 'approved')->with('user');
+
+        if (!empty($searchTerm)) {
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                $q->where('full_name', 'like', "%{$searchTerm}%")
+                  ->orWhere('student_id', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $submissions = $query->latest('updated_at')->get();
 
         return view('admin.index', [
             'currentPage' => 'Approved Docs',
             'submissions' => $submissions,
+            'searchTerm' => $searchTerm,
         ]);
     }
 

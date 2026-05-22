@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const toggle = document.querySelector('.toggle-password'), passInput = document.getElementById('password');
     if (toggle && passInput) {
-        const flip = () => { const s = passInput.type === 'password'; passInput.type = s ? 'text' : 'password'; toggle.classList.toggle('bx-hide', s); toggle.classList.toggle('bx-show', !s); toggle.setAttribute('aria-label', s ? 'Hide password' : 'Show password'); };
+        const flip = () => { const s = passInput.type === 'password'; passInput.type = s ? 'text' : 'password'; toggle.classList.toggle('bx-show', s); toggle.classList.toggle('bx-hide', !s); toggle.setAttribute('aria-label', s ? 'Hide password' : 'Show password'); };
         toggle.addEventListener('click', flip);
         toggle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
     }

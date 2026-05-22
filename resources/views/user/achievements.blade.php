@@ -1,13 +1,13 @@
 @extends('user.layout', ['pageTitle' => 'Achieve', 'pageTitleSpan' => 'ments'])
 
 @section('content')
-    <div class="welcome-card" style="margin-bottom: 24px;">
+    <div class="welcome-card animate-down" style="margin-bottom: 24px;">
         <h2>My <span>Trophies</span> & Records</h2>
         <p>Keep track of your medals, tournament history, and points contributed to your campus leaderboard.</p>
     </div>
 
     <!-- Leaderboard Stats Card -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 32px;">
+    <div class="animate-up delay-1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 32px;">
         <div class="action-card" style="border-bottom-color: var(--maroon);">
             <div class="action-card-left">
                 <h3 style="font-size: 0.8rem; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px;">Total Points</h3>
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="data-table">
+    <div class="data-table animate-up delay-2">
         <div class="table-header">
             <div style="flex: 2;">Tournament Event / Achievement</div>
             <div style="flex: 1;">Placement</div>
@@ -54,5 +54,4 @@
             <a href="{{ route('user.submissions') }}" class="btn btn-gold"><i class='bx bx-plus'></i> Log New Achievement</a>
         </div>
     </div>
-
 @endsection

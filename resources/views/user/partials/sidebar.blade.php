@@ -18,9 +18,21 @@
         <a href="{{ route('user.submissions') }}" class="nav-item {{ request()->routeIs('user.submissions') ? 'active' : '' }}">
             <i class='bx bx-file-export'></i> <span>Submissions</span>
         </a>
-        <a href="{{ route('user.achievements') }}" class="nav-item {{ request()->routeIs('user.achievements') ? 'active' : '' }}">
-            <i class='bx bx-trophy'></i> <span>Achievements</span>
-        </a>
+        <div class="nav-submenu-wrapper">
+            <a href="{{ route('user.achievements') }}" class="nav-item {{ (request()->routeIs('user.achievements') || request()->routeIs('user.leaderboard')) ? 'active' : '' }}">
+                <i class='bx bx-trophy'></i>
+                <span>Achievements</span>
+                <i class='bx bx-chevron-down submenu-arrow {{ (request()->routeIs('user.achievements') || request()->routeIs('user.leaderboard')) ? 'rotated' : '' }}' style="margin-left: auto; transition: transform 0.3s ease; font-size: 1.15rem;"></i>
+            </a>
+            <div class="nav-submenu" style="{{ (request()->routeIs('user.achievements') || request()->routeIs('user.leaderboard')) ? 'display: flex;' : 'display: none;' }}">
+                <a href="{{ route('user.achievements') }}" class="nav-submenu-item {{ request()->routeIs('user.achievements') ? 'active' : '' }}">
+                    <i class='bx bx-award'></i> <span>My Achievements</span>
+                </a>
+                <a href="{{ route('user.leaderboard') }}" class="nav-submenu-item {{ request()->routeIs('user.leaderboard') ? 'active' : '' }}">
+                    <i class='bx bx-list-ol'></i> <span>Leaderboards</span>
+                </a>
+            </div>
+        </div>
         <a href="{{ route('user.track-records') }}" class="nav-item {{ request()->routeIs('user.track-records') ? 'active' : '' }}">
             <i class='bx bx-file'></i> <span>Track Records</span>
         </a>

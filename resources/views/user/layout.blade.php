@@ -108,6 +108,48 @@
             color: var(--gold);
             transform: translateX(5px);
         }
+        .nav-submenu {
+            display: flex;
+            flex-direction: column;
+            padding-left: 20px;
+            margin-top: 2px;
+            margin-bottom: 8px;
+        }
+        .submenu-arrow {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .submenu-arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .nav-submenu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            border-left: 2px solid rgba(255,255,255,0.1);
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+        }
+        .nav-submenu-item:hover {
+            color: var(--white);
+            border-left-color: var(--gold);
+            background: rgba(255,255,255,0.03);
+            transform: translateX(3px);
+        }
+        .nav-submenu-item.active {
+            color: var(--gold);
+            border-left-color: var(--gold);
+            background: rgba(240,180,41,.05);
+            transform: translateX(3px);
+        }
         .nav-item:hover i {
             transform: scale(1.2) rotate(-5deg);
         }
@@ -297,6 +339,7 @@
             transition: all 0.2s, transform 0.1s;
             border: none;
             position: relative;
+            overflow: hidden;
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
             text-decoration: none;
         }
@@ -504,8 +547,7 @@
         function closeSidebar() {
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('sidebarOverlay').classList.remove('active');
-        </body>
-</html>
-
+        }
+    </script>
 </body>
 </html>

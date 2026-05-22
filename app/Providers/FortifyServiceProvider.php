@@ -11,6 +11,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,20 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // Custom two-factor login redirect based on role
+        $this->app->singleton(TwoFactorLoginResponseContract::class, function () {
+            return new class implements TwoFactorLoginResponseContract {
+                public function toResponse($request)
+                {
+                    $user = auth()->user();
+                    if ($user->role === 'admin' || $user->role === 'super_admin') {
+                        return redirect()->route('admin.dashboard');
+                    }
+                    return redirect()->route('user.dashboard');
+                }
+            };
+        });
     }
 
     /**
@@ -63,7 +78,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::registerView(fn () => Inertia::render('auth/Register'));
 
-        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));
+        Fortify::twoFactorChallengeView(fn () => view('auth.two-factor-challenge'));
 
         Fortify::confirmPasswordView(fn () => view('auth.confirm-password'));
     }
