@@ -481,12 +481,19 @@ class AdminController extends Controller
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,super_admin,user',
+            'user_type' => 'required|in:student,alumni,admin,super_admin',
         ]);
 
+        $role = in_array($validated['user_type'], ['admin', 'super_admin']) ? $validated['user_type'] : 'user';
+        $status = $validated['user_type'] === 'alumni' ? 'alumni' : 'undergraduate';
+
         User::create([
-            ...$validated,
+            'student_id' => $validated['student_id'],
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => $role,
+            'status' => $status,
             'approved' => true,
         ]);
 
@@ -496,6 +503,14 @@ class AdminController extends Controller
     public function editUser($id)
     {
         $user = User::findOrFail($id);
+        
+        // Determine user_type for the form
+        $userType = $user->role;
+        if ($user->role === 'user') {
+            $userType = $user->status === 'alumni' ? 'alumni' : 'student';
+        }
+        $user->user_type = $userType;
+
         return view('admin.index', ['currentPage' => 'Edit User', 'editUser' => $user]);
     }
 
@@ -506,10 +521,18 @@ class AdminController extends Controller
         $validated = $request->validate([
             'full_name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|in:admin,super_admin,user',
+            'user_type' => 'required|in:student,alumni,admin,super_admin',
         ]);
 
-        $user->update($validated);
+        $role = in_array($validated['user_type'], ['admin', 'super_admin']) ? $validated['user_type'] : 'user';
+        $status = $validated['user_type'] === 'alumni' ? 'alumni' : 'undergraduate';
+
+        $user->update([
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'role' => $role,
+            'status' => $status,
+        ]);
 
         return redirect()->route('admin.users')->with('message', 'User updated successfully');
     }

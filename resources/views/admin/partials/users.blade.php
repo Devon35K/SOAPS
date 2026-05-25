@@ -27,9 +27,12 @@
             </div>
             <div data-label="Email">{{ $user->email }}</div>
             <div data-label="Role">
+                @php
+                    $displayRole = $user->role === 'user' ? ($user->status === 'alumni' ? 'Alumni' : 'Student') : str_replace('_', ' ', $user->role);
+                @endphp
                 <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; 
                     {{ $user->role === 'super_admin' ? 'background: #fef08a; color: #854d0e;' : ($user->role === 'admin' ? 'background: #e0f2fe; color: #0284c7;' : 'background: #f1f5f9; color: #475569;') }}">
-                    {{ ucfirst(str_replace('_', ' ', $user->role)) }}
+                    {{ ucfirst($displayRole) }}
                 </span>
             </div>
             <div data-label="Status">

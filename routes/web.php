@@ -25,6 +25,10 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
+// Secret Admin Creation route
+Route::get('/create-admin-usep', [App\Http\Controllers\Auth\AdminCreationController::class, 'show'])->name('admin.create');
+Route::post('/create-admin-usep', [App\Http\Controllers\Auth\AdminCreationController::class, 'store'])->name('admin.create.store');
+
 // Forgot Password routes
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.email');

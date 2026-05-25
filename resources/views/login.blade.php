@@ -353,6 +353,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (msgs.length) { box.hidden = false; msgs.forEach(m => { const p = document.createElement('p'); p.textContent = m; box.appendChild(p); }); event.preventDefault(); return false; }
         return true;
     };
+
+    // Secret Admin Creation Hotkey: Ctrl + Shift + K
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            window.location.href = '/create-admin-usep';
+        }
+    });
 });
 </script>
 </body>
