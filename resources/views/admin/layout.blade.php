@@ -108,8 +108,12 @@
             background: rgba(240,180,41,.1);
             border-left: 4px solid var(--gold);
             color: var(--gold);
+            transform: translateX(5px);
         }
-        .nav-item i { font-size: 1.3rem; }
+        .nav-item:hover i {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        .nav-item i { font-size: 1.3rem; transition: transform 0.3s ease; }
 
         .role-badge {
             background: rgba(240,180,41,.1);

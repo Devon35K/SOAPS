@@ -64,6 +64,55 @@
             box-shadow: inset 0 0 12px rgba(122, 20, 40, 0.03);
         }
 
+        .leaderboard-item.top-10 {
+            background: linear-gradient(135deg, rgba(240,180,41,0.07) 0%, rgba(255,255,255,0) 100%);
+            border-left: 3px solid rgba(240,180,41,0.35);
+        }
+
+        .leaderboard-item.top-10.highlighted {
+            background: linear-gradient(135deg, rgba(122,20,40,0.08) 0%, rgba(240,180,41,0.06) 100%);
+            border-left: 4px solid var(--gold);
+            border-right: 4px solid var(--gold);
+        }
+
+        .leaderboard-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 32px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .leaderboard-divider::before,
+        .leaderboard-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0,0,0,0.06);
+        }
+
+        .leaderboard-gap-separator {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            padding: 20px 0;
+            font-weight: 800;
+        }
+
+        .leaderboard-pinned-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 32px 2px;
+        }
+
         .leaderboard-rank {
             width: 36px;
             height: 36px;
@@ -192,7 +241,7 @@
         <!-- Welcome Banner -->
         <div class="welcome-card" style="margin-bottom: 0;">
             <h2>Campus <span>Standings</span></h2>
-            <p>Compare your points and rank against our elite campus athletes. Top 10 rankings are updated in real-time.</p>
+            <p>Compare your points and rank against our elite campus athletes. Top 100 standings are updated in real-time.</p>
         </div>
 
         <!-- Stats row -->
@@ -222,7 +271,7 @@
         <div class="leaderboard-full-card">
             <div class="leaderboard-full-header">
                 <span><i class='bx bx-trophy' style="color: var(--gold); margin-right: 8px;"></i> Athlete Leaderboard Standings</span>
-                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 400; letter-spacing: 0.5px; text-transform: none;">Top 10 Rankings</span>
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 400; letter-spacing: 0.5px; text-transform: none;">Top 100 Campus Standings</span>
             </div>
             <div class="leaderboard-full-body">
                 @php
@@ -248,6 +297,7 @@
                     @php
                         $entryRank = $index + 1;
                         $isCurrentUser = $entry->user_id === auth()->id();
+                        $isTop10 = $entryRank <= 10;
                         $displayName = $entry->user ? $entry->user->full_name : 'Unknown Athlete';
                         $displaySport = $entry->user ? $entry->user->sport : 'General';
                         
@@ -268,7 +318,12 @@
                         }
                     @endphp
 
-                    <div class="leaderboard-item {{ $isCurrentUser ? 'highlighted' : '' }}">
+                    {{-- Add section divider between Top 10 and 11-100 --}}
+                    @if($entryRank === 11)
+                        <div class="leaderboard-divider">Ranks 11 – 100</div>
+                    @endif
+
+                    <div class="leaderboard-item {{ $isCurrentUser ? 'highlighted' : '' }} {{ $isTop10 ? 'top-10' : '' }}">
                         <div class="leaderboard-rank {{ $entryRank == 1 ? 'rank-1' : ($entryRank == 2 ? 'rank-2' : ($entryRank == 3 ? 'rank-3' : 'rank-other')) }}">
                             @if($entryRank == 1)
                                 🏆
@@ -308,7 +363,7 @@
                     </div>
                 @endforelse
 
-                @if(!$userInTop10 && $currentUserEntry)
+                @if(!$userInTop100 && $currentUserEntry)
                     @php
                         $displayName = $currentUserEntry->user ? $currentUserEntry->user->full_name : 'Unknown Athlete';
                         $displaySport = $currentUserEntry->user ? $currentUserEntry->user->sport : 'General';
@@ -330,10 +385,10 @@
                         }
                     @endphp
 
-                    <!-- Gap Separator -->
-                    <div style="text-align: center; color: var(--text-muted); font-size: 1.5rem; letter-spacing: 4px; padding: 20px 0; font-weight: 800;">
-                        •••
-                    </div>
+                    <!-- CODM-Style Gap Separator -->
+                    <div class="leaderboard-gap-separator">•••</div>
+
+                    <div class="leaderboard-pinned-label">Your Standing</div>
 
                     <div class="leaderboard-item highlighted" style="border-top: 1px solid rgba(0,0,0,0.04);">
                         <div class="leaderboard-rank rank-other" style="color: var(--maroon);">
@@ -358,7 +413,7 @@
                             {{ number_format($currentUserEntry->total_points) }} <span style="font-size: 0.85rem; font-weight: 500; text-transform: uppercase;">pts</span>
                         </div>
                     </div>
-                @elseif(!$userInTop10 && !$currentUserEntry)
+                @elseif(!$userInTop100 && !$currentUserEntry)
                     @php
                         $displayName = auth()->user()->full_name;
                         $displaySport = auth()->user()->sport ?? 'General';
@@ -380,10 +435,10 @@
                         }
                     @endphp
 
-                    <!-- Gap Separator -->
-                    <div style="text-align: center; color: var(--text-muted); font-size: 1.5rem; letter-spacing: 4px; padding: 20px 0; font-weight: 800;">
-                        •••
-                    </div>
+                    <!-- CODM-Style Gap Separator -->
+                    <div class="leaderboard-gap-separator">•••</div>
+
+                    <div class="leaderboard-pinned-label">Your Standing</div>
 
                     <div class="leaderboard-item highlighted" style="border-top: 1px solid rgba(0,0,0,0.04);">
                         <div class="leaderboard-rank rank-other" style="color: var(--maroon);">

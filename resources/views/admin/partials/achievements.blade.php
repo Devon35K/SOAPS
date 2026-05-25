@@ -1,6 +1,8 @@
 @php
-$sports = ['Basketball', 'Volleyball', 'Football', 'Swimming', 'Track and Field', 'Tennis', 'Table Tennis', 'Badminton'];
+// $sports is passed from AdminController::achievements() — canonical SPORTS constant
+$sports = $sports ?? [];
 @endphp
+
 
 <div class="search-form">
     <form method="GET" action="{{ route('admin.achievements') }}" class="search-grid">

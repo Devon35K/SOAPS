@@ -25,6 +25,10 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
+// Secret Admin Creation route
+Route::get('/create-admin-usep', [App\Http\Controllers\Auth\AdminCreationController::class, 'show'])->name('admin.create');
+Route::post('/create-admin-usep', [App\Http\Controllers\Auth\AdminCreationController::class, 'store'])->name('admin.create.store');
+
 // Forgot Password routes
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
@@ -46,8 +50,10 @@ Route::get('dashboard', function () {
 Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('student-athletes', [AdminController::class, 'studentAthletes'])->name('student-athletes');
+    Route::get('student-athletes/search', [AdminController::class, 'studentAthletesSearch'])->name('student-athletes.search');
     Route::get('achievements', [AdminController::class, 'achievements'])->name('achievements');
     Route::get('evaluations', [AdminController::class, 'evaluations'])->name('evaluations');
+    Route::get('evaluations/search', [AdminController::class, 'evaluationsSearch'])->name('evaluations.search');
     Route::get('approved-docs', [AdminController::class, 'approvedDocs'])->name('approved-docs');
     Route::get('reports', [AdminController::class, 'reports'])->name('reports');
     Route::get('account-approvals', [AdminController::class, 'accountApprovals'])->name('account-approvals');

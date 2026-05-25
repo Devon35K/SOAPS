@@ -30,6 +30,14 @@
             @include('admin.partials.users')
             @break
 
+        @case('Create User')
+            @include('admin.partials.create-user')
+            @break
+
+        @case('Edit User')
+            @include('admin.partials.edit-user')
+            @break
+
         @default
             @include('admin.partials.dashboard')
     @endswitch
