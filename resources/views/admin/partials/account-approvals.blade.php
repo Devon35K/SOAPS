@@ -178,6 +178,8 @@ function viewDocument(requestId, fileType = '') {
 }
 
 function handleApproval(requestId, action, rejectionReason) {
+    console.log('handleApproval called with requestId:', requestId, 'type:', typeof requestId);
+    alert('Debug: requestId = ' + requestId + ' (type: ' + typeof requestId + ')');
     if (action === 'approve' && !confirm('Are you sure you want to approve this request?')) return;
 
     const row    = document.getElementById(`request-row-${requestId}`);

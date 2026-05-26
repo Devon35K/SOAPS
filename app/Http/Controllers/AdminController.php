@@ -319,7 +319,14 @@ class AdminController extends Controller
     public function approveRequest(Request $request)
     {
         try {
+            Log::debug('approveRequest received', [
+                'method' => $request->method(),
+                'content_type' => $request->header('Content-Type'),
+                'all_input' => $request->all(),
+                'raw_content' => $request->getContent()
+            ]);
             $approvalId = $request->input('approval_id');
+            Log::debug('approvalId extracted: ' . var_export($approvalId, true));
             $approval = \App\Models\AccountApproval::find($approvalId);
 
             if (!$approval) {
