@@ -48,7 +48,7 @@
                     <i class='bx bx-check'></i> Approve
                 </button>
 
-                <button onclick="showAccountRejectPanel({{ $request->id }})" id="btn-reject-{{ $request->id }}" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;">
+                <button onclick="openRejectModal({{ $request->id }}, '{{ addslashes($request->full_name) }}')" id="btn-reject-{{ $request->id }}" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;">
                     <i class='bx bx-x'></i> Reject
                 </button>
             </div>
@@ -60,18 +60,38 @@
                 <p style="font-weight: 500;">No pending approval requests</p>
             </div>
         </div>
-        <!-- Rejection Reason Panel (injected per row, hidden by default) -->
-        <div id="acct-reject-panel-{{ $request->id }}" style="display:none; grid-column: 1 / -1; padding: 16px; background: #fff5f5; border-top: 1px solid #fecaca;">
-            <label style="display:block; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; color: #991b1b; letter-spacing: 1px; margin-bottom: 8px;">
-                <i class='bx bx-error-circle'></i> Reason for Rejection <span style="color:#64748b; font-weight:500;">(required)</span>
-            </label>
-            <textarea id="acct-reject-reason-{{ $request->id }}" rows="2" placeholder="State why this account request is being rejected..." style="width:100%; padding: 10px 12px; border: 1.5px solid #fca5a5; border-radius: 4px; font-family: 'Barlow', sans-serif; font-size: 0.88rem; color: #1e293b; resize: vertical; outline: none;"></textarea>
-            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
-                <button onclick="cancelAccountReject({{ $request->id }})" class="btn" style="background:#f1f5f9; color:#475569; padding:7px 14px; font-size:0.75rem;">Cancel</button>
-                <button onclick="confirmAccountReject({{ $request->id }})" class="btn" style="background:#dc2626; color:white; padding:7px 18px; font-size:0.75rem;"><i class='bx bx-x-circle'></i> Confirm Reject</button>
-            </div>
-        </div>
     @endforelse
+</div>
+
+<!-- Rejection Reason Modal -->
+<div id="rejectReasonModal" style="position: fixed; inset: 0; background: rgba(28,20,16,.72); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 10000;">
+    <div style="background: white; width: 92%; max-width: 480px; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); box-shadow: 0 25px 50px -12px rgba(0,0,0,.5); display: flex; flex-direction: column;">
+        <!-- Header -->
+        <div style="display: flex; align-items: center; gap: 12px; padding: 20px 24px; border-bottom: 2px solid #fee2e2; background: #fff5f5;">
+            <div style="width: 8px; height: 28px; background: #dc2626; flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+                <h3 style="font-family: 'Barlow Condensed'; font-weight: 800; font-size: 1.3rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Reject Account Request</h3>
+                <p id="reject-modal-name" style="font-size: 0.82rem; color: #64748b; margin: 2px 0 0;"></p>
+            </div>
+            <button onclick="closeRejectModal()" style="background: none; border: none; font-size: 1.5rem; color: #94a3b8; cursor: pointer; line-height: 1;"><i class='bx bx-x'></i></button>
+        </div>
+        <!-- Body -->
+        <div style="padding: 24px;">
+            <label style="display: block; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; color: #991b1b; letter-spacing: 1.2px; margin-bottom: 10px;">
+                <i class='bx bx-error-circle'></i> Reason for Rejection <span style="color: #94a3b8; font-weight: 500; text-transform: none;">(required — sent to applicant by email)</span>
+            </label>
+            <textarea id="reject-modal-reason" rows="4" placeholder="e.g. Incomplete documentation, invalid student ID, document is unclear..." style="width: 100%; padding: 12px 14px; border: 1.5px solid #fca5a5; border-radius: 4px; font-family: 'Barlow', sans-serif; font-size: 0.9rem; color: #1e293b; resize: vertical; outline: none; transition: border-color 0.2s;"
+                onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#fca5a5'"></textarea>
+            <p id="reject-modal-error" style="display:none; color: #dc2626; font-size: 0.78rem; margin-top: 6px; font-weight: 600;"><i class='bx bx-error-circle'></i> Please enter a reason before rejecting.</p>
+        </div>
+        <!-- Footer -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid #f1f5f9;">
+            <button onclick="closeRejectModal()" class="btn" style="background: #f1f5f9; color: #475569; padding: 9px 20px;">Cancel</button>
+            <button onclick="submitRejectModal()" id="reject-modal-confirm-btn" class="btn" style="background: #dc2626; color: white; padding: 9px 24px; font-weight: 700;">
+                <i class='bx bx-x-circle'></i> Confirm Rejection
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Document Viewer Modal -->
@@ -97,11 +117,40 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('documentModal');
-    if (modal) {
-        document.body.appendChild(modal);
-    }
+    ['documentModal', 'rejectReasonModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) document.body.appendChild(el);
+    });
 });
+
+let _rejectTargetId = null;
+
+function openRejectModal(requestId, fullName) {
+    _rejectTargetId = requestId;
+    document.getElementById('reject-modal-name').textContent = 'Applicant: ' + fullName;
+    document.getElementById('reject-modal-reason').value = '';
+    document.getElementById('reject-modal-reason').style.borderColor = '#fca5a5';
+    document.getElementById('reject-modal-error').style.display = 'none';
+    document.getElementById('rejectReasonModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('reject-modal-reason').focus(), 80);
+}
+
+function closeRejectModal() {
+    document.getElementById('rejectReasonModal').style.display = 'none';
+    _rejectTargetId = null;
+}
+
+function submitRejectModal() {
+    const reason = document.getElementById('reject-modal-reason').value.trim();
+    if (!reason) {
+        document.getElementById('reject-modal-reason').style.borderColor = '#dc2626';
+        document.getElementById('reject-modal-error').style.display = 'block';
+        document.getElementById('reject-modal-reason').focus();
+        return;
+    }
+    closeRejectModal();
+    handleApproval(_rejectTargetId, 'reject', reason);
+}
 
 function viewDocument(requestId, fileType = '') {
     const modal = document.getElementById('documentModal');
@@ -128,50 +177,28 @@ function viewDocument(requestId, fileType = '') {
     }
 }
 
-function showAccountRejectPanel(requestId) {
-    document.getElementById(`acct-reject-panel-${requestId}`).style.display = 'block';
-    document.getElementById(`btn-reject-${requestId}`).style.display = 'none';
-    document.getElementById(`btn-approve-${requestId}`).disabled = true;
-    document.getElementById(`btn-approve-${requestId}`).style.opacity = '0.4';
-    document.getElementById(`acct-reject-reason-${requestId}`).focus();
-}
-
-function cancelAccountReject(requestId) {
-    document.getElementById(`acct-reject-panel-${requestId}`).style.display = 'none';
-    document.getElementById(`btn-reject-${requestId}`).style.display = '';
-    document.getElementById(`btn-approve-${requestId}`).disabled = false;
-    document.getElementById(`btn-approve-${requestId}`).style.opacity = '1';
-    document.getElementById(`acct-reject-reason-${requestId}`).value = '';
-}
-
-function confirmAccountReject(requestId) {
-    const reason = document.getElementById(`acct-reject-reason-${requestId}`).value.trim();
-    if (!reason) {
-        document.getElementById(`acct-reject-reason-${requestId}`).style.borderColor = '#dc2626';
-        document.getElementById(`acct-reject-reason-${requestId}`).focus();
-        return;
-    }
-    handleApproval(requestId, 'reject', reason);
-}
-
 function handleApproval(requestId, action, rejectionReason) {
-    if (action === 'approve' && !confirm(`Are you sure you want to approve this request?`)) return;
+    if (action === 'approve' && !confirm('Are you sure you want to approve this request?')) return;
 
-    const row = document.getElementById(`request-row-${requestId}`);
-    const badge = document.getElementById(`status-badge-${requestId}`);
-    const btn = action === 'approve'
-        ? document.getElementById(`btn-approve-${requestId}`)
-        : document.getElementById(`acct-reject-panel-${requestId}`).querySelector('button:last-child');
-    const approvBtn = document.getElementById(`btn-approve-${requestId}`);
-    
-    // Loading state
-    if (btn) { btn.disabled = true; const origHTML = btn.innerHTML; btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>'; }
-    approvBtn.disabled = true;
+    const row    = document.getElementById(`request-row-${requestId}`);
+    const badge  = document.getElementById(`status-badge-${requestId}`);
+    const approveBtn = document.getElementById(`btn-approve-${requestId}`);
+    const rejectBtn  = document.getElementById(`btn-reject-${requestId}`);
+
+    // Disable both action buttons and show spinner on the acting one
+    if (approveBtn) { approveBtn.disabled = true; }
+    if (rejectBtn)  { rejectBtn.disabled = true; }
+    if (action === 'approve' && approveBtn) {
+        approveBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+    }
+    if (action === 'reject' && rejectBtn) {
+        rejectBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+    }
 
     const url = action === 'approve' ? '{{ route("admin.approve-request") }}' : '{{ route("admin.reject-request") }}';
     const payload = { approval_id: requestId };
     if (rejectionReason) payload.rejection_reason = rejectionReason;
-    
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -185,37 +212,29 @@ function handleApproval(requestId, action, rejectionReason) {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            // Visual feedback
             badge.style.background = action === 'approve' ? '#dcfce7' : '#fee2e2';
-            badge.style.color = action === 'approve' ? '#166534' : '#991b1b';
-            badge.innerText = action === 'approve' ? 'Approved' : 'Rejected';
-            
-            // Fade out and remove
+            badge.style.color      = action === 'approve' ? '#166534' : '#991b1b';
+            badge.innerText        = action === 'approve' ? 'Approved' : 'Rejected';
             setTimeout(() => {
-                row.style.opacity = '0';
-                row.style.transform = 'translateX(20px)';
+                row.style.opacity    = '0';
+                row.style.transform  = 'translateX(20px)';
                 row.style.transition = 'all 0.5s ease';
                 setTimeout(() => {
                     row.remove();
-                    // Check if table is empty
-                    if (document.querySelectorAll('.table-row:not([style*="display: none"])').length === 0) {
-                        location.reload();
-                    }
+                    if (!document.querySelector('[id^="request-row-"]')) location.reload();
                 }, 500);
             }, 800);
         } else {
-            alert(result.message || 'Action failed');
-            btn.disabled = false;
-            otherBtn.disabled = false;
-            btn.innerHTML = originalText;
+            alert('Error: ' + (result.message || 'Action failed'));
+            if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = '<i class="bx bx-check"></i> Approve'; }
+            if (rejectBtn)  { rejectBtn.disabled  = false; rejectBtn.innerHTML  = '<i class="bx bx-x"></i> Reject'; }
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-        btn.disabled = false;
-        otherBtn.disabled = false;
-        btn.innerHTML = originalText;
+        alert('Network/server error: ' + error.message);
+        if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = '<i class="bx bx-check"></i> Approve'; }
+        if (rejectBtn)  { rejectBtn.disabled  = false; rejectBtn.innerHTML  = '<i class="bx bx-x"></i> Reject'; }
     });
 }
 

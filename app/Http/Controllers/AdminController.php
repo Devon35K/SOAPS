@@ -318,17 +318,21 @@ class AdminController extends Controller
 
     public function approveRequest(Request $request)
     {
+        try {
+            $approvalId = $request->input('approval_id');
+            $approval = \App\Models\AccountApproval::find($approvalId);
 
-        $approvalId = $request->input('approval_id');
-        $approval = \App\Models\AccountApproval::find($approvalId);
+            if (!$approval) {
+                return ($request->wantsJson() || $request->ajax())
+                    ? response()->json(['success' => false, 'message' => 'Approval request not found (ID: ' . $approvalId . ').'])
+                    : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'approve']);
+            }
 
-        if ($approval) {
             $approval->approval_status = 'approved';
             $approval->approved_by = auth()->id();
             $approval->approval_date = now();
             $approval->save();
 
-            // Create user account with all fields from approval request
             User::create([
                 'student_id' => $approval->student_id,
                 'full_name' => $approval->full_name,
@@ -342,54 +346,58 @@ class AdminController extends Controller
                 'role' => 'user',
             ]);
 
-            // Send approval email
             try {
                 Mail::to($approval->email)->send(new ApprovalMail($approval->full_name, $approval->student_id, $approval->email));
             } catch (\Exception $e) {
                 Log::error('Failed to send approval email: ' . $e->getMessage());
             }
 
-            return $request->ajax() 
+            return ($request->wantsJson() || $request->ajax())
                 ? response()->json(['success' => true, 'message' => 'Request approved successfully! User has been notified.'])
                 : redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'approve']);
-        }
 
-        return $request->ajax()
-            ? response()->json(['success' => false, 'message' => 'Failed to find approval request.'])
-            : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'approve']);
+        } catch (\Exception $e) {
+            Log::error('approveRequest error: ' . $e->getMessage());
+            return ($request->wantsJson() || $request->ajax())
+                ? response()->json(['success' => false, 'message' => 'Server error: ' . $e->getMessage()])
+                : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'approve']);
+        }
     }
 
     public function rejectRequest(Request $request)
     {
+        try {
+            $approvalId = $request->input('approval_id');
+            $approval = \App\Models\AccountApproval::find($approvalId);
 
-        $approvalId = $request->input('approval_id');
-        $approval = \App\Models\AccountApproval::find($approvalId);
+            if (!$approval) {
+                return ($request->wantsJson() || $request->ajax())
+                    ? response()->json(['success' => false, 'message' => 'Approval request not found (ID: ' . $approvalId . ').'])
+                    : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
+            }
 
-        if ($approval) {
-            // Store email and name for the rejection mail before deleting
             $email = $approval->email;
             $name = $approval->full_name;
             $rejectionReason = $request->input('rejection_reason', '');
 
-            // Delete the record as requested by the user ("when rejected it won't register to the database")
             $approval->delete();
 
-            // Send rejection email
             try {
                 Mail::to($email)->send(new RejectionMail($name, $rejectionReason));
             } catch (\Exception $e) {
                 Log::error('Failed to send rejection email: ' . $e->getMessage());
             }
 
-            return $request->ajax() 
-                ? response()->json(['success' => true, 'message' => 'Request rejected successfully!'])
+            return ($request->wantsJson() || $request->ajax())
+                ? response()->json(['success' => true, 'message' => 'Request rejected. The applicant has been notified by email.'])
                 : redirect()->route('admin.account-approvals', ['status' => 'success', 'action' => 'reject']);
+
+        } catch (\Exception $e) {
+            Log::error('rejectRequest error: ' . $e->getMessage());
+            return ($request->wantsJson() || $request->ajax())
+                ? response()->json(['success' => false, 'message' => 'Server error: ' . $e->getMessage()])
+                : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
         }
-
-
-        return $request->ajax()
-            ? response()->json(['success' => false, 'message' => 'Failed to reject request.'])
-            : redirect()->route('admin.account-approvals', ['status' => 'error', 'action' => 'reject']);
     }
 
     public function viewApprovalDocument($id)

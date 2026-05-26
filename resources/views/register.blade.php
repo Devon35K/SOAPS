@@ -376,7 +376,7 @@
                 <div class="logo-badge"><img src="/image/Usep.png" alt="USeP"></div>
                 <div class="logo-name">USeP OSAS<br>Sports Unit</div>
             </div>
-            <span class="headline-tag">Join the Team</span>
+            <span class="headline-tag">Sign Up</span>
             <h1 class="headline">One Goal.<br><span class="gold-word">One Family.</span></h1>
             <p class="tagline">Register as a student-athlete and be part of USeP's sports legacy. Train, compete, and excel with us.</p>
             
