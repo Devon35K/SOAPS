@@ -14,13 +14,15 @@ class RejectionMail extends Mailable
     use Queueable, SerializesModels;
 
     public $fullName;
+    public $rejectionReason;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($fullName)
+    public function __construct($fullName, $rejectionReason = '')
     {
         $this->fullName = $fullName;
+        $this->rejectionReason = $rejectionReason;
     }
 
     /**

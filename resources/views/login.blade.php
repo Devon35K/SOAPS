@@ -274,7 +274,7 @@
                     <div class="forgot-row">
                         <a href="{{ route('password.request') }}" class="forgot-link">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="btn-login">Enter the Field</button>
+                    <button type="submit" class="btn-login">Log IN</button>
                     <div class="btn-accent"></div>
                 </div>
             </form>

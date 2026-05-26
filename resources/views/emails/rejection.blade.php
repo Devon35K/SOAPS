@@ -194,6 +194,13 @@
                 We regret to inform you that your account request has been rejected. This decision may have been made due to incomplete documentation, invalid information, or failure to meet the requirements for student-athlete registration.
             </p>
             
+            @if(!empty($rejectionReason))
+            <div class="rejection-box">
+                <h3>Reason for Rejection</h3>
+                <p>{{ $rejectionReason }}</p>
+            </div>
+            @endif
+
             <div class="rejection-box">
                 <h3>What You Can Do</h3>
                 <p>

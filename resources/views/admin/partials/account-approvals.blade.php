@@ -48,7 +48,7 @@
                     <i class='bx bx-check'></i> Approve
                 </button>
 
-                <button onclick="handleApproval({{ $request->id }}, 'reject')" id="btn-reject-{{ $request->id }}" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;">
+                <button onclick="showAccountRejectPanel({{ $request->id }})" id="btn-reject-{{ $request->id }}" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.75rem;">
                     <i class='bx bx-x'></i> Reject
                 </button>
             </div>
@@ -58,6 +58,17 @@
             <div style="color: var(--text-muted);">
                 <i class='bx bx-inbox' style="font-size: 2.5rem; margin-bottom: 12px; color: var(--text-muted); opacity: 0.5;"></i>
                 <p style="font-weight: 500;">No pending approval requests</p>
+            </div>
+        </div>
+        <!-- Rejection Reason Panel (injected per row, hidden by default) -->
+        <div id="acct-reject-panel-{{ $request->id }}" style="display:none; grid-column: 1 / -1; padding: 16px; background: #fff5f5; border-top: 1px solid #fecaca;">
+            <label style="display:block; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; color: #991b1b; letter-spacing: 1px; margin-bottom: 8px;">
+                <i class='bx bx-error-circle'></i> Reason for Rejection <span style="color:#64748b; font-weight:500;">(required)</span>
+            </label>
+            <textarea id="acct-reject-reason-{{ $request->id }}" rows="2" placeholder="State why this account request is being rejected..." style="width:100%; padding: 10px 12px; border: 1.5px solid #fca5a5; border-radius: 4px; font-family: 'Barlow', sans-serif; font-size: 0.88rem; color: #1e293b; resize: vertical; outline: none;"></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+                <button onclick="cancelAccountReject({{ $request->id }})" class="btn" style="background:#f1f5f9; color:#475569; padding:7px 14px; font-size:0.75rem;">Cancel</button>
+                <button onclick="confirmAccountReject({{ $request->id }})" class="btn" style="background:#dc2626; color:white; padding:7px 18px; font-size:0.75rem;"><i class='bx bx-x-circle'></i> Confirm Reject</button>
             </div>
         </div>
     @endforelse
@@ -117,21 +128,49 @@ function viewDocument(requestId, fileType = '') {
     }
 }
 
-function handleApproval(requestId, action) {
-    if (!confirm(`Are you sure you want to ${action} this request?`)) return;
+function showAccountRejectPanel(requestId) {
+    document.getElementById(`acct-reject-panel-${requestId}`).style.display = 'block';
+    document.getElementById(`btn-reject-${requestId}`).style.display = 'none';
+    document.getElementById(`btn-approve-${requestId}`).disabled = true;
+    document.getElementById(`btn-approve-${requestId}`).style.opacity = '0.4';
+    document.getElementById(`acct-reject-reason-${requestId}`).focus();
+}
+
+function cancelAccountReject(requestId) {
+    document.getElementById(`acct-reject-panel-${requestId}`).style.display = 'none';
+    document.getElementById(`btn-reject-${requestId}`).style.display = '';
+    document.getElementById(`btn-approve-${requestId}`).disabled = false;
+    document.getElementById(`btn-approve-${requestId}`).style.opacity = '1';
+    document.getElementById(`acct-reject-reason-${requestId}`).value = '';
+}
+
+function confirmAccountReject(requestId) {
+    const reason = document.getElementById(`acct-reject-reason-${requestId}`).value.trim();
+    if (!reason) {
+        document.getElementById(`acct-reject-reason-${requestId}`).style.borderColor = '#dc2626';
+        document.getElementById(`acct-reject-reason-${requestId}`).focus();
+        return;
+    }
+    handleApproval(requestId, 'reject', reason);
+}
+
+function handleApproval(requestId, action, rejectionReason) {
+    if (action === 'approve' && !confirm(`Are you sure you want to approve this request?`)) return;
 
     const row = document.getElementById(`request-row-${requestId}`);
     const badge = document.getElementById(`status-badge-${requestId}`);
-    const btn = document.getElementById(`btn-${action}-${requestId}`);
-    const otherBtn = document.getElementById(`btn-${action === 'approve' ? 'reject' : 'approve'}-${requestId}`);
+    const btn = action === 'approve'
+        ? document.getElementById(`btn-approve-${requestId}`)
+        : document.getElementById(`acct-reject-panel-${requestId}`).querySelector('button:last-child');
+    const approvBtn = document.getElementById(`btn-approve-${requestId}`);
     
     // Loading state
-    btn.disabled = true;
-    otherBtn.disabled = true;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+    if (btn) { btn.disabled = true; const origHTML = btn.innerHTML; btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>'; }
+    approvBtn.disabled = true;
 
     const url = action === 'approve' ? '{{ route("admin.approve-request") }}' : '{{ route("admin.reject-request") }}';
+    const payload = { approval_id: requestId };
+    if (rejectionReason) payload.rejection_reason = rejectionReason;
     
     fetch(url, {
         method: 'POST',
@@ -141,7 +180,7 @@ function handleApproval(requestId, action) {
             'X-Requested-With': 'XMLHttpRequest',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ approval_id: requestId })
+        body: JSON.stringify(payload)
     })
     .then(response => response.json())
     .then(result => {

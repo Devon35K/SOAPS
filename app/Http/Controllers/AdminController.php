@@ -369,13 +369,14 @@ class AdminController extends Controller
             // Store email and name for the rejection mail before deleting
             $email = $approval->email;
             $name = $approval->full_name;
+            $rejectionReason = $request->input('rejection_reason', '');
 
             // Delete the record as requested by the user ("when rejected it won't register to the database")
             $approval->delete();
 
             // Send rejection email
             try {
-                Mail::to($email)->send(new RejectionMail($name));
+                Mail::to($email)->send(new RejectionMail($name, $rejectionReason));
             } catch (\Exception $e) {
                 Log::error('Failed to send rejection email: ' . $e->getMessage());
             }
