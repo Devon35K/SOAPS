@@ -102,6 +102,12 @@
                         <div style="margin-bottom: 16px;">
                             <label style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">Authentication Code</label>
                             <input type="text" name="code" class="form-control" placeholder="000000" required style="width: 100%; padding: 12px 16px; border: 2px solid #ddd; outline: none; font-family: monospace;">
+                            
+                            @if ($errors->confirmTwoFactorAuthentication->has('code'))
+                                <span style="color: #dc2626; font-size: 0.8rem; font-weight: 600; margin-top: 4px; display: block;">
+                                    {{ $errors->confirmTwoFactorAuthentication->first('code') }}
+                                </span>
+                            @endif
                         </div>
                         <button type="submit" class="btn btn-primary">Confirm & Activate</button>
                     </form>
