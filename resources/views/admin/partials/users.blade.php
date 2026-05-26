@@ -36,21 +36,26 @@
                 </span>
             </div>
             <div data-label="Status">
-                <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; 
-                    {{ $user->approved ? 'background: #dcfce7; color: #166534;' : 'background: #fef08a; color: #854d0e;' }}">
-                    {{ $user->approved ? 'Approved' : 'Pending' }}
-                </span>
+                @if($user->is_archived)
+                    <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; background: #fee2e2; color: #991b1b;">
+                        Disabled
+                    </span>
+                @else
+                    <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; border-radius: 2px; font-family: 'Barlow Condensed'; 
+                        {{ $user->approved ? 'background: #dcfce7; color: #166534;' : 'background: #fef08a; color: #854d0e;' }}">
+                        {{ $user->approved ? 'Approved' : 'Pending' }}
+                    </span>
+                @endif
             </div>
             <div data-label="Actions" style="display: flex; gap: 8px;">
                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.75rem; text-decoration: none;">
                     <i class='bx bx-edit'></i> Edit
                 </a>
                 @if($user->role !== 'super_admin')
-                    <form method="POST" action="{{ route('admin.users.delete', $user->id) }}" style="margin: 0; display: inline;" onsubmit="return confirm('Delete {{ $user->full_name }}?')">
+                    <form method="POST" action="{{ route('admin.users.archive', $user->id) }}" style="margin: 0; display: inline;" onsubmit="return confirm('{{ $user->is_archived ? 'Enable' : 'Disable' }} {{ $user->full_name }}?')">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.75rem;">
-                            <i class='bx bx-trash'></i> Delete
+                        <button type="submit" class="btn {{ $user->is_archived ? 'btn-gold' : 'btn-danger' }}" style="padding: 6px 12px; font-size: 0.75rem; background: {{ $user->is_archived ? 'var(--gold)' : '#ef4444' }}; color: {{ $user->is_archived ? 'var(--charcoal)' : 'white' }};">
+                            <i class='bx {{ $user->is_archived ? 'bx-check-shield' : 'bx-block' }}'></i> {{ $user->is_archived ? 'Enable' : 'Disable' }}
                         </button>
                     </form>
                 @endif

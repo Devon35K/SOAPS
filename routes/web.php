@@ -74,7 +74,7 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
         Route::post('users', [AdminController::class, 'storeUser'])->name('users.store');
         Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::put('users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
-        Route::delete('users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
+        Route::post('users/{id}/toggle-archive', [AdminController::class, 'toggleArchiveUser'])->name('users.archive');
     });
 });
 

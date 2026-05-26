@@ -599,15 +599,18 @@ class AdminController extends Controller
         return redirect()->route('admin.users')->with('message', 'User updated successfully');
     }
 
-    public function deleteUser($id)
+    public function toggleArchiveUser($id)
     {
 
         $user = User::findOrFail($id);
         if ($user->role === 'super_admin') {
-            return redirect()->route('admin.users')->with('error', 'Cannot delete Super Admin');
+            return redirect()->route('admin.users')->with('error', 'Cannot disable Super Admin');
         }
 
-        $user->delete();
-        return redirect()->route('admin.users')->with('message', 'User deleted successfully');
+        $user->is_archived = !$user->is_archived;
+        $user->save();
+        
+        $message = $user->is_archived ? 'User disabled successfully' : 'User enabled successfully';
+        return redirect()->route('admin.users')->with('message', $message);
     }
 }

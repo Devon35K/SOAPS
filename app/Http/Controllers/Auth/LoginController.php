@@ -51,55 +51,85 @@ class LoginController extends Controller
         }
 
         // Attempt to authenticate the user
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            
-            // Check if user is approved
-            if (!$user->approved) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            // Check if the account is in the approvals table instead
+            $pendingAccount = \App\Models\AccountApproval::where('email', $credentials['email'])
+                                                         ->where('approval_status', 'pending')
+                                                         ->first();
+            RateLimiter::hit($throttleKey);
+
+            if ($pendingAccount) {
+                if (!Hash::check($credentials['password'], $pendingAccount->password)) {
+                    return redirect()->route('login')
+                        ->with('login_error', 'Incorrect password')
+                        ->withInput($request->only('email'));
+                }
                 return redirect()->route('login')
-                    ->with('login_error', 'Your account is pending admin approval.');
+                    ->with('login_error', 'Not yet approved')
+                    ->withInput($request->only('email'));
             }
 
-            // Check if user has 2FA enabled
-            if ($user->hasEnabledTwoFactorAuthentication()) {
-                Auth::logout();
-                
-                $request->session()->put([
-                    'login.id' => $user->id,
-                    'login.remember' => $request->boolean('remember'),
-                ]);
-                
-                return redirect()->route('two-factor.login');
-            }
-
-            // Clear the rate limiter on successful authentication
-            RateLimiter::clear($throttleKey);
-
-            $request->session()->regenerate();
-            
-            // Log successful login
-            \Log::info('User logged in', ['user_id' => $user->id, 'email' => $user->email]);
-
-            // Redirect based on user role
-            if ($user->role === 'admin' || $user->role === 'super_admin') {
-                return redirect()->route('admin.dashboard');
-            } else {
-                return redirect()->route('user.dashboard');
-            }
+            return redirect()->route('login')
+                ->with('login_error', 'Incorrect email')
+                ->withInput($request->only('email'));
         }
 
-        // Increment the rate limiter on failed attempt
-        RateLimiter::hit($throttleKey);
+        if (!Hash::check($credentials['password'], $user->password)) {
+            RateLimiter::hit($throttleKey);
+            return redirect()->route('login')
+                ->with('login_error', 'Incorrect password')
+                ->withInput($request->only('email'));
+        }
 
-        // Authentication failed
-        \Log::warning('Login attempt failed', ['email' => $request->email]);
+        // Login successful
+        Auth::login($user, $request->boolean('remember'));
+
+        // Check if user is approved
+        if (!$user->approved) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')
+                ->with('login_error', 'Not yet approved');
+        }
+
+        // Check if user is archived
+        if ($user->is_archived) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')
+                ->with('login_error', 'Your account has been disabled.');
+        }
+
+        // Check if user has 2FA enabled
+        if ($user->hasEnabledTwoFactorAuthentication()) {
+            Auth::logout();
+            
+            $request->session()->put([
+                'login.id' => $user->id,
+                'login.remember' => $request->boolean('remember'),
+            ]);
+            
+            return redirect()->route('two-factor.login');
+        }
+
+        // Clear the rate limiter on successful authentication
+        RateLimiter::clear($throttleKey);
+
+        $request->session()->regenerate();
         
-        return redirect()->route('login')
-            ->with('login_error', 'Invalid email or password. Please try again.')
-            ->withInput($request->only('email'));
+        // Log successful login
+        \Log::info('User logged in', ['user_id' => $user->id, 'email' => $user->email]);
+
+        // Redirect based on user role
+        if ($user->role === 'admin' || $user->role === 'super_admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('user.dashboard');
+        }
     }
 
     /**

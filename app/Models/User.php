@@ -31,6 +31,7 @@ class User extends Authenticatable
         'year_section',
         'document_path',
         'approved',
+        'is_archived',
         'role',
     ];
 
