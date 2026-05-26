@@ -87,9 +87,10 @@ class UserController extends Controller
         $rank = array_search($userId, $allRankings);
         $rank = ($rank !== false) ? $rank + 1 : 'N/A';
         
-        // Fetch approved achievements
+        // Fetch approved and rejected achievements (so user sees rejection reasons)
         $achievements = \App\Models\Achievement::where('user_id', $userId)
-            ->where('status', 'Approved')
+            ->whereIn('status', ['Approved', 'Rejected'])
+            ->with('approvedBy')
             ->orderBy('submission_date', 'desc')
             ->get();
 

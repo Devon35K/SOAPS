@@ -279,7 +279,7 @@
                 </div>
             </form>
 
-            <p class="signup-row">No account? <a href="{{ route('register') }}">Join the Team</a></p>
+            <p class="signup-row">No account? <a href="{{ route('register') }}">SIGN UP</a></p>
         </div>
     </div>
 </div>

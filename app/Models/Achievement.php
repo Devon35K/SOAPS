@@ -26,6 +26,7 @@ class Achievement extends Model
         'documents',
         'status',
         'rejection_reason',
+        'approved_by',
     ];
 
     protected $casts = [
@@ -39,5 +40,13 @@ class Achievement extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the admin who approved/evaluated the achievement.
+     */
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

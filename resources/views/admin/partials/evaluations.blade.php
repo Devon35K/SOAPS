@@ -114,16 +114,52 @@ function openEvaluationModal(userId) {
                         </div>
                     </div>
                     
+                    <!-- Rejection Reason Panel (hidden until Reject is clicked) -->
+                    <div id="reject-panel-${sub.id}" style="display:none; margin-top: 16px; padding: 16px; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px;">
+                        <label style="display:block; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; color: #991b1b; letter-spacing: 1px; margin-bottom: 8px;"><i class="bx bx-error-circle"></i> Reason for Rejection <span style="color:#64748b;font-weight:500;">(required)</span></label>
+                        <textarea id="reject-reason-${sub.id}" rows="3" placeholder="State the reason why this submission is being rejected..." style="width:100%; padding: 10px 12px; border: 1.5px solid #fca5a5; border-radius: 4px; font-family: 'Barlow', sans-serif; font-size: 0.88rem; color: #1e293b; resize: vertical; outline: none;"></textarea>
+                        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+                            <button onclick="cancelReject(${sub.id})" class="btn" style="background:#f1f5f9; color:#475569; padding:7px 14px; font-size:0.75rem;">Cancel</button>
+                            <button onclick="confirmReject(${sub.id}, event)" class="btn" style="background:#dc2626; color:white; padding:7px 18px; font-size:0.75rem;"><i class="bx bx-x-circle"></i> Confirm Reject</button>
+                        </div>
+                    </div>
+
                     <!-- Actions -->
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
-                        <button onclick="submitEvaluation(${sub.id}, 'reject')" class="btn" style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border: none; cursor: pointer;">Reject</button>
-                        <button onclick="submitEvaluation(${sub.id}, 'approve')" id="approve-btn-${sub.id}" class="btn btn-primary" style="padding: 8px 24px;">
+                        <button onclick="showRejectPanel(${sub.id})" id="reject-btn-${sub.id}" class="btn" style="background: #fee2e2; color: #991b1b; padding: 8px 16px; border: none; cursor: pointer;"><i class="bx bx-x"></i> Reject</button>
+                        <button onclick="submitEvaluation(${sub.id}, 'approve', event)" id="approve-btn-${sub.id}" class="btn btn-primary" style="padding: 8px 24px;">
                             ${['achievement', 'participation'].includes(sub.document_type) ? 'Approve & Award Points' : 'Approve & Archive'}
                         </button>
                     </div>
                 </div>
             `).join('');
         });
+}
+
+function showRejectPanel(subId) {
+    document.getElementById(`reject-panel-${subId}`).style.display = 'block';
+    document.getElementById(`reject-btn-${subId}`).style.display = 'none';
+    document.getElementById(`approve-btn-${subId}`).disabled = true;
+    document.getElementById(`approve-btn-${subId}`).style.opacity = '0.4';
+    document.getElementById(`reject-reason-${subId}`).focus();
+}
+
+function cancelReject(subId) {
+    document.getElementById(`reject-panel-${subId}`).style.display = 'none';
+    document.getElementById(`reject-btn-${subId}`).style.display = '';
+    document.getElementById(`approve-btn-${subId}`).disabled = false;
+    document.getElementById(`approve-btn-${subId}`).style.opacity = '1';
+    document.getElementById(`reject-reason-${subId}`).value = '';
+}
+
+function confirmReject(subId, event) {
+    const reason = document.getElementById(`reject-reason-${subId}`).value.trim();
+    if (!reason) {
+        document.getElementById(`reject-reason-${subId}`).style.borderColor = '#dc2626';
+        document.getElementById(`reject-reason-${subId}`).focus();
+        return;
+    }
+    submitEvaluation(subId, 'reject', event, reason);
 }
 
 function toggleEvalForm(subId) {
@@ -139,7 +175,7 @@ function updatePoints(subId) {
     document.getElementById(`points-display-${subId}`).innerText = points;
 }
 
-function submitEvaluation(subId, action) {
+function submitEvaluation(subId, action, event, rejectionReason) {
     const evalForm = document.getElementById(`eval-form-${subId}`);
     const isEvalVisible = evalForm && evalForm.style.display !== 'none';
     
@@ -157,6 +193,7 @@ function submitEvaluation(subId, action) {
         level: level,
         rank: rank,
         points: parseInt(points) || 0,
+        comments: rejectionReason || '',
     };
 
     // Show loading state on button
@@ -182,9 +219,11 @@ function submitEvaluation(subId, action) {
     .then(result => {
         if (result.success) {
             const card = document.getElementById(`sub-card-${subId}`);
-            card.innerHTML = `<div style="color: #059669; font-weight: 600; text-align: center; padding: 40px; background: #ecfdf5; border-radius: 8px;">
-                <i class="bx bx-check-circle" style="font-size: 3rem; display: block; margin-bottom: 10px;"></i> 
+            const isApproval = action === 'approve';
+            card.innerHTML = `<div style="color: ${isApproval ? '#059669' : '#991b1b'}; font-weight: 600; text-align: center; padding: 40px; background: ${isApproval ? '#ecfdf5' : '#fff5f5'}; border-radius: 8px; border: 1px solid ${isApproval ? '#bbf7d0' : '#fecaca'};">
+                <i class="bx ${isApproval ? 'bx-check-circle' : 'bx-x-circle'}" style="font-size: 3rem; display: block; margin-bottom: 10px;"></i>
                 ${result.message}
+                ${!isApproval && data.comments ? `<p style="margin-top:10px; font-size:0.85rem; font-weight:400; color:#64748b; font-style:italic;">"${data.comments}"</p>` : ''}
             </div>`;
             setTimeout(() => {
                 card.style.opacity = '0';

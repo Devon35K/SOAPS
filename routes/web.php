@@ -52,6 +52,7 @@ Route::middleware(['web', 'auth', 'role:admin'])->prefix('admin')->name('admin.'
     Route::get('student-athletes', [AdminController::class, 'studentAthletes'])->name('student-athletes');
     Route::get('student-athletes/search', [AdminController::class, 'studentAthletesSearch'])->name('student-athletes.search');
     Route::get('achievements', [AdminController::class, 'achievements'])->name('achievements');
+    Route::get('achievements/search', [AdminController::class, 'achievementsSearch'])->name('achievements.search');
     Route::get('evaluations', [AdminController::class, 'evaluations'])->name('evaluations');
     Route::get('evaluations/search', [AdminController::class, 'evaluationsSearch'])->name('evaluations.search');
     Route::get('approved-docs', [AdminController::class, 'approvedDocs'])->name('approved-docs');

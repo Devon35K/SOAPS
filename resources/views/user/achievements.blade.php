@@ -34,19 +34,53 @@
             <div style="flex: 2;">Tournament Event / Achievement</div>
             <div style="flex: 1;">Placement</div>
             <div style="flex: 1;">Points</div>
+            <div style="flex: 1;">Status</div>
+            <div style="flex: 2;">Reviewed By / Remarks</div>
             <div style="flex: 1;">Date Logged</div>
         </div>
         
         @forelse($achievements as $achievement)
-            <div class="table-row">
+            <div class="table-row" style="{{ $achievement->status === 'Rejected' ? 'background: rgba(239,68,68,0.03); border-left: 3px solid #ef4444;' : '' }}">
                 <div style="flex: 2; font-weight: 600; color: var(--maroon);">{{ $achievement->level_of_competition }} Level Achievement</div>
                 <div style="flex: 1; font-weight: 700; color: var(--gold-dark);"><i class='bx bxs-medal'></i> {{ $achievement->performance }}</div>
-                <div style="flex: 1; font-weight: 600;">+{{ $achievement->total_points }} pts</div>
+                <div style="flex: 1; font-weight: 600;">
+                    @if($achievement->status === 'Approved')
+                        <span style="color: #059669;">+{{ $achievement->total_points }} pts</span>
+                    @else
+                        <span style="color: #B91C1C;">—</span>
+                    @endif
+                </div>
+                <div style="flex: 1;">
+                    @if($achievement->status === 'Approved')
+                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; font-family: 'Barlow Condensed'; background: #dcfce7; color: #166534; border-radius: 2px;">
+                            <i class='bx bx-check-circle'></i> Approved
+                        </span>
+                    @else
+                        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; padding: 4px 8px; font-family: 'Barlow Condensed'; background: #fee2e2; color: #991b1b; border-radius: 2px;">
+                            <i class='bx bx-x-circle'></i> Rejected
+                        </span>
+                    @endif
+                </div>
+                <div style="flex: 2; font-size: 0.85rem;">
+                    @if($achievement->approvedBy)
+                        <span style="font-weight: 600; color: var(--text-body);">
+                            {{ $achievement->status === 'Approved' ? 'Approved by' : 'Reviewed by' }}:
+                            <span style="color: var(--maroon);">{{ $achievement->approvedBy->full_name }}</span>
+                        </span>
+                    @endif
+                    @if($achievement->status === 'Rejected' && $achievement->rejection_reason)
+                        <div style="margin-top: 4px; font-size: 0.8rem; color: #B91C1C; font-style: italic;">
+                            <i class='bx bx-info-circle'></i> {{ $achievement->rejection_reason }}
+                        </div>
+                    @elseif($achievement->status === 'Rejected')
+                        <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-muted); font-style: italic;">No reason provided.</div>
+                    @endif
+                </div>
                 <div style="flex: 1; font-size: 0.9rem; color: var(--text-muted);">{{ \Carbon\Carbon::parse($achievement->submission_date)->format('M d, Y') }}</div>
             </div>
         @empty
             <div class="table-row" style="justify-content: center; padding: 40px; color: var(--text-muted);">
-                No approved achievements recorded yet.
+                No achievements recorded yet.
             </div>
         @endforelse
 

@@ -1,10 +1,6 @@
-oylw ryql yure idcu
-
-
-
 # Sports and Cultural Management System (2IT) Group 6
 
-A comprehensive desktop-based Document Archiver for the Sports and Cultural Office of the University of Southeastern Philippines (USeP) Tagum-Mabini Campus. Built on Laravel 12 with Vite-powered assets, managing sports and cultural activities, document submissions, point-based evaluations, and equipment tracking.
+A comprehensive web-based Document Archiver and Achievement Management System for the Sports and Cultural Office of the University of Southeastern Philippines (USeP) Tagum-Mabini Campus. Built on Laravel 12 with Vue 3, Inertia.js, and TailwindCSS, featuring document submissions, point-based evaluations, and campus-wide leaderboards.
 
 ## System Overview
 
@@ -12,9 +8,9 @@ The Sports and Cultural Management System serves as a digital solution for the U
 - Manage student/alumni sports and cultural participation and achievements
 - Handle document submissions and approval workflows with digital archiving
 - Implement point-based evaluation system for awards and recognitions
-- Provide secure multi-role user management (Admin and Student roles)
+- Provide secure three-tier role management (Super Admin, Admin, and Student roles)
 - Streamline administrative operations for sports and cultural activities
-- Monitor sports equipment borrowing and returns with automated sanction system
+- Display campus-wide leaderboards for achievement rankings
 - Facilitate fast data retrieval, filtering, and comparison capabilities
 
 ---
@@ -22,70 +18,79 @@ The Sports and Cultural Management System serves as a digital solution for the U
 ## 2. Key Features
 
 ### User Management
-- **Two-Tier Role System**: Admin (Faculty/Staff) and Student users
-- **Account Approval Workflow**: Students submit requests with documents for admin approval
-- **Profile Management**: Users can update profiles and upload images
+- **Three-Tier Role System**: Super Admin, Admin (Faculty/Staff), and Student users
+- **Account Approval Workflow**: Students submit registration requests with supporting documents for admin approval
+- **Profile Management**: Users can update profiles including sport, campus, and personal information
 - **Session Management**: Secure login with timeout and CSRF protection
-- **User Base Management**: Comprehensive user directory with role-based access control
-- **Multi-Factor Authentication**: Enhanced security with MFA support
+- **User Base Management**: Comprehensive user directory with filtering by sport, campus, and status
+- **Multi-Factor Authentication**: Enhanced security with 2FA support via Laravel Fortify
 
 ### Super Admin Features
-- **System Administration**: Full system control and configuration
-- **User Role Management**: Assign and manage user permissions across all roles
-- **System Settings**: Configure application-wide settings and preferences
-- **Audit Control**: Access to all system logs and administrative records
-- **Emergency Controls**: System maintenance mode and emergency access controls
+- **Full User Management**: Create, edit, and delete admin and student accounts
+- **System Administration**: Complete control over user permissions across all roles
+- **Account Management**: Direct user creation bypassing approval workflow
+- **Administrative Oversight**: Access to all system functions and user records
 
 ### Activity Logging & Monitoring
-- **Comprehensive Audit Trail**: Log all user actions, system changes, and administrative activities
+- **Submission Tracking**: Monitor all document submissions with timestamps and status changes
 - **Real-time Monitoring**: Track user logins, file uploads, document approvals
-- **Security Logs**: Monitor failed login attempts, permission changes, and security events
+- **Security Logs**: Monitor failed login attempts and authentication events
 - **Administrative Actions**: Record all admin decisions, approvals, and rejections
-- **Report Generation**: Generate detailed activity reports for compliance and auditing
+- **User Analytics**: Dashboard statistics for athletes, pending evaluations, and account approvals
 
 ### Document Management
-- **Document Submission**: Students submit various document types (PDF, DOC, DOCX, JPG, PNG)
+- **Document Submission**: Students submit documents (PDF, JPG, JPEG, PNG) up to 5MB
+- **Base64 Storage**: Files stored as base64 in database for SQLite compatibility
 - **Approval Workflow**: Admins can approve/reject submissions with comments
-- **File Storage**: Secure document storage with proper access controls
-- **Download Functionality**: Secure file downloads with proper headers
+- **Document Types**: Support for certificates, medals, competition proofs, and other supporting documents
+- **Download/View Functionality**: Secure inline document viewing with proper MIME type handling
 
 ### Achievement Tracking
-- **Point-Based Evaluation System**: Scoring method for assessing student achievements in sports and cultural activities for awards and recognition
-- **Campus Leaderboard**: Ranking system displaying student standings based on accumulated points
-- **Total Points Tracking**: Cumulative score monitoring for individuals and teams
-- **Award Recognition System**: Admins can record student achievements based on point accumulation
-- **Multiple Award Types**: Championships, medals, certificates, scholarships
-- **Document Attachment**: Supporting documents for achievements
-- **Student Search**: Real-time student lookup for award assignment
+- **Point-Based Evaluation System**: Comprehensive scoring based on:
+  - Level of competition (University, Regional, National, International)
+  - Performance (Champion, 1st Runner-up, 2nd Runner-up, etc.)
+  - Number of events participated
+  - Leadership roles held
+  - Sportsmanship awards
+  - Community impact contributions
+  - Document completeness
+- **Campus Leaderboard**: Real-time ranking system displaying student standings
+- **Total Points Tracking**: Cumulative score monitoring with automatic rank calculation
+- **Award Recognition System**: Admins evaluate and approve achievements
+- **Status Tracking**: Pending, Approved, and Rejected achievement statuses
+- **Document Attachment**: Supporting documents linked to achievements
 
 ### Administrative Features
-- **Dashboard**: Comprehensive admin interface with multiple modules
-- **User Management**: Add, edit, delete users
-- **Reports and Analytics**: Student counts, submission statistics
-- **Account Approvals**: Manage new account requests
+- **Dashboard**: Comprehensive admin interface with analytics and statistics
+- **Athlete Management**: View, filter, and manage student athletes by sport, campus, and status
+- **Evaluation System**: Review and score student submissions with point assignments
+- **User Management**: Add, edit, and manage user accounts (Super Admin only)
+- **Reports and Analytics**: Real-time statistics on athletes, pending evaluations, and approvals
+- **Account Approvals**: Manage new account requests with document verification
 
-### Sports Equipment Management
-- **Equipment Inventory**: Complete catalog of sports supplies and tools with categorization
-- **Borrowing System**: Track equipment checkouts with student identification and timestamps
-- **Due Date Management**: Automatic tracking of return deadlines with configurable borrowing periods
-- **Sanction System**: Automated penalty imposition for late returns including:
-  - Warning notifications for first offenses
-  - Temporary borrowing restrictions for repeat violations
-  - Official sanctions recorded in student profiles
-  - Escalating penalty tiers based on delay duration
-- **Equipment Status**: Real-time availability tracking and maintenance scheduling
-- **Borrowing History**: Complete audit trail of all equipment transactions
-- **Student Accountability**: Link equipment borrowing to student records for comprehensive monitoring
+### Sports & Campus Management
+- **Multi-Sport Support**: 16 official sports categories:
+  - Athletics, Badminton, Basketball, Cheerleading, Chess
+  - Dance Sports, Esports, Football, Sepak Takraw, Softball
+  - Swimming, Table Tennis, Taekwondo, Tennis, Volleyball, Wrestling
+- **Multi-Campus Support**: 5 USeP campuses:
+  - Tagum-Mabini, Obrero, Mintal, Guianga, Bislig
+- **Student Status Tracking**: Undergraduate and Alumni status management
+- **Sport-Specific Filtering**: Filter athletes by their registered sport
 
 ---
 
 ## 3. Tech Stack
 
-- **Backend:** PHP 8.2, Laravel 12
-- **Frontend:** Vite, Vue 3, Inertia.js, TailwindCSS 4
-- **Database:** SQLite (default) / MySQL / MariaDB
+- **Backend:** PHP 8.2+, Laravel 12, Laravel Fortify (authentication)
+- **Frontend:** Vite, Vue 3, Inertia.js, TailwindCSS 4, TypeScript
+- **UI Components:** Reka UI, Lucide Vue icons, Tailwind Merge
+- **Database:** SQLite (default) / MySQL / MariaDB with base64 file storage
+- **Email:** PHPMailer for transactional emails
 - **Runtime:** Node.js 18+, Composer 2+
-- **Recommended Dev Environment:** Laragon on Windows (ships with required PHP extensions)
+- **Code Quality:** Laravel Pint (PHP), ESLint + Prettier (JS/TS)
+- **Testing:** PHPUnit, Laravel Dusk (optional)
+- **Recommended Dev Environment:** Laragon on Windows
 
 ---
 
@@ -104,7 +109,7 @@ The Sports and Cultural Management System serves as a digital solution for the U
 | Component | Minimum Requirements | Recommended Requirements |
 |-----------|---------------------|---------------------------|
 | **Database Management System** | MySQL 5.7 or Microsoft SQL Server 2016 | MySQL 8.0 or Microsoft SQL Server 2019 or newer |
-| **Development Environment** | Visual Studio 2019, Eclipse, or similar IDE | Visual Studio 2022 or IntelliJ IDEA with full plugin support |
+| **Development Environment** | VS Code, PHPStorm, or similar IDE | VS Code with PHP extensions or IntelliJ IDEA |
 | **Web Server** | Apache 2.4, Nginx 1.18, or IIS 10 | Apache 2.4 or newer, Nginx latest stable, or IIS with optimized module configurations |
 | **Security Software** | Basic antivirus (e.g., Windows Defender) and anti-malware | Enterprise-level endpoint protection (e.g., Bitdefender, Norton, or Malwarebytes Premium) |
 | **Backup Software** | Manual or scheduled backup tools (e.g., Windows Backup, rsync) | Automated cloud-integrated backup solutions (e.g., Acronis, Veeam, or AWS Backup) |
@@ -191,11 +196,14 @@ php artisan migrate:fresh --seed
 ```
 
 **Tables created by migrations:**
-- `users` - User accounts (students, admins)
-- `cache` - Application cache
-- `jobs` - Queue jobs
-- `new_table_name` - Custom application tables
-- Plus other application-specific tables
+- `users` - User accounts with roles (super_admin, admin, user)
+- `submissions` - Document submissions with base64 file storage
+- `achievements` - Achievement records with point calculations
+- `leaderboard` - Points aggregation and rankings
+- `account_approvals` - Pending account registration requests
+- `user_images` - Profile image storage
+- `notifications` - User notification system
+- `cache`, `jobs` - Laravel system tables
 
 ### Step 5: Final Setup
 
@@ -328,13 +336,13 @@ php artisan serve
 
 ## 10. Seeded Accounts
 
-| Role | Email | Password | Permissions |
-|------|-------|----------|-------------|
-| **Super Admin** | superadmin@usep.edu.ph | superadmin123 | Full system control, can manage other admins, system settings |
-| **Admin** | admin@usep.edu.ph | admin123 | Manage users, documents, approvals, equipment |
-| **Student** | student@usep.edu.ph | student123 | Submit documents, track achievements, borrow equipment |
+| Role | Access Method | Permissions |
+|------|---------------|-------------|
+| **Super Admin** | Create via `/create-admin-usep` route | Full user CRUD, can manage other admins, all system functions |
+| **Admin** | Create via seeder or Super Admin | Manage users, documents, approvals, evaluations |
+| **Student** | Self-register with approval | Submit documents, track achievements, view leaderboard |
 
-> **Important:** Update all default credentials immediately in production. Super Admin has highest privileges including creating other admins. Admin accounts can manage day-to-day operations but cannot modify system configuration.
+> **Important:** Update all default credentials immediately in production. Use the secret route `/create-admin-usep` to create the first Super Admin account after installation.
 
 ### Role-Based Access Control (RBAC)
 
@@ -357,14 +365,18 @@ php artisan serve
 
 | Command | Purpose |
 |---------|---------|
-| `php artisan migrate:fresh --seed` | Reset database and reseed demo data |
+| `php artisan migrate:fresh --seed` | Reset database and reseed (runs AdminSeeder) |
 | `php artisan storage:link` | **Important:** expose `storage/app/public` via `public/storage` |
-| `php artisan queue:work` | Run queued jobs (if using notifications or async tasks) |
-| `php artisan optimize:clear` | Clear config, route, view caches |
-| `php artisan config:clear && php artisan cache:clear` |
-| `npm run dev` | Watch + hot reload assets |
-| `npm run build` | Compile & minify production assets |
-| `npm run build:ssr` | Build with server-side rendering support |
+| `php artisan queue:work` | Run queued jobs for email notifications |
+| `php artisan optimize:clear` | Clear all config, route, view, and cache files |
+| `php artisan config:clear && php artisan cache:clear` | Clear configuration and application cache |
+| `composer run dev` | Boot Laravel server, queue, and Vite concurrently |
+| `composer run setup` | Full install workflow (deps + key + migrate + build) |
+| `npm run dev` | Vite dev server with hot reload |
+| `npm run build` | Compile production assets |
+| `npm run build:ssr` | Build with SSR support |
+| `npm run lint` | Run ESLint on JavaScript/TypeScript |
+| `npm run format` | Run Prettier code formatting |
 
 ### Composer Scripts
 
@@ -387,27 +399,73 @@ php artisan serve
 
 ```
 app/
+├── Actions/Fortify/        # Custom Fortify authentication actions
+├── Concerns/               # Validation rule traits
 ├── Http/
 │   ├── Controllers/        # Web controllers
-│   ├── Middleware/         # Custom middleware
-│   └── Kernel.php          # Middleware registration
-├── Models/                 # Eloquent models (User, etc.)
+│   │   ├── Auth/           # Authentication controllers
+│   │   │   ├── LoginController.php
+│   │   │   ├── RegisterController.php
+│   │   │   ├── ForgotPasswordController.php
+│   │   │   └── AdminCreationController.php
+│   │   ├── Settings/       # Profile, password, 2FA settings
+│   │   ├── AdminController.php
+│   │   ├── UserController.php
+│   │   └── EmailController.php
+│   ├── Middleware/         # Role-based access middleware
+│   └── Requests/           # Form request validation
+├── Mail/                   # Mailable classes (Approval, OTP, Notification)
+├── Models/                 # Eloquent models
+│   ├── User.php           # User with roles, 2FA, relations
+│   ├── Submission.php     # Document submissions
+│   ├── Achievement.php    # Achievement records
+│   ├── Leaderboard.php    # Points aggregation
+│   ├── AccountApproval.php # Registration requests
+│   ├── Notification.php   # User notifications
+│   └── UserImage.php      # Profile images
+├── Providers/              # Service providers
 └── Services/               # Business logic services
 
 database/
-├── migrations/             # Schema definition
-└── seeders/                # Default data seeding
+├── factories/              # Model factories
+├── migrations/             # Schema definitions
+│   ├── 0001_01_01_000000_create_users_table.php
+│   ├── 2025_01_21_000001_update_users_table.php
+│   ├── 2025_01_21_000004_create_submissions_table.php
+│   ├── 2025_04_06_000002_create_achievements_table.php
+│   ├── 2025_04_06_000003_create_leaderboard_table.php
+│   └── ... (19 total migrations)
+└── seeders/                # Database seeders
+    ├── DatabaseSeeder.php
+    └── AdminSeeder.php
 
 resources/
 ├── views/                  # Blade templates
-├── js/                     # Vue.js components and entry points
-│   ├── app.ts             # Main application entry
-│   └── ssr.ts             # Server-side rendering entry
+│   ├── admin/             # Admin dashboard pages
+│   ├── user/              # Student portal pages
+│   ├── auth/              # Authentication pages
+│   ├── emails/            # Email templates
+│   ├── settings/          # User settings pages
+│   ├── intro.blade.php    # Landing page
+│   └── login.blade.php    # Login page
+├── js/                     # Vue.js application
+│   ├── components/        # Vue components + UI library
+│   ├── composables/       # Shared Vue composables
+│   ├── app.ts            # Main entry point
+│   └── ssr.ts            # SSR entry point
 └── css/                    # TailwindCSS styles
 
 public/
 ├── storage/ -> ../storage/app/public (symlink)
-└── build/                  # Vite compiled assets
+├── image/                 # Static images (USeP logos)
+├── css/                   # Compiled CSS
+├── js/                    # Compiled JS
+└── build/                 # Vite compiled assets (manifest.json)
+
+routes/
+├── web.php               # Main application routes
+├── settings.php          # User settings routes
+└── console.php           # Console commands
 ```
 
 ---

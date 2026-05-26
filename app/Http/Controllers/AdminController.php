@@ -154,6 +154,44 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * AJAX endpoint — returns only the achievements + leaderboard rows HTML.
+     */
+    public function achievementsSearch(Request $request)
+    {
+        $search = $request->get('search', '');
+        $status = $request->get('status', '');
+        $sport  = $request->get('sport', '');
+
+        $achievements = \App\Models\Achievement::query()
+            ->when($search, fn($q) => $q->where('athlete_name', 'like', "%{$search}%"))
+            ->when($status, function ($q) use ($status) {
+                $q->whereHas('user', fn($uq) => $uq->where('status', $status));
+            })
+            ->when($sport, function ($q) use ($sport) {
+                $q->whereHas('user', fn($uq) => $uq->where('sport', $sport));
+            })
+            ->with('user')
+            ->get();
+
+        $leaderboard = \App\Models\Leaderboard::with('user.images')
+            ->join('users', 'leaderboard.user_id', '=', 'users.id')
+            ->when($search, function ($q) use ($search) {
+                $q->where('users.full_name', 'like', "%{$search}%")
+                  ->orWhere('users.student_id', 'like', "%{$search}%");
+            })
+            ->when($status, fn($q) => $q->where('users.status', $status))
+            ->when($sport, fn($q) => $q->where('users.sport', $sport))
+            ->select('leaderboard.*', 'users.full_name as athlete_name')
+            ->orderBy('leaderboard.total_points', 'desc')
+            ->get();
+
+        return view('admin.partials.achievements-results', [
+            'achievements' => $achievements,
+            'leaderboard'  => $leaderboard,
+        ]);
+    }
+
     public function evaluations(Request $request)
     {
 
@@ -412,6 +450,7 @@ class AdminController extends Controller
                     'performance' => $request->rank,
                     'total_points' => $request->points,
                     'status' => 'Approved',
+                    'approved_by' => auth()->id(),
                     'submission_date' => now(),
                     'documents' => ['submission_id' => $submission->id]
                 ]);
@@ -430,6 +469,20 @@ class AdminController extends Controller
             $submission->status = 'rejected';
             $submission->comments = $request->comments;
             $submission->save();
+
+            // Create a Rejected Achievement record so the user sees rejection reason in their Achievements page
+            \App\Models\Achievement::create([
+                'user_id' => $user->id,
+                'athlete_name' => $user->full_name,
+                'level_of_competition' => $request->level ?? 'N/A',
+                'performance' => $request->rank ?? 'N/A',
+                'total_points' => 0,
+                'status' => 'Rejected',
+                'approved_by' => auth()->id(),
+                'rejection_reason' => $request->comments,
+                'submission_date' => now(),
+                'documents' => ['submission_id' => $submission->id]
+            ]);
 
             return response()->json(['success' => true, 'message' => 'Submission rejected.']);
         }
